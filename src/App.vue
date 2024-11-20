@@ -1,25 +1,11 @@
 <script setup lang="ts">
-import {ref} from "vue";
-import {invoke} from "@tauri-apps/api/core";
-import TcButton from "./UI/TcButton.vue";
 
-const greetMsg = ref("");
-const name = ref("");
-// @ts-ignore
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  greetMsg.value = await invoke("greet", {name: name.value});
-}
+
+import TcButton from "./UI/TcButton.vue";
 </script>
 
 <template>
-  <main class="container">
-
-
-
-    <p>{{ greetMsg }}</p>
-    <tc-button @click="console.log(123)">fff</tc-button>
-  </main>
+<tc-button>mainly called genshin?</tc-button>
 </template>
 
 <style scoped>
