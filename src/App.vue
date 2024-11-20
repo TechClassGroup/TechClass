@@ -5,7 +5,7 @@ import TcButton from "./UI/TcButton.vue";
 
 const greetMsg = ref("");
 const name = ref("");
-
+// @ts-ignore
 async function greet() {
   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
   greetMsg.value = await invoke("greet", {name: name.value});
@@ -16,10 +16,7 @@ async function greet() {
   <main class="container">
 
 
-    <form class="bg-red-800" @submit.prevent="greet">
-      <input id="greet-input" v-model="name" placeholder="Enter a name..." />
-      <button type="submit">Greet</button>
-    </form>
+
     <p>{{ greetMsg }}</p>
     <tc-button @click="console.log(123)">fff</tc-button>
   </main>
