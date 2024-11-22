@@ -43,28 +43,27 @@ pub fn init() {
 
     info!("日志已初始化");
 }
-
 #[tauri::command]
 pub fn log_trace(content: String) {
-    trace!("{}", content);
+    trace!("[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_debug(content: String) {
-    debug!("{}", content);
+    debug!("[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_info(content: String) {
-    info!("{}", content);
+    info!("[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_warn(content: String) {
-    warn!("{}", content);
+    warn!("[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_error(content: String) {
-    error!("{}", content);
+    error!("[From frontend] {}", content);
 }
