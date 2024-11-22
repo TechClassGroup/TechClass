@@ -23,4 +23,9 @@ tauri-plugin-shell = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 log="0.4"
-env_logger = "0.9"
+tracing = "0.1.40"
+tracing-subscriber =  { version = "0.3", features = ["fmt", "time", "local-time"] }
+time = "0.3.36"
+tracing-appender = "0.2.3"
+lazy_static = "1.5.0"
+
