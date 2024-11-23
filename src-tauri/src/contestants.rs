@@ -3,9 +3,9 @@
 /// 获取当前exe的位置
 fn exe_directory() -> std::path::PathBuf {
     std::env::current_exe()
-        .expect("Failed to get current executable path")
+        .expect("Failed to get exe's current executable path")
         .parent()
-        .expect("Failed to get parent directory")
+        .expect("Failed to get exe's parent directory")
         .to_path_buf()
 }
 /// 有关文件路径的常量

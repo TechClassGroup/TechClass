@@ -5,7 +5,8 @@
 
 use techclass_lib::logs;
 fn main() {
-    logs::init(); // 初始化日志
+    logs::init();
 
-    techclass_lib::run()
+    techclass_lib::run();
+
 }

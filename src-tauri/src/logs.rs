@@ -43,6 +43,7 @@ pub fn init() {
 
     info!("日志已初始化");
 }
+
 #[tauri::command]
 pub fn log_trace(content: String) {
     trace!("[From frontend] {}", content);

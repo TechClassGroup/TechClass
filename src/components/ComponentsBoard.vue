@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import MainWindow from "./components/MainWindow.vue";
+
 </script>
 
 <template>
-  <main-window></main-window>
+
 </template>
 
 <style scoped>
