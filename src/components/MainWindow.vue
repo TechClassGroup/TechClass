@@ -5,10 +5,9 @@ import ComponentsBoard from "./ComponentsBoard.vue";
 </script>
 
 <template>
-  <div >
-    <side-dock>
-    </side-dock>
-    <components-board></components-board>
+  <div class="w-full h-full flex flex-row">
+    <side-dock></side-dock>
+    <components-board class="flex-grow"></components-board>
   </div>
 </template>
 
