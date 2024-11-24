@@ -15,6 +15,9 @@ export const useApplicationStore = defineStore('application', {
     actions: {
         resetSettingCurrentPage() {
             this.setting.current_page = 'general/about'
+        },
+        reverseSettingOpen() {
+            this.setting.open = !this.setting.open
         }
     }
 
