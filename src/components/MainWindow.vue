@@ -13,9 +13,10 @@ import ComponentsBoard from "./ComponentsBoard.vue";
 
   <div class="w-full h-full flex flex-row">
     <side-dock></side-dock>
-    <router-link to="/setting" >to setting</router-link>
 
     <router-link to="/" class="z-50">Close Setting</router-link>
+    <router-link to="/setting/">to setting</router-link>
+
     <components-board class="flex-grow"></components-board>
   </div>
 
