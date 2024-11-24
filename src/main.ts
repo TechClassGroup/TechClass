@@ -14,7 +14,7 @@ app.mount('#app')
 
 logger.info("前端启动成功");
 
-window.addEventListener('popstate', (event) => {
-    event.preventDefault();
+// 不允许用户通过浏览器的前进后退按钮进行页面跳转 防止一些奇妙的bug
+window.addEventListener('popstate', () => {
     history.pushState(null, '', location.href);
 });
