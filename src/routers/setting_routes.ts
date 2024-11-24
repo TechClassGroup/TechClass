@@ -1,5 +1,5 @@
 import {RouteRecordRaw} from "vue-router";
-import About from "../components/About.vue";
+import About from "../components/setting/About.vue";
 import SettingPage from "../components/SettingPage.vue";
 
 /**
