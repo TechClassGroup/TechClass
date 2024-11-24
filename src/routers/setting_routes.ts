@@ -7,7 +7,7 @@ import SettingPage from "../components/SettingPage.vue";
  */
 const setting_routes: Array<RouteRecordRaw> = [
     {
-        path: "/settings",
+        path: "/setting",
         component: SettingPage,
         children: [
             {

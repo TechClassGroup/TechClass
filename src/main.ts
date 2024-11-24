@@ -13,3 +13,8 @@ app.use(router)
 app.mount('#app')
 
 logger.info("前端启动成功");
+
+window.addEventListener('popstate', (event) => {
+    event.preventDefault();
+    history.pushState(null, '', location.href);
+});
