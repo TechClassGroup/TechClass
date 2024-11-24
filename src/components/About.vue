@@ -3,7 +3,7 @@
 </script>
 
 <template>
-this is about page
+Tech Class developing...
 </template>
 
 <style scoped>
