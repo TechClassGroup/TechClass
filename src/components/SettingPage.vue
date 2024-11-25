@@ -11,7 +11,7 @@ const basic_url = "/setting";
 const store = useApplicationStore();
 
 function changePage(target: string) {
-  logger.info(`Change Current Page to ${target}`);
+  logger.debug(`设置页面: 修改当前页面到 ${target}`);
   const target_url = `${basic_url}/${target}`;
   if (router.hasRoute(target_url)) {
     store.setting.current_page = target_url;
@@ -23,7 +23,6 @@ function changePage(target: string) {
 }
 
 onMounted(() => {
-  logger.info("Setting Page Mounted");
   changePage(store.setting.current_page)
 })
 </script>

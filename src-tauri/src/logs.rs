@@ -1,6 +1,6 @@
 //! 管理日志
 
-use log::{debug, error, info, trace, warn};
+use log::info;
 use tracing_subscriber::util::SubscriberInitExt;
 
 use crate::contestants::files_path;
@@ -18,7 +18,7 @@ pub fn init() {
         time::UtcOffset::current_local_offset().unwrap_or_else(|_| time::UtcOffset::UTC);
     let timer = tracing_subscriber::fmt::time::OffsetTime::new(time_offset, time_fmt);
     // 文件附加
-    let file_appender = tracing_appender::rolling::hourly(
+    let file_appender = tracing_appender::rolling::daily(
         files_path::directory::LOG.as_path(),
         files_path::file::LOG_PREFIX,
     );
@@ -44,27 +44,29 @@ pub fn init() {
     info!("日志已初始化");
 }
 
+use tracing::{event, Level};
+
 #[tauri::command]
 pub fn log_trace(content: String) {
-    trace!("[From frontend] {}", content);
+    event!(Level::TRACE, "[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_debug(content: String) {
-    debug!("[From frontend] {}", content);
+    event!(Level::DEBUG, "[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_info(content: String) {
-    info!("[From frontend] {}", content);
+    event!(Level::INFO, "[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_warn(content: String) {
-    warn!("[From frontend] {}", content);
+    event!(Level::WARN, "[From frontend] {}", content);
 }
 
 #[tauri::command]
 pub fn log_error(content: String) {
-    error!("[From frontend] {}", content);
+    event!(Level::ERROR, "[From frontend] {}", content);
 }
