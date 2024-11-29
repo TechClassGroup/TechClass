@@ -1,19 +1,19 @@
 /**
  * @fileOverview 时间显示插件
  */
-import {OfficialPlugin} from "../../types/type.ts";
+import {PluginObject} from "../../types/type.ts";
+import timeDisplayMain from "./timeDisplayMain.vue";
 
-const timeDisplay: OfficialPlugin = {
-    official: true,
-    name: "时钟",
-    id: "timeDisplay",
-    description: "显示当前的时间",
-    setting_page: null,
-    main_page: null,
-    independent_page: null,
-    init() {
-
+const timeDisplay: PluginObject = {
+    create: () => {
+        return {
+            name: "时钟",
+            id: "timeDisplay",
+            description: "显示当前时间",
+            setting_page: null,
+            main_page: timeDisplayMain,
+            official: true
+        }
     }
-
 }
 export default timeDisplay;

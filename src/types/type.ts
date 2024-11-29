@@ -1,5 +1,4 @@
 import {defineComponent} from "vue";
-import {Store} from "pinia";
 
 /**
  * 版本号
@@ -17,10 +16,9 @@ interface IPlugin {
     name: string;
     id: string;
     description: string;
-    setting_page: ReturnType<typeof defineComponent>;
-    main_page: ReturnType<typeof defineComponent>;
-    independent_page: ReturnType<typeof defineComponent>;
-    init: (store: Store) => void;
+    setting_page: ReturnType<typeof defineComponent> | null;
+    main_page: ReturnType<typeof defineComponent> | null;
+
 }
 
 /**
@@ -28,5 +26,19 @@ interface IPlugin {
  */
 export interface OfficialPlugin extends IPlugin {
     official: true;
+}
+
+/**
+ * 自定义插件
+ */
+export interface customPlugin extends IPlugin {
+    official: false;
+}
+
+/**
+ * 插件对象
+ */
+export interface PluginObject {
+    create: () => OfficialPlugin | customPlugin
 
 }
