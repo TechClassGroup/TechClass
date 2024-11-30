@@ -2,11 +2,12 @@
 
 import SideDock from "./SideDock.vue";
 import ComponentsBoard from "./ComponentsBoard.vue";
-import {useApplicationStore} from "../stores/useApplicationStore.ts";
+
 import SettingPage from "./SettingPage.vue";
+import {useApplicationStore} from "../stores/useApplicationStore.ts";
 
 
-const store = useApplicationStore()
+const store = useApplicationStore();
 
 </script>
 

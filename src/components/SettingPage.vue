@@ -3,14 +3,15 @@
 import logger from "../modules/logger.ts";
 import {useApplicationStore} from "../stores/useApplicationStore.ts";
 import About from "./setting/About.vue";
-import {Component} from "vue";
+import {defineComponent} from "vue";
+import TcButton from "../UI/TcButton.vue";
 
 
 const store = useApplicationStore();
 
 interface Route {
   name: string;
-  component: Component;
+  component: ReturnType<typeof defineComponent>;
 }
 
 const routes: { [key: string]: Route } = {
@@ -37,13 +38,15 @@ function changePage(target: string) {
   <div class="fixed  top-0 left-0 w-full h-full flex justify-center items-center">
 
     <div
-        class="relative z-50 w-[1200px] max-h-[90vh] h-[800px]  p-1 max-w-[70vw] bg-blue-200 rounded-xl flex overflow-hidden ">
+        class="relative w-[1200px] max-h-[90vh] h-[800px]  p-1 max-w-[70vw] bg-blue-200 rounded-xl flex overflow-hidden"
+        :class="store.setting.open ? 'z-50' : '-z-50'"
+    >
       <button class="absolute top-1 right-1 m-2" @click="store.reverseSettingOpen()">
         <img src="/src/assets/images/web-window-close.svg" alt="关闭窗口">
       </button>
       <template v-for="(value,key) in routes">
         <div class="basis-1/4 min-w-44 max-w-64 p-3 bg-blue-300 rounded overflow-y-auto">
-          <button @click="changePage(String(key))">{{ value.name}}</button>
+          <tc-button @click="changePage(String(key))">{{ value.name }}</tc-button>
         </div>
       </template>
 
