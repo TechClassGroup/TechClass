@@ -1,8 +1,8 @@
-import {defineStore} from "pinia";
-
 /**
  * @fileOverview 应用程序的一些状态
  */
+import {defineStore} from "pinia";
+
 export const useApplicationStore = defineStore('application', {
     state: () => {
         return {

@@ -2,6 +2,7 @@ import {RouteRecordRaw} from "vue-router";
 import About from "../components/setting/About.vue";
 import SettingPage from "../components/SettingPage.vue";
 
+
 /**
  * @fileOverview 设置页面的路由路径
  */

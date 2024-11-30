@@ -30,7 +30,8 @@ onMounted(() => {
 <template>
   <div class="fixed  top-0 left-0 w-full h-full flex justify-center items-center">
 
-    <div class="relative z-50 w-[1200px] max-h-[90vh] h-[800px]  p-1 max-w-[70vw] bg-blue-200 rounded-xl flex overflow-hidden ">
+    <div
+        class="relative z-50 w-[1200px] max-h-[90vh] h-[800px]  p-1 max-w-[70vw] bg-blue-200 rounded-xl flex overflow-hidden ">
       <button class="absolute top-1 right-1 m-2" @click="store.reverseSettingOpen()">
         <img src="/src/assets/images/web-window-close.svg" alt="关闭窗口">
       </button>
