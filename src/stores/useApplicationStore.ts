@@ -8,13 +8,13 @@ export const useApplicationStore = defineStore('application', {
         return {
             setting: {
                 open: false,
-                current_page: 'general/about'
+                current_page: 'about'
             }
         }
     },
     actions: {
         resetSettingCurrentPage() {
-            this.setting.current_page = 'general/about'
+            this.setting.current_page = 'about'
         },
         reverseSettingOpen() {
             this.setting.open = !this.setting.open

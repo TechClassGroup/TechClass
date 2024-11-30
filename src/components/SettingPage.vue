@@ -1,30 +1,36 @@
 <script setup lang="ts">
 
 import logger from "../modules/logger.ts";
-import {onMounted} from "vue";
-
-import {useRouter} from "vue-router";
 import {useApplicationStore} from "../stores/useApplicationStore.ts";
+import About from "./setting/About.vue";
+import {Component} from "vue";
 
-const router = useRouter()
-const basic_url = "/setting";
+
 const store = useApplicationStore();
+
+interface Route {
+  name: string;
+  component: Component;
+}
+
+const routes: { [key: string]: Route } = {
+  about: {
+    name: "关于",
+    component: About,
+  }
+}
 
 function changePage(target: string) {
   logger.debug(`设置页面: 修改当前页面到 ${target}`);
-  const target_url = `${basic_url}/${target}`;
-  if (router.hasRoute(target_url)) {
-    store.setting.current_page = target_url;
-    router.push(target_url);
-    return
+  if (!routes[target]) {
+    logger.warn(`设置页面: 未找到 ${target} 页面`);
+    store.resetSettingCurrentPage();
+  } else {
+    store.setting.current_page = target;
   }
-  store.resetSettingCurrentPage();
-  router.push(`${basic_url}/${store.setting.current_page}`);
 }
 
-onMounted(() => {
-  changePage(store.setting.current_page)
-})
+
 </script>
 
 <template>
@@ -35,11 +41,14 @@ onMounted(() => {
       <button class="absolute top-1 right-1 m-2" @click="store.reverseSettingOpen()">
         <img src="/src/assets/images/web-window-close.svg" alt="关闭窗口">
       </button>
-      <div class="basis-1/4 min-w-44 max-w-64 p-3 bg-blue-300 rounded overflow-y-auto">
-        <button @click="changePage('general/about')">关于</button>
-      </div>
+      <template v-for="(value,key) in routes">
+        <div class="basis-1/4 min-w-44 max-w-64 p-3 bg-blue-300 rounded overflow-y-auto">
+          <button @click="changePage(String(key))">{{ value.name}}</button>
+        </div>
+      </template>
+
       <div class="bg-blue-500 flex-grow p-3 rounded ml-1">
-        <router-view></router-view>
+        <component :is="routes[store.setting.current_page].component" />
       </div>
     </div>
   </div>

@@ -2,25 +2,18 @@
 
 import SideDock from "./SideDock.vue";
 import ComponentsBoard from "./ComponentsBoard.vue";
-import {useRouter} from "vue-router";
 import {useApplicationStore} from "../stores/useApplicationStore.ts";
-import {watch} from "vue";
+import SettingPage from "./SettingPage.vue";
 
-const router = useRouter();
+
 const store = useApplicationStore()
-watch(() => store.setting.open, (new_val) => {
-  if (new_val) {
-    router.push("/setting")
-  } else {
-    router.push("/")
-  }
-});
+
 </script>
 
 <template>
 
   <div class="fixed">
-    <router-view></router-view>
+    <setting-page v-if="store.setting.open"></setting-page>
   </div>
 
 
