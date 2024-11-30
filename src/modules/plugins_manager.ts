@@ -23,7 +23,6 @@ export const computedPluginsComponent:
                 store: plugin.store
             })
         }
-        logger.info(components)
         return components;
     })
 
@@ -34,7 +33,7 @@ export const computedPluginsComponent:
 export function loadNewPlugin(plugin: IPlugin) {
     logger.trace(`加载插件 ${plugin.name} id: ${plugin.id}`);
     if (loadedPlugins.value[plugin.id]) {
-        logger.warn(`插件 ${plugin.name} id: ${plugin.id} 已经加载过了`);
+        logger.warn(`插件 ${plugin.name} id: ${plugin.id} 已加载`);
         return;
     }
     const store = defineStore(plugin.id, {})();

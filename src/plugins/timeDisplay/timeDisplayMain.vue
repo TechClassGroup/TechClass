@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+display main!!!
 </template>
 
 <style scoped>
