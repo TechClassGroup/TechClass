@@ -36,6 +36,6 @@ export interface InstancePlugin {
  * 仅暴露插件的组件以及其store
  */
 export interface PluginComponentStore {
-    component: PluginComponent;
+    component:  PluginComponent;
     store: Store;
 }
