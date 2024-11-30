@@ -9,7 +9,7 @@ import timeDisplay from "../plugins/timeDisplay/timeDisplay.ts";
   <div class="bg-lime-300 ">
     <button @click="loadNewPlugin(timeDisplay)">load it!</button>
     <template v-for="item in computedPluginsComponent">
-      <component :is="item.component.main_page"></component>
+      <component :is="item.component.main_page" :store="item.store"></component>
     </template>
   </div>
 </template>

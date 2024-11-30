@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
+import {Store} from "pinia";
 
+const props = defineProps<{
+  store: Store;
+}>();
+console.log(props);
 const currentTime = ref(new Date().toLocaleTimeString());
 let timer: number | undefined;
 
