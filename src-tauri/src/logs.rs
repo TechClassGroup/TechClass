@@ -1,6 +1,6 @@
 //! 管理日志
 
-use log::info;
+use log::{trace, debug, info, warn, error};
 use tracing_subscriber::util::SubscriberInitExt;
 
 use crate::contestants::files_path;
@@ -44,29 +44,34 @@ pub fn init() {
     info!("日志已初始化");
 }
 
-use tracing::{event, Level};
+
 
 #[tauri::command]
+/// 从前端以trace的等级记录日志
 pub fn log_trace(content: String) {
-    event!(Level::TRACE, "[From frontend] {}", content);
+    trace!("[From frontend] {}", content);
 }
 
 #[tauri::command]
+/// 从前端以debug的等级记录日志
 pub fn log_debug(content: String) {
-    event!(Level::DEBUG, "[From frontend] {}", content);
+    debug!("[From frontend] {}", content);
 }
 
 #[tauri::command]
+/// 从前端以info的等级记录日志
 pub fn log_info(content: String) {
-    event!(Level::INFO, "[From frontend] {}", content);
+    info!("[From frontend] {}", content);
 }
 
 #[tauri::command]
+/// 从前端以warn的等级记录日志
 pub fn log_warn(content: String) {
-    event!(Level::WARN, "[From frontend] {}", content);
+    warn!("[From frontend] {}", content);
 }
 
 #[tauri::command]
+/// 从前端以error的等级记录日志
 pub fn log_error(content: String) {
-    event!(Level::ERROR, "[From frontend] {}", content);
+    error!("[From frontend] {}", content);
 }

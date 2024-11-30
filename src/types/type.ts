@@ -40,5 +40,6 @@ export interface customPlugin extends IPlugin {
  */
 export interface PluginObject {
     create: () => OfficialPlugin | customPlugin
+    init: () => void
 
 }

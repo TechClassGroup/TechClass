@@ -14,6 +14,9 @@ const timeDisplay: PluginObject = {
             main_page: timeDisplayMain,
             official: true
         }
+    },
+    init: () => {
+
     }
 }
 export default timeDisplay;
