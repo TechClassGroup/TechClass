@@ -1,24 +1,31 @@
 //! 管理日志
 
 use flexi_logger::{detailed_format, Cleanup, Criterion, Duplicate, FileSpec, Naming};
+use lazy_static::lazy_static;
 use log::{debug, error, info, trace, warn};
 
-use crate::contestants::logging;
+use crate::contestants::{app_info, PATH_BASIC};
 
+const LOG_SIZE: u64 = 10 * 1024 * 1024;
+const LOG_PREFIX: &str = app_info::NAME;
+const LOG_SUFFIX: &str = "log";
+lazy_static! {
+    pub static ref PATH_LOG: std::path::PathBuf = PATH_BASIC.join("logs");
+}
 /// 初始化日志系统
 pub fn init() {
     flexi_logger::Logger::try_with_str("trace")
         .unwrap()
         .log_to_file(
             FileSpec::default()
-                .basename(logging::LOG_PREFIX)
-                .directory(logging::PATH_LOG.as_path())
-                .suffix(logging::LOG_SUFFIX),
+                .basename(LOG_PREFIX)
+                .directory(PATH_LOG.as_path())
+                .suffix(LOG_SUFFIX),
         )
         .rotate(
-            Criterion::Size(logging::MAX_SIZE),
+            Criterion::Size(LOG_SIZE),
             Naming::Timestamps,
-            Cleanup::KeepLogFiles(logging::ROTATE_COUNT),
+            Cleanup::KeepLogFiles(10),
         )
         .write_mode(flexi_logger::WriteMode::BufferAndFlush)
         .duplicate_to_stdout(Duplicate::All)

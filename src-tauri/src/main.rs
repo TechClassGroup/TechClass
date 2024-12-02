@@ -4,6 +4,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use techclass_lib::logs;
+
 fn main() {
     logs::init();
 
