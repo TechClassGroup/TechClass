@@ -11,8 +11,15 @@ export default defineConfig({
             index: './src/index.ts'
         }
     },
-    server:{
-        port: 8080,
+    server: {
+        port: 1420,
     },
+    tools: {
+        rspack: {
+            watchOptions: {
+                ignored: ['**/node_modules', '**/src-tauri/**', '**/.git/**']
+            }
+        }
+    }
 
 });
