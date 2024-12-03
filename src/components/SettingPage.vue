@@ -42,7 +42,7 @@ function changePage(target: string) {
         :class="store.setting.open ? 'z-50' : '-z-50'"
     >
       <button class="absolute top-1 right-1 m-2" @click="store.reverseSettingOpen()">
-        <img src="/src/assets/images/web-window-close.svg" alt="关闭窗口">
+        <img src="../assets/images/web-window-close.svg" alt="关闭窗口">
       </button>
       <template v-for="(value,key) in routes">
         <div class="basis-1/4 min-w-44 max-w-64 p-3 bg-blue-300 rounded overflow-y-auto">
