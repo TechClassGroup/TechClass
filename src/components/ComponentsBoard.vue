@@ -9,6 +9,7 @@ import timeDisplay from "../plugins/timeDisplay/timeDisplay.ts";
   <div class="bg-lime-300 ">
     <button @click="loadNewPlugin(timeDisplay)">load it!</button>
     <template v-for="item in computedPluginsComponent">
+      <vue-draggable-resizable ></vue-draggable-resizable>
       <component :is="item.component.main_page" :store="item.store"></component>
     </template>
   </div>

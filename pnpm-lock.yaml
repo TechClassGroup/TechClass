@@ -26,6 +26,9 @@ importers:
       vue:
         specifier: ^3.3.4
         version: 3.5.13(typescript@5.6.3)
+      vue-draggable-resizable:
+        specifier: ^3.0.0
+        version: 3.0.0(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@tauri-apps/cli':
         specifier: ^2
@@ -1025,6 +1028,11 @@ packages:
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
+
+  vue-draggable-resizable@3.0.0:
+    resolution: {integrity: sha512-kABSggcXPoDB8dOTVE09ZkccxiMdNDUaLl7STTeghsFE3o+mk653iumrkmjKLfIBA/w5ZXWJmarBqoqsmWLzEg==, tarball: https://registry.npmmirror.com/vue-draggable-resizable/-/vue-draggable-resizable-3.0.0.tgz}
+    peerDependencies:
+      vue: ^3.2.25
 
   vue-loader@17.4.2:
     resolution: {integrity: sha512-yTKOA4R/VN4jqjw4y5HrynFL8AK0Z3/Jt7eOJXEitsm0GMRHDBjCfCiuTiLP7OESvsZYo2pATCWhDqxC5ZrM6w==, tarball: https://registry.npmmirror.com/vue-loader/-/vue-loader-17.4.2.tgz}
@@ -2029,6 +2037,10 @@ snapshots:
   vscode-uri@3.0.8: {}
 
   vue-demi@0.14.10(vue@3.5.13(typescript@5.6.3)):
+    dependencies:
+      vue: 3.5.13(typescript@5.6.3)
+
+  vue-draggable-resizable@3.0.0(vue@3.5.13(typescript@5.6.3)):
     dependencies:
       vue: 3.5.13(typescript@5.6.3)
 

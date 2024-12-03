@@ -17,7 +17,8 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "^2",
     "pinia": "^2.2.6",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vue-draggable-resizable": "^3.0.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
