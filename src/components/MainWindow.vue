@@ -13,7 +13,7 @@ const store = useApplicationStore();
 
 <template>
 
-  <div class="fixed">
+  <div class="fixed z-50">
     <setting-page v-if="store.setting.open"></setting-page>
   </div>
 
