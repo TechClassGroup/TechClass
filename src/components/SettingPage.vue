@@ -5,6 +5,7 @@ import {useApplicationStore} from "../stores/useApplicationStore.ts";
 import About from "./setting/About.vue";
 import {defineComponent} from "vue";
 import TcButton from "../UI/TcButton.vue";
+import PluginSet from "@components/setting/PluginSet.vue";
 
 
 const store = useApplicationStore();
@@ -18,6 +19,10 @@ const routes: { [key: string]: Route } = {
   about: {
     name: "关于",
     component: About,
+  },
+  plugin: {
+    name: "插件配置",
+    component: PluginSet,
   }
 }
 
@@ -35,7 +40,7 @@ function changePage(target: string) {
 </script>
 
 <template>
-  <div class="fixed  top-0 left-0 w-full h-full flex justify-center items-center">
+  <div class="fixed  top-0 left-0 w-full h-full flex justify-center items-center ">
 
     <div
         class="relative w-[1200px] max-h-[90vh] h-[800px]  p-1 max-w-[70vw] bg-blue-200 rounded-xl flex overflow-hidden"
