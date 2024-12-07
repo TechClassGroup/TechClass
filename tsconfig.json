@@ -23,6 +23,7 @@
     "allowJs": true,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true,
+
     /* aliases */
     "paths": {
       "@/*": [

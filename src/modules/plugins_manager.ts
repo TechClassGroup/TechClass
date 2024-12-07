@@ -20,7 +20,8 @@ export const computedPluginsComponent:
         for (const plugin of Object.values(loadedPlugins.value)) {
             components.push({
                 component: plugin.pluginObject.component,
-                store: plugin.store
+                store: plugin.store,
+                id: plugin.pluginObject.id
             })
         }
         return components;

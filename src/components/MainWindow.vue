@@ -20,7 +20,7 @@ const store = useApplicationStore();
 
   <div class="w-full h-full flex flex-row">
     <side-dock></side-dock>
-    <components-board class="flex-grow"></components-board>
+    <components-board class="flex-grow overflow-hidden"></components-board>
   </div>
 
 
