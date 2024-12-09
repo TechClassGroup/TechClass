@@ -27,7 +27,7 @@ const routes: { [key: string]: Route } = {
 }
 
 function changePage(target: string) {
-  logger.debug(`设置页面: 修改当前页面到 ${target}`);
+  logger.trace(`设置页面: 修改当前页面到 ${target}`);
   if (!routes[target]) {
     logger.warn(`设置页面: 未找到 ${target} 页面`);
     store.resetSettingCurrentPage();
