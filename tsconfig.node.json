@@ -6,5 +6,7 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["rsbuild.config.ts"]
+  "include": [
+    "rsbuild.config.ts"
+  ]
 }

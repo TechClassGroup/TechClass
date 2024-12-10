@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
 <template>
-Tech Class developing...
+  Tech Class developing...
 </template>
 
 <style scoped>

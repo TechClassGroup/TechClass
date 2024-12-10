@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
 <template>
-Till I reach your arms...
+  Till I reach your arms...
   A madder there for you
 
 </template>

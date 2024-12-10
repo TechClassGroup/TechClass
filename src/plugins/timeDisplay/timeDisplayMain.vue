@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {onMounted, onUnmounted, ref} from 'vue';
 import {Store} from "pinia";
 

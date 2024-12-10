@@ -1,8 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 
 import {computedPluginsComponent} from "../modules/plugins_manager.ts";
-
 </script>
 
 <template>

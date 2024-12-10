@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useApplicationStore} from "@/stores/useApplicationStore.ts";
 
 const store = useApplicationStore();
@@ -8,7 +8,7 @@ const store = useApplicationStore();
   <div class="w-[40px] bg-blue-400 h-dvh flex flex-col p-1">
     <div></div>
     <button class="p-1 mt-auto" @click="store.reverseSettingOpen()">
-      <img src="@assets/images/settings.svg" alt="设置页面">
+      <img alt="设置页面" src="@assets/images/settings.svg">
     </button>
   </div>
 </template>

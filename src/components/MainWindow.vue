@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import SideDock from "./SideDock.vue";
 import ComponentsBoard from "./ComponentsBoard.vue";

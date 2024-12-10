@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import logger from "../modules/logger.ts";
 import {useApplicationStore} from "../stores/useApplicationStore.ts";
@@ -40,8 +40,8 @@ function changePage(target: string) {
 </script>
 
 <template>
-  <div class="fixed  top-0 left-0 w-full h-full flex justify-center items-center "
-       :class="store.setting.open ? 'z-50' : '-z-50'">
+  <div :class="store.setting.open ? 'z-50' : '-z-50'"
+       class="fixed  top-0 left-0 w-full h-full flex justify-center items-center ">
 
     <div
         class="relative w-[1200px] max-h-[90vh] h-[800px]
@@ -50,7 +50,7 @@ function changePage(target: string) {
 
     >
       <button class="absolute top-1 right-1 m-2" @click="store.reverseSettingOpen()">
-        <img src="@assets/images/web-window-close.svg" alt="关闭窗口">
+        <img alt="关闭窗口" src="@assets/images/web-window-close.svg">
       </button>
 
 
