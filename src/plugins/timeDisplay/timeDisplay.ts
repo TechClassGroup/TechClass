@@ -3,7 +3,7 @@
  */
 
 import timeDisplayMain from "./timeDisplayMain.vue";
-import {IPlugin} from "../../types/plugins.d.ts";
+import {IPlugin} from "@/types/plugins";
 
 const timeDisplay: IPlugin = {
     name: "时钟",

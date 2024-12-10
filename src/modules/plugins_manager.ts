@@ -6,7 +6,7 @@
 import logger from "./logger.ts";
 import {defineStore} from "pinia";
 import {computed, ComputedRef, Ref, ref} from "vue";
-import {InstancePlugin, IPlugin, PluginComponentStore} from "../types/plugins.d.ts";
+import {InstancePlugin, IPlugin, PluginComponentStore} from "@/types/plugins";
 
 
 const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
