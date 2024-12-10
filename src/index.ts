@@ -8,8 +8,11 @@ import "vue-draggable-resizable/style.css"
 import VueDraggableResizable from 'vue-draggable-resizable'
 import {loadNewPlugin} from "@/modules/plugins_manager.ts";
 import timeDisplay from "@/plugins/timeDisplay/timeDisplay.ts";
+import {StoragePiniaPlugin} from "@/stores/piniaPlugins.ts";
 
 const pinia = createPinia();
+pinia.use(StoragePiniaPlugin)
+
 const app = createApp(App)
 
 app.use(pinia);
