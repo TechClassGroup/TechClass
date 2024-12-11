@@ -4,7 +4,7 @@
 import {defineStore, StoreDefinition} from "pinia";
 import logger from "@/modules/logger.ts";
 
-export const useApplicationStore: StoreDefinition = defineStore("application", {
+export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: () => {
         return {
             setting: {
@@ -26,7 +26,8 @@ export const useApplicationStore: StoreDefinition = defineStore("application", {
             this.setting.open = !this.setting.open;
         },
     },
-    storage: {
+    config_storage: {
         enabled: true,
+
     },
 });

@@ -4,18 +4,20 @@
  */
 import {PiniaPluginContext} from "pinia";
 
-export interface StorageOptions {
-    storage?: {
+export interface ConfigStorageOptions {
+    config_storage?: {
         enabled: boolean;
+        key?: string | string[]; // 要监听的key
     };
 }
 
-export function StoragePiniaPlugin({
-                                       options,
-                                   }: PiniaPluginContext & { options: StorageOptions }) {
-    const config = options.storage;
-    if (!config) {
+export function ConfigStoragePiniaPlugin({
+                                             options,
+                                         }: PiniaPluginContext & { options: ConfigStorageOptions }) {
+    const config = options.config_storage
+    if (!config || !config.enabled || !config.key) {
         return;
     }
+
 
 }
