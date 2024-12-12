@@ -1,5 +1,7 @@
-pub mod logs;
 pub mod contestants;
+pub mod error;
+pub mod logs;
+pub mod storage;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -9,8 +11,10 @@ pub fn run() {
             logs::log_debug,
             logs::log_info,
             logs::log_warn,
-            logs::log_error
-            ])
+            logs::log_error,
+            storage::storage_content,
+            storage::load_content
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -12,6 +12,7 @@ const LOG_SUFFIX: &str = "log";
 lazy_static! {
     pub static ref PATH_LOG: std::path::PathBuf = PATH_BASIC.join("logs");
 }
+
 /// 初始化日志系统
 pub fn init() {
     flexi_logger::Logger::try_with_str("trace")

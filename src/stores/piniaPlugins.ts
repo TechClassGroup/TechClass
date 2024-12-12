@@ -11,6 +11,11 @@ export interface ConfigStorageOptions {
     };
 }
 
+type ConfigErrorKind = {
+    kind: IPCErrorKind.Io | IPCErrorKind.Json;
+    message: string;
+}
+
 export function ConfigStoragePiniaPlugin({
                                              options,
                                          }: PiniaPluginContext & { options: ConfigStorageOptions }) {
@@ -18,6 +23,7 @@ export function ConfigStoragePiniaPlugin({
     if (!config || !config.enabled || !config.key) {
         return;
     }
+
 
 
 }
