@@ -10,6 +10,7 @@ import {loadNewPlugin} from "@/modules/plugins_manager.ts";
 import timeDisplay from "@/plugins/timeDisplay/timeDisplay.ts";
 import {ConfigStoragePiniaPlugin} from "@/stores/piniaPlugins.ts";
 
+logger.info('\n\n🚀🚀🚀 应用启动中... 🚀🚀🚀\n\n');
 const pinia = createPinia();
 pinia.use(ConfigStoragePiniaPlugin)
 
@@ -18,9 +19,6 @@ const app = createApp(App)
 app.use(pinia);
 app.mount('#app')
 app.component('vue-draggable-resizable', VueDraggableResizable)
-logger.info('===============================');
-logger.info('')
-logger.info('')
 
 
 logger.info("前端启动成功");

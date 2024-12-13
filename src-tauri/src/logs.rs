@@ -35,33 +35,36 @@ pub fn init() {
         .unwrap();
     info!("日志已初始化");
 }
-
+fn process_content(content: String) -> String {
+    let parsed_content = serde_json::from_str::<String>(&content).unwrap_or(content);
+    format!("[前端] {}", parsed_content)
+}
 #[tauri::command]
 /// 从前端以trace的等级记录日志
 pub fn log_trace(content: String) {
-    trace!("[From frontend] {}", content);
+    trace!("{}", process_content(content));
 }
 
 #[tauri::command]
 /// 从前端以debug的等级记录日志
 pub fn log_debug(content: String) {
-    debug!("[From frontend] {}", content);
+    debug!("{}", process_content(content));
 }
 
 #[tauri::command]
 /// 从前端以info的等级记录日志
 pub fn log_info(content: String) {
-    info!("[From frontend] {}", content);
+    info!("{}", process_content(content));
 }
 
 #[tauri::command]
 /// 从前端以warn的等级记录日志
 pub fn log_warn(content: String) {
-    warn!("[From frontend] {}", content);
+    warn!("{}", process_content(content));
 }
 
 #[tauri::command]
 /// 从前端以error的等级记录日志
 pub fn log_error(content: String) {
-    error!("[From frontend] {}", content);
+    error!("{}", process_content(content));
 }
