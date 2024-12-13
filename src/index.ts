@@ -1,6 +1,6 @@
 import {createApp} from "vue";
 import App from "./App.vue";
-import "./assets/styles/main.css"
+import "@assets/styles/main.css"
 import logger from "./modules/logger.ts";
 import {createPinia} from "pinia";
 import "vue-draggable-resizable/style.css"
