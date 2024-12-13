@@ -24,6 +24,11 @@ type ConfigErrorKind = {
     kind: IPCErrorKind.Io | IPCErrorKind.Json;
 };
 
+/**
+ * 配置存储插件 用于将store的状态存储到Tauri后端，于Config文件夹中，且会自动加载
+ * - 具有syncNow方法，可以立即同步
+ * - 具有on_storage_load_complete方法，当存储加载完成时调用
+ */
 export function ConfigStoragePiniaPlugin({
                                              options,
                                              store,
