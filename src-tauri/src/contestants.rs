@@ -1,7 +1,9 @@
 //! @fileOverview 一些常量
 
 use lazy_static::lazy_static;
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
+
+use crate::storage::PATH_CONFIG;
 
 /// 获取当前exe的位置
 fn exe_directory() -> std::path::PathBuf {
@@ -11,6 +13,18 @@ fn exe_directory() -> std::path::PathBuf {
         .expect("Failed to get exe's parent directory")
         .to_path_buf()
 }
+
+pub fn init_path() {
+    (|| -> Result<(), Box<dyn std::error::Error>> {
+        fs::create_dir_all(PATH_BASIC.clone())?;
+        fs::create_dir_all(PATH_CONFIG.clone())?;
+        Ok(())
+    })()
+    .unwrap_or_else(|e| {
+        log::error!("初始化目录时出错 {}", e);
+    })
+}
+
 
 lazy_static! {
     /// 程序的基本路径

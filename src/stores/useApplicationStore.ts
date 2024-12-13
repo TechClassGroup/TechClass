@@ -11,7 +11,9 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
                 open: false,
                 current_page: "about",
             },
-            storage: {},
+            storage: {
+                open: false,
+            },
             simple_num: 0,
         };
     },
@@ -24,10 +26,11 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
                 `设置界面当前状态: ${this.setting.open} 将切换到: ${!this.setting.open}`
             );
             this.setting.open = !this.setting.open;
+            this.storage.open = this.setting.open
         },
     },
     config_storage: {
         enabled: true,
-
+        key: 'storage',
     },
 });
