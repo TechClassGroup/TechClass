@@ -32,5 +32,8 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     config_storage: {
         enabled: true,
         key: 'storage',
+        throttle_ms: 1000,
+
     },
+
 });

@@ -6,7 +6,7 @@ use std::path::PathBuf;
 
 use crate::{contestants::PATH_BASIC, error::IpcError};
 use lazy_static::lazy_static;
-use log::warn;
+use log::{trace, warn};
 use serde_json::Value;
 
 lazy_static! {
@@ -31,7 +31,8 @@ pub async fn storage_content(id: String, content: Value) -> Result<(), IpcError>
             return Err(IpcError::Json(e));
         }
     };
-    let mut file = match OpenOptions::new().write(true).create(true).open(&path) {
+
+    let mut file = match OpenOptions::new().write(true).create(true).truncate(true).open(&path) {
         Ok(file) => file,
         Err(e) => {
             warn!("打开文件时出错: {}", e);
@@ -51,7 +52,15 @@ pub async fn storage_content(id: String, content: Value) -> Result<(), IpcError>
 /// 把存储着[id]的内容读取出来
 pub fn load_content(id: String) -> Result<Value, IpcError> {
     let path = get_path(&id);
-    let mut file = match OpenOptions::new().read(true).create(true).open(&path) {
+    if !path.exists() {
+        if let Err(e) = OpenOptions::new().write(true).create(true).open(&path) {
+            warn!("创建文件时出错: {}", e);
+            return Err(IpcError::Io(e));
+        }
+        log::info!("{id}所属的文件不存在，已创建");
+        return Ok(Value::Null);
+    }
+    let mut file = match OpenOptions::new().read(true).open(&path) {
         Ok(file) => file,
         Err(e) => {
             warn!("打开文件时出错: {}", e);
@@ -63,7 +72,7 @@ pub fn load_content(id: String) -> Result<Value, IpcError> {
         warn!("读取文件内容时出错: {}", e);
         return Err(IpcError::Io(e));
     }
-
+    trace!("{content}");
     let json_content: Value = match serde_json::from_str(&content) {
         Ok(content) => content,
         Err(e) => {

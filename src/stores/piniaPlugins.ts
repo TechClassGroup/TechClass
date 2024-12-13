@@ -16,6 +16,8 @@ export interface ConfigStorageOptions {
         throttle_ms?: number; // 延迟时间 以毫秒为单位
         max_retries?: number; // 最大重试次数
     };
+    on_storage_load_complete?: () => void;
+    syncNow?: () => void;
 }
 
 type ConfigErrorKind = {
@@ -34,18 +36,31 @@ export function ConfigStoragePiniaPlugin({
     const throttle_time = config.throttle_ms || 300;
     const id = store.$id;
     const maxRetries = config.max_retries || 3;
+
     // 加载状态
     logger.info(`[Config Storage Pinia Plugin] 加载: ${id} key: ${key}`);
-    invoke('load_storage', {id}).then((content) => {
-        if (content && content[key]) {
-            store[key] = content[key];
-            logger.info(`[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`);
-        } else {
-            logger.warn(`[Config Storage Pinia Plugin] 加载失败 属性不存在: ${id} key: ${key}`);
-        }
-    }).catch((err: ConfigErrorKind) => {
-        logger.error(`[Config Storage Pinia Plugin] 加载失败: ${id} key: ${key}`, err);
-    })
+    invoke("load_content", {id})
+        .then((content) => {
+            if (content && content[key]) {
+                store[key] = content[key];
+                logger.info(
+                    `[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`
+                );
+                if (typeof options.on_storage_load_complete === "function") {
+                    options.on_storage_load_complete();
+                }
+            } else {
+                logger.warn(
+                    `[Config Storage Pinia Plugin] 加载失败 属性不存在: ${id} key: ${key}`
+                );
+            }
+        })
+        .catch((err: ConfigErrorKind) => {
+            logger.error(
+                `[Config Storage Pinia Plugin] 加载失败: ${id} key: ${key}`,
+                err
+            );
+        });
 
     // 调用Tauri后端本地化存储，如果失败则重试。达到重试次数后，不再递归。等到下一次状态变化后再尝试
     const storage_func = throttle((content: any) => {
@@ -55,7 +70,7 @@ export function ConfigStoragePiniaPlugin({
             invoke("storage_content", {
                 id,
                 content: {
-                    [id]: content,
+                    [key]: content,
                 },
             })
                 .then(() => {
@@ -67,7 +82,9 @@ export function ConfigStoragePiniaPlugin({
                     if (retryCount <= maxRetries) {
                         attemptStorage();
                     } else {
-                        logger.error(`[Config Storage Pinia Plugin] 达到最大重试次数: ${id}`);
+                        logger.error(
+                            `[Config Storage Pinia Plugin] 达到最大重试次数: ${id}`
+                        );
                     }
                 });
         };
@@ -82,9 +99,16 @@ export function ConfigStoragePiniaPlugin({
         },
         {deep: true}
     );
-    store.$dispose = () => {  // 别忘了在store销毁时停止监听
+    store.$dispose = () => {
+        // 别忘了在store销毁时停止监听
         stopWatch();
         logger.info(`[Config Storage Pinia Plugin] 停止监听: ${id} key: ${key}`);
-    }
+    };
+
+    // 注册两个方法 允许立即同步和加载回调
+    store.syncNow = () => {
+        storage_func.flush();
+    };
+
     logger.info(`[Config Storage Pinia Plugin] 监听: ${id} key: ${key} 成功`);
 }
