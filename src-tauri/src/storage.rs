@@ -6,7 +6,7 @@ use std::path::PathBuf;
 
 use crate::{contestants::PATH_BASIC, error::IpcError};
 use lazy_static::lazy_static;
-use log::{warn};
+use log::warn;
 use serde_json::Value;
 
 lazy_static! {
