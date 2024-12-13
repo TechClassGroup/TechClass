@@ -27,15 +27,26 @@ export function ConfigStoragePiniaPlugin({
                                              store,
                                          }: PiniaPluginContext & { options: ConfigStorageOptions }) {
     const config = options.config_storage;
-    if (!config || !config.enabled || !config.key) {
+    if (!config || !config.enabled || !config.key || !store[config.key]) {
         return;
     }
     const key = config.key;
-
     const throttle_time = config.throttle_ms || 300;
     const id = store.$id;
-
     const maxRetries = config.max_retries || 3;
+    // 加载状态
+    logger.info(`[Config Storage Pinia Plugin] 加载: ${id} key: ${key}`);
+    invoke('load_storage', {id}).then((content) => {
+        if (content && content[key]) {
+            store[key] = content[key];
+            logger.info(`[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`);
+        } else {
+            logger.warn(`[Config Storage Pinia Plugin] 加载失败 属性不存在: ${id} key: ${key}`);
+        }
+    }).catch((err: ConfigErrorKind) => {
+        logger.error(`[Config Storage Pinia Plugin] 加载失败: ${id} key: ${key}`, err);
+    })
+
     // 调用Tauri后端本地化存储，如果失败则重试。达到重试次数后，不再递归。等到下一次状态变化后再尝试
     const storage_func = throttle((content: any) => {
         let retryCount = 0;
@@ -63,13 +74,17 @@ export function ConfigStoragePiniaPlugin({
 
         attemptStorage();
     }, throttle_time);
-
-    watch(
+    // 对其进行监听
+    const stopWatch = watch(
         () => store[key],
         (newContent) => {
             storage_func(newContent);
         },
         {deep: true}
     );
+    store.$dispose = () => {  // 别忘了在store销毁时停止监听
+        stopWatch();
+        logger.info(`[Config Storage Pinia Plugin] 停止监听: ${id} key: ${key}`);
+    }
     logger.info(`[Config Storage Pinia Plugin] 监听: ${id} key: ${key} 成功`);
 }
