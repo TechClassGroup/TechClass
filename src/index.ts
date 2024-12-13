@@ -6,8 +6,6 @@ import {createPinia} from "pinia";
 import "vue-draggable-resizable/style.css"
 // @ts-ignore
 import VueDraggableResizable from 'vue-draggable-resizable'
-import {loadNewPlugin} from "@/modules/plugins_manager.ts";
-import timeDisplay from "@/plugins/timeDisplay/timeDisplay.ts";
 import {ConfigStoragePiniaPlugin} from "@/stores/piniaPlugins.ts";
 
 logger.info('\n\n🚀🚀🚀 应用启动中... 🚀🚀🚀\n\n');
@@ -27,4 +25,3 @@ logger.info("前端启动成功");
 window.addEventListener('popstate', () => {
     history.pushState(null, '', location.href);
 });
-loadNewPlugin(timeDisplay);

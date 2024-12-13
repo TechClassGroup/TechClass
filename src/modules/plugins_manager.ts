@@ -7,6 +7,7 @@ import logger from "./logger.ts";
 import {defineStore} from "pinia";
 import {computed, ComputedRef, Ref, ref} from "vue";
 import {InstancePlugin, IPlugin, PluginComponentStore} from "@/types/plugins";
+import {useApplicationStore} from "@/stores/useApplicationStore.ts";
 
 
 const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
@@ -45,4 +46,27 @@ export function loadNewPlugin(plugin: IPlugin) {
     }
     logger.info(`插件 ${plugin.name} id: ${plugin.id} 加载成功`);
 
+}
+
+/**
+ * 卸载插件
+ * @param id 插件的ID
+ */
+export function unloadPlugin(id: string) {
+    if (!loadedPlugins.value[id]) {
+        logger.warn(`插件 id: ${id} 不存在`);
+        return;
+    }
+    logger.trace(`卸载插件 id: ${id}`);
+    delete loadedPlugins.value[id];
+    logger.info(`插件 id: ${id} 卸载成功`);
+}
+
+/**
+ * 初始化插件
+ */
+export function init_plugins() {
+    loadedPlugins.value = {}; // 重置插件列表
+    const store = useApplicationStore()
+    console.log(store);
 }

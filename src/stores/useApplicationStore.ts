@@ -3,6 +3,7 @@
  */
 import {defineStore, StoreDefinition} from "pinia";
 import logger from "@/modules/logger.ts";
+import {init_plugins} from "@/modules/plugins_manager.ts";
 
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: () => {
@@ -12,9 +13,12 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
                 current_page: "about",
             },
             storage: {
-                open: false,
+                plugins_list: {
+                    official: [],
+                    custom: [],
+                }
             },
-            simple_num: 0,
+
         };
     },
     actions: {
@@ -26,14 +30,15 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
                 `设置界面当前状态: ${this.setting.open} 将切换到: ${!this.setting.open}`
             );
             this.setting.open = !this.setting.open;
-            this.storage.open = this.setting.open
         },
     },
     config_storage: {
         enabled: true,
         key: 'storage',
         throttle_ms: 1000,
-
     },
+    on_storage_load_complete() {
+        init_plugins();
+    }
 
 });
