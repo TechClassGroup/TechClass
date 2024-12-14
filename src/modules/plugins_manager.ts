@@ -8,6 +8,7 @@ import {defineStore} from "pinia";
 import {computed, ComputedRef, Ref, ref} from "vue";
 import {InstancePlugin, IPlugin, PluginComponentStore} from "@/types/plugins";
 import {useApplicationStore} from "@/stores/useApplicationStore.ts";
+import {official_plugins} from "@/plugins/official_plugins.ts";
 
 
 const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
@@ -67,6 +68,17 @@ export function unloadPlugin(id: string) {
  */
 export function init_plugins() {
     loadedPlugins.value = {}; // 重置插件列表
-    const store = useApplicationStore()
-    console.log(store);
+    const store = useApplicationStore();
+    const enable_official_plugins = store.storage.plugins_list.official;
+    const enable_custom_plugins = store.storage.plugins_list.custom;
+    for (const plugin of enable_official_plugins) {
+        const pluginObject = official_plugins.find((p) => p.id === plugin);
+        if (pluginObject)
+            loadNewPlugin(pluginObject);
+        else {
+            logger.warn(`官方插件 ${plugin} 不存在 加载失败`);
+        }
+    }
+
+
 }

@@ -5,6 +5,7 @@ import {defineStore, StoreDefinition} from "pinia";
 import logger from "@/modules/logger.ts";
 import {init_plugins} from "@/modules/plugins_manager.ts";
 
+
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: () => {
         return {
@@ -14,8 +15,8 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
             },
             storage: {
                 plugins_list: {
-                    official: [],
-                    custom: [],
+                    official: [] as string[],
+                    custom: [] as string[],
                 }
             },
 
