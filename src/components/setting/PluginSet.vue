@@ -35,7 +35,7 @@ const reload_plugins=() => {
       > 立即重新加载</tc-button></div>
 
     <template v-for="item in official_plugins" :key="item.id">
-      <div class="flex items-center justify-between p-4 border-t border-gray-100">
+      <div class="flex items-center justify-between p-4 border-t border-gray-500">
         <div class="flex-1">
           <div class="text-base font-medium">
             {{ item.name }}

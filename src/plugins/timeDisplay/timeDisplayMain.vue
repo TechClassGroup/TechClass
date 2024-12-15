@@ -1,34 +1,45 @@
-<script lang="ts" setup>
-import {onMounted, onUnmounted, ref} from 'vue';
-import {Store} from "pinia";
+<script setup lang="ts">
+import { ref } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
-const props = defineProps<{
-  store: Store;
-}>();
-console.log(props);
-const currentTime = ref(new Date().toLocaleTimeString());
-let timer: number | undefined;
+const currentTime = ref('')
+const showSeconds = ref(true)
 
 const updateTime = () => {
-  currentTime.value = new Date().toLocaleTimeString();
-};
+  const now = new Date()
+  const hours = now.getHours().toString().padStart(2, '0')
+  const minutes = now.getMinutes().toString().padStart(2, '0')
+  const seconds = now.getSeconds().toString().padStart(2, '0')
+  currentTime.value = showSeconds.value 
+    ? `${hours}:${minutes}:${seconds}`
+    : `${hours}:${minutes}`
+}
 
+
+
+let timer: number
 onMounted(() => {
-  timer = setInterval(updateTime, 1000);
-});
+  updateTime()
+  timer = setInterval(updateTime, 1000)
+})
 
 onUnmounted(() => {
-  if (timer) {
-    clearInterval(timer);
-  }
-});
+  clearInterval(timer)
+})
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-full p-4 bg-gray-100">
-    <div class="text-4xl font-bold mb-4">{{ currentTime }}</div>
+  <div 
+    class="select-none text-4xl font-light text-gray-800 
+           tracking-wider p-2 transition-all duration-300 hover:opacity-80
+           flex items-center justify-center h-full cursor-pointer"
+ 
+  >
+    <span class="min-w-[160px] text-center">{{ currentTime }}</span>
   </div>
 </template>
 
 <style scoped>
+
+/* nothing here */
 </style>
