@@ -2,7 +2,7 @@
  * @fileOverview Pinia插件
  * @author erduotong
  */
-import {PiniaPluginContext} from "pinia";
+import {PiniaPluginContext, Store} from "pinia";
 import {watch} from "vue";
 import {throttle} from "lodash";
 
@@ -16,7 +16,7 @@ export interface ConfigStorageOptions {
         throttle_ms?: number; // 延迟时间 以毫秒为单位
         max_retries?: number; // 最大重试次数
     };
-    on_storage_load_complete?: () => void;
+    on_storage_load_complete?: (store: Store) => void;
     syncNow?: () => void;
 }
 
@@ -96,7 +96,7 @@ export function ConfigStoragePiniaPlugin({
                     `[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`
                 );
                 if (typeof options.on_storage_load_complete === "function") {
-                    options.on_storage_load_complete();
+                    options.on_storage_load_complete(store);
                 }
             } else {
                 logger.warn(

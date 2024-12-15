@@ -4,7 +4,9 @@
 import {defineStore, StoreDefinition} from "pinia";
 import logger from "@/modules/logger.ts";
 import {init_plugins} from "@/modules/plugins_manager.ts";
+import {watch} from "vue";
 
+type AppStore = ReturnType<typeof useApplicationStore>
 
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: () => {
@@ -12,14 +14,14 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
             setting: {
                 open: false,
                 current_page: "about",
+                needReloadPlugins: false,
             },
             storage: {
-                plugins_list: {
+                pluginsList: {
                     official: [] as string[],
                     custom: [] as string[],
-                }
+                },
             },
-
         };
     },
     actions: {
@@ -32,14 +34,26 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
             );
             this.setting.open = !this.setting.open;
         },
+        reloadPlugins() {
+            init_plugins();
+            this.setting.needReloadPlugins = false;
+        },
+
     },
+
     config_storage: {
         enabled: true,
-        key: 'storage',
+        key: "storage",
         throttle_ms: 1000,
     },
-    on_storage_load_complete() {
+    on_storage_load_complete(store: AppStore) {
         init_plugins();
-    }
-
+        watch(
+            () => (store).storage.pluginsList,
+            () => {
+                (store).setting.needReloadPlugins = true;
+            },
+            {deep: true}
+        );
+    },
 });

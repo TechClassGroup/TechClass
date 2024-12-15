@@ -69,16 +69,20 @@ export function unloadPlugin(id: string) {
 export function init_plugins() {
     loadedPlugins.value = {}; // 重置插件列表
     const store = useApplicationStore();
-    const enable_official_plugins = store.storage.plugins_list.official;
-    const enable_custom_plugins = store.storage.plugins_list.custom;
+    const enable_official_plugins = store.storage.pluginsList.official;
+    const enable_custom_plugins = store.storage.pluginsList.custom;
     for (const plugin of enable_official_plugins) {
         const pluginObject = official_plugins.find((p) => p.id === plugin);
         if (pluginObject)
             loadNewPlugin(pluginObject);
         else {
             logger.warn(`官方插件 ${plugin} 不存在 加载失败`);
+            // 移除不存在的插件
+            enable_official_plugins.splice(enable_official_plugins.indexOf(plugin), 1);
         }
     }
+
+    store.setting.needReloadPlugins = false; // 回调防止循环调用
 
 
 }
