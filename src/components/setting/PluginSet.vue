@@ -5,42 +5,49 @@ import TcSwitch from "@/UI/TcSwitch.vue";
 import TcButton from "@/UI/TcButton.vue";
 import {init_plugins} from "@/modules/plugins_manager.ts";
 // 数据流动: 按钮更新 --> store变化 --> 按钮状态变化
-const store = useApplicationStore()
+const store = useApplicationStore();
 
 // 切换插件状态
 const togglePlugin = (pluginId: string, value: boolean) => {
   if (value) {
     // 添加到官方列表
-    store.storage.pluginsList.official.push(pluginId)
+    store.storage.pluginsList.official.push(pluginId);
   } else {
     // 从官方列表中移除
-    const index = store.storage.pluginsList.official.indexOf(pluginId)
+    const index = store.storage.pluginsList.official.indexOf(pluginId);
     if (index > -1) {
-      store.storage.pluginsList.official.splice(index, 1)
+      store.storage.pluginsList.official.splice(index, 1);
     }
   }
-
-}
-const reload_plugins=() => {
-  init_plugins()
-  store.reloadPlugins()
-}
+};
+const reload_plugins = () => {
+  init_plugins();
+  store.reloadPlugins();
+};
 </script>
 
 <template>
   <div class="p-3">
-    <div class="flex"> <h1 class="font-black mb-5">插件列表</h1>
-      <tc-button v-if="store.setting.needReloadPlugins" @click="reload_plugins"
-                 class="ml-auto mr-2 mb-2"
-      > 立即重新加载</tc-button></div>
+    <div class="flex">
+      <h1 class="font-black mb-5">插件列表</h1>
+      <tc-button
+          v-if="store.setting.needReloadPlugins"
+          @click="reload_plugins"
+          class=" ml-auto mr-4 mb-2 text-sm"
+      >
+        立即重新加载
+      </tc-button>
+    </div>
 
     <template v-for="item in official_plugins" :key="item.id">
-      <div class="flex items-center justify-between p-4 border-t border-gray-500">
-        <div class="flex-1">
+      <div
+          class="flex items-center justify-between p-4 border-t border-gray-500"
+      >
+        <div class="mr-4">
           <div class="text-base font-medium">
             {{ item.name }}
           </div>
-          <div class="text-xs  mt-1">
+          <div class="text-xs mt-1">
             {{ item.description }}
           </div>
         </div>
@@ -54,7 +61,5 @@ const reload_plugins=() => {
 </template>
 
 <style scoped>
-.flex-1 {
-  margin-right: 1rem;
-}
+/**/
 </style>
