@@ -12,7 +12,7 @@ const timeDisplay: IPlugin<MainComponentKey> = {
     description: "显示当前时间",
     component: {
         main_page: {
-            main: timeDisplayMain
+            main: timeDisplayMain,
         },
         setting_page: null,
     },
