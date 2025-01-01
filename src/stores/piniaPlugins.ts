@@ -12,7 +12,7 @@ import logger from "@/modules/logger.ts";
 export interface ConfigStorageOptions {
     config_storage?: {
         enabled: boolean;
-        key?: string; // 要监听的key
+        keys?: string[]; // 要监听的keys数组
         throttle_ms?: number; // 延迟时间 以毫秒为单位
         max_retries?: number; // 最大重试次数
     };
@@ -35,10 +35,16 @@ export function ConfigStoragePiniaPlugin({
                                              store,
                                          }: PiniaPluginContext & { options: ConfigStorageOptions }) {
     const config = options.config_storage;
-    if (!config || !config.enabled || !config.key || !store[config.key]) {
+    if (
+        !config ||
+        !config.enabled ||
+        !config.keys ||
+        config.keys.length === 0 ||
+        !config.keys.every((key) => store[key])
+    ) {
         return;
     }
-    const key = config.key;
+    const keys = config.keys;
     const throttle_time = config.throttle_ms || 300;
     const id = store.$id;
     const maxRetries = config.max_retries || 3;
@@ -46,87 +52,97 @@ export function ConfigStoragePiniaPlugin({
     // 添加一个基于路径的安全合并函数
     function safeDeepMerge(target: any, source: any, path: string[] = []) {
         // 如果是基本类型或数组，检查source中对应路径的值
-        if (typeof target !== 'object' || Array.isArray(target)) {
+        if (typeof target !== "object" || Array.isArray(target)) {
             // 根据路径在source中查找对应值
             let sourceValue = source;
             for (const key of path) {
-                if (sourceValue && typeof sourceValue === 'object') {
+                if (sourceValue && typeof sourceValue === "object") {
                     sourceValue = sourceValue[key];
                 } else {
                     return target; // 如果路径无效，保持原值
                 }
             }
-            
+
             // 检查类型是否匹配
-            if (typeof sourceValue === typeof target || 
-                (Array.isArray(target) && Array.isArray(sourceValue))) {
+            if (
+                typeof sourceValue === typeof target ||
+                (Array.isArray(target) && Array.isArray(sourceValue))
+            ) {
                 return sourceValue;
             }
             return target; // 类型不匹配时保持原值
         }
-        
+
         // 如果是对象，递归合并
-        const result = { ...target };
+        const result = {...target};
         for (const key in target) {
             if (Object.prototype.hasOwnProperty.call(target, key)) {
-                result[key] = safeDeepMerge(
-                    target[key], 
-                    source, 
-                    [...path, key]
-                );
+                result[key] = safeDeepMerge(target[key], source, [...path, key]);
             }
         }
         return result;
     }
 
     // 加载状态
-    logger.info(`[Config Storage Pinia Plugin] 加载: ${id} key: ${key}`);
+    logger.info(
+        `[Config Storage Pinia Plugin] 加载: ${id} keys: ${keys.join(", ")}`
+    );
     invoke("load_content", {id})
         .then((content) => {
-            if (content && content[key]) {
-                // 使用基于路径的安全合并
-                const mergedData = safeDeepMerge(store[key], content[key]);
-                
-                // 更新store
-                Object.keys(store[key]).forEach(k => {
-                    store[key][k] = mergedData[k];
+            if (content) {
+                // 遍历所有keys
+                keys.forEach((key) => {
+                    if (content[key]) {
+                        // 使用基于路径的安全合并
+                        const mergedData = safeDeepMerge(store[key], content[key]);
+
+                        // 更新store
+                        Object.keys(store[key]).forEach((k) => {
+                            store[key][k] = mergedData[k];
+                        });
+
+                        logger.info(
+                            `[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`
+                        );
+                    } else {
+                        logger.warn(
+                            `[Config Storage Pinia Plugin] 加载失败 属性不存在: ${id} key: ${key}`
+                        );
+                    }
                 });
 
-                logger.info(
-                    `[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`
-                );
                 if (typeof options.on_storage_load_complete === "function") {
                     options.on_storage_load_complete(store);
                 }
-            } else {
-                logger.warn(
-                    `[Config Storage Pinia Plugin] 加载失败 属性不存在: ${id} key: ${key}`
-                );
             }
         })
         .catch((err: ConfigErrorKind) => {
             logger.error(
-                `[Config Storage Pinia Plugin] 加载失败: ${id} key: ${key}`,
+                `[Config Storage Pinia Plugin] 加载失败: ${id} keys: ${keys.join(
+                    ", "
+                )}`,
                 err
             );
             // 强制保存一次，以便下次加载时可以加载
             store.syncNow();
-
         });
 
-    // 调用Tauri后端本地化存储，如果失败则重试。达到重试次数后，不再递归。等到下一次状态变化后再尝试
-    const storage_func = throttle((content: any) => {
+    // 调用Tauri后端本地化存储
+    const storage_func = throttle(() => {
         let retryCount = 0;
 
         const attemptStorage = () => {
+            const content = keys.reduce((acc, key) => {
+                acc[key] = store[key];
+                return acc;
+            }, {} as Record<string, any>);
+
             invoke("storage_content", {
                 id,
-                content: {
-                    [key]: content,
-                },
+                content,
             })
                 .then(() => {
-                    logger.trace(`[Config Storage Pinia Plugin] 存储成功: ${id} `);
+                    logger.trace(`[Config Storage Pinia Plugin] 存储成功: ${id}`);
                 })
                 .catch((error: ConfigErrorKind) => {
                     logger.warn(`[Config Storage Pinia Plugin] 存储失败: ${id}`, error);
@@ -143,26 +159,33 @@ export function ConfigStoragePiniaPlugin({
 
         attemptStorage();
     }, throttle_time);
-    // 对其进行监听
-    const stopWatch = watch(
-        () => store[key],
-        (newContent) => {
-            storage_func(newContent);
-        },
-        {deep: true}
+
+    // 对所有keys进行监听
+    const stopWatches = keys.map((key) =>
+        watch(
+            () => store[key],
+            () => {
+                storage_func();
+            },
+            {deep: true}
+        )
     );
+
     store.$dispose = () => {
-        // 别忘了在store销毁时停止监听
-        stopWatch();
-        logger.info(`[Config Storage Pinia Plugin] 停止监听: ${id} key: ${key}`);
+        // 停止所有监听
+        stopWatches.forEach((stop) => stop());
+        logger.info(
+            `[Config Storage Pinia Plugin] 停止监听: ${id} keys: ${keys.join(", ")}`
+        );
     };
 
-    // 注册两个方法 允许立即同步和加载回调
+    // 注册syncNow方法
     store.syncNow = () => {
-
-        storage_func(store[key]);
+        storage_func();
         storage_func.flush();
     };
 
-    logger.info(`[Config Storage Pinia Plugin] 监听: ${id} key: ${key} 成功`);
+    logger.info(
+        `[Config Storage Pinia Plugin] 监听: ${id} keys: ${keys.join(", ")} 成功`
+    );
 }

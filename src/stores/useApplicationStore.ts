@@ -43,7 +43,7 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
 
     config_storage: {
         enabled: true,
-        key: "storage",
+        keys: ["storage"],
         throttle_ms: 1000,
     },
     on_storage_load_complete(store: AppStore) {
