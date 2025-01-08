@@ -15,14 +15,22 @@ const updateComponentStatus = (
   status.height = height as any;
 };
 const onResizeDrag = ($event: any, status: DraggableComponentConfig) => {
-  updateComponentStatus(
-      status,
-      $event[0],
-      $event[1],
-      $event[2],
-      $event[3]
-  );
+  updateComponentStatus(status, $event[0], $event[1], $event[2], $event[3]);
 };
+
+const getComponentProps = (status: any) => ({
+  maxWidth: status.maxWidth,
+  maxHeight: status.maxHeight,
+  minWidth: status.minWidth,
+  minHeight: status.minHeight,
+  width: status.width,
+  height: status.height,
+  x: status.x,
+  y: status.y,
+  draggable: status.draggable,
+  resizable: status.resizable,
+  z: status.zIndex,
+});
 </script>
 
 <template>
@@ -35,18 +43,7 @@ const onResizeDrag = ($event: any, status: DraggableComponentConfig) => {
         <vue-draggable-resizable
             :parent="true"
             class="shadow-md rounded-lg bg-white"
-            :max-width="item.store.componentStatus[key].width"
-            :max-height="item.store.componentStatus[key].height"
-            :min-width="item.store.componentStatus[key].minWidth"
-            :min-height="item.store.componentStatus[key].minHeight"
-            :width="item.store.componentStatus[key].width"
-            :height="item.store.componentStatus[key].height"
-            :x="item.store.componentStatus[key].x"
-            :y="item.store.componentStatus[key].y"
-            :draggable="item.store.componentStatus[key].draggable"
-            :resizable="item.store.componentStatus[key].resizable"
-            :z="item.store.componentStatus[key].zIndex"
-
+            v-bind="getComponentProps(item.store.componentStatus[key])"
             @resizing="(...$event: any) => onResizeDrag($event, item.store.componentStatus[key])"
             @dragging="(...$event: any) => onResizeDrag($event, item.store.componentStatus[key])"
         >
