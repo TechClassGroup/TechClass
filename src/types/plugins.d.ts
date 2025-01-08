@@ -20,14 +20,14 @@ export interface IPlugin<T extends string = string> {
     id: string;
     description: string;
     component: PluginComponent<T>;
-    init: (app: Store) => void;
+    init: (store: PluginStore<T>) => void;
 }
 
-interface PluginState<T extends string = string> extends StateTree {
+export interface PluginState<T extends string = string> extends StateTree {
     componentStatus: Record<T, DraggableComponentConfig>;
 }
 
-export type PluginStore<T extends string = string> = Store<PluginState<T>>;
+export type PluginStore<T extends string = string> = Store<string, PluginState<T>>;
 
 /**
  * 插件实例

@@ -3,11 +3,17 @@
  */
 
 import logger from "./logger.ts";
-import {defineStore} from "pinia";
-import {computed, ComputedRef, markRaw, ref, Ref} from "vue";
-import {InstancePlugin, IPlugin, PluginComponentStore, PluginStore,} from "@/types/plugins";
-import {useApplicationStore} from "@/stores/useApplicationStore.ts";
-import {official_plugins} from "@/plugins/official_plugins.ts";
+import { defineStore } from "pinia";
+import { computed, ComputedRef, markRaw, ref, Ref } from "vue";
+import {
+    DraggableComponentConfig,
+    InstancePlugin,
+    IPlugin,
+    PluginComponentStore,
+    PluginState,
+} from "@/types/plugins";
+import { useApplicationStore } from "@/stores/useApplicationStore.ts";
+import { official_plugins } from "@/plugins/official_plugins.ts";
 
 const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 /**
@@ -31,7 +37,7 @@ export const computedPluginsComponent: ComputedRef<
  * 加载插件
  * @param plugin
  */
-export function loadNewPlugin(plugin: IPlugin) {
+export function loadNewPlugin(plugin: IPlugin<any>) {
     type ComponentKeys = keyof NonNullable<typeof plugin.component.mainPage>;
     logger.trace(`加载插件 ${plugin.name} id: ${plugin.id}`);
     if (loadedPlugins.value[plugin.id]) {
@@ -49,7 +55,18 @@ export function loadNewPlugin(plugin: IPlugin) {
         });
     }
 
-    const store = defineStore(plugin.id, {})();
+    const storeDefine = defineStore(plugin.id, {
+        state: () =>
+            ({
+                componentStatus: {} as Record<
+                    ComponentKeys,
+                    DraggableComponentConfig
+                >,
+            } satisfies PluginState<ComponentKeys>),
+    });
+
+    // 直接使用 storeDefine 的返回类型，不需要类型转换
+    const store = storeDefine();
     plugin.init(store);
     loadedPlugins.value[plugin.id] = {
         pluginObject: plugin,
