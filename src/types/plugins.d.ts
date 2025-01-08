@@ -1,41 +1,57 @@
 /**
  * @fileOverview 插件的类型
  */
-import { defineComponent } from "vue";
-import { Store } from "pinia";
+import {defineComponent} from "vue";
+import {Store} from "pinia";
 
 /**
  * 插件的组件
  */
 interface PluginComponent<T extends string = string> {
-  setting_page: ReturnType<typeof defineComponent> | null;
-  main_page: Record<T, ReturnType<typeof defineComponent>> | null;
+    settingPage: ReturnType<typeof defineComponent> | null;
+    mainPage: Record<T, ReturnType<typeof defineComponent>> | null;
 }
 
 /**
  * 插件对象
  */
 export interface IPlugin<T extends string = string> {
-  name: string;
-  id: string;
-  description: string;
-  component: PluginComponent<T>;
-  init: (app: Store) => void;
+    name: string;
+    id: string;
+    description: string;
+    component: PluginComponent<T>;
+    init: (app: Store) => void;
 }
 
 /**
  * 插件实例
  */
 export interface InstancePlugin {
-  pluginObject: IPlugin;
-  store: Store;
+    pluginObject: IPlugin;
+    store: Store;
 }
 
 /**
  * 仅暴露插件的组件以及其store
  */
 export interface PluginComponentStore {
-  component: PluginComponent;
-  store: Store;
-  id: string;
+    component: PluginComponent;
+    store: Store;
+    id: string;
 }
+
+/**
+ * 可拖拽组件的参数
+ */
+export interface DraggableComponentConfig {
+    maxWidth: number;
+    maxHeight: number;
+    minWidth: number;
+    minHeight: number;
+    width: number | "auto";
+    height: number | "auto";
+    draggable: boolean;
+    resizable: boolean;
+    zIndex: number;
+}
+

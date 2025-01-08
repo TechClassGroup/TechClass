@@ -38,11 +38,11 @@ export function loadNewPlugin(plugin: IPlugin) {
         return;
     }
     // 使用 markRaw 包裹组件，防止被 reactive 包裹
-    if (plugin.component.main_page) {
-        Object.keys(plugin.component.main_page).forEach((key) => {
-            if (plugin.component.main_page?.key) {
-                plugin.component.main_page[key] = markRaw(
-                    plugin.component.main_page[key]
+    if (plugin.component.mainPage) {
+        Object.keys(plugin.component.mainPage).forEach((key) => {
+            if (plugin.component.mainPage?.key) {
+                plugin.component.mainPage[key] = markRaw(
+                    plugin.component.mainPage[key]
                 );
             }
         });
