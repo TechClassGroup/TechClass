@@ -56,6 +56,8 @@ export interface DraggableComponentConfig {
     minHeight: number;
     width: number | "auto";
     height: number | "auto";
+    x: number;
+    y: number;
     draggable: boolean;
     resizable: boolean;
     zIndex: number;

@@ -3,17 +3,11 @@
  */
 
 import logger from "./logger.ts";
-import { defineStore } from "pinia";
-import { computed, ComputedRef, markRaw, ref, Ref } from "vue";
-import {
-    DraggableComponentConfig,
-    InstancePlugin,
-    IPlugin,
-    PluginComponentStore,
-    PluginState,
-} from "@/types/plugins";
-import { useApplicationStore } from "@/stores/useApplicationStore.ts";
-import { official_plugins } from "@/plugins/official_plugins.ts";
+import {defineStore} from "pinia";
+import {computed, ComputedRef, markRaw, ref, Ref, watch} from "vue";
+import {DraggableComponentConfig, InstancePlugin, IPlugin, PluginComponentStore, PluginState,} from "@/types/plugins";
+import {useApplicationStore} from "@/stores/useApplicationStore.ts";
+import {official_plugins} from "@/plugins/official_plugins.ts";
 
 const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 /**
@@ -24,6 +18,7 @@ export const computedPluginsComponent: ComputedRef<
 > = computed(() => {
     const components: Array<PluginComponentStore> = [];
     for (const plugin of Object.values(loadedPlugins.value)) {
+        console.log(plugin)
         components.push({
             component: plugin.pluginObject.component,
             store: plugin.store,
@@ -54,7 +49,6 @@ export function loadNewPlugin(plugin: IPlugin<any>) {
             }
         });
     }
-
     const storeDefine = defineStore(plugin.id, {
         state: () =>
             ({
@@ -63,11 +57,52 @@ export function loadNewPlugin(plugin: IPlugin<any>) {
                     DraggableComponentConfig
                 >,
             } satisfies PluginState<ComponentKeys>),
+        actions: {
+            /**
+             * 更新组件的拖动状态
+             */
+            updateComponentStatus() {
+                logger.debug(`更新${plugin.name}的组件状态`);
+
+                for (const key in plugin.component.mainPage) {
+                    if (!this.componentStatus[key]) {
+                        // 组件的默认值
+                        this.componentStatus[key] = {
+                            maxHeight: Infinity,
+                            maxWidth: Infinity,
+                            minHeight: 0,
+                            minWidth: 0,
+                            width: "auto",
+                            height: "auto",
+                            x: 0,
+                            y: 0,
+                            draggable: true,
+                            resizable: true,
+                            zIndex: 0,
+                        };
+                    }
+                }
+                for (const key in this.componentStatus) {
+                    if (!plugin.component.mainPage?.[key]) {
+                        delete this.componentStatus[key];
+                    }
+                }
+            },
+        },
     });
 
     // 直接使用 storeDefine 的返回类型，不需要类型转换
     const store = storeDefine();
-    plugin.init(store);
+    // 一些监听器
+    watch(
+        () => Object.keys(plugin.component.mainPage || {}),
+        () => {
+            store.updateComponentStatus();
+        },
+        {
+            immediate: true,
+        }
+    );
     loadedPlugins.value[plugin.id] = {
         pluginObject: plugin,
         store,
