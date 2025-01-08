@@ -3,11 +3,17 @@
  */
 
 import logger from "./logger.ts";
-import {defineStore} from "pinia";
-import {computed, ComputedRef, markRaw, ref, Ref, watch} from "vue";
-import {DraggableComponentConfig, InstancePlugin, IPlugin, PluginComponentStore, PluginState,} from "@/types/plugins";
-import {useApplicationStore} from "@/stores/useApplicationStore.ts";
-import {official_plugins} from "@/plugins/official_plugins.ts";
+import { defineStore } from "pinia";
+import { computed, ComputedRef, markRaw, ref, Ref, watch } from "vue";
+import {
+    DraggableComponentConfig,
+    InstancePlugin,
+    IPlugin,
+    PluginComponentStore,
+    PluginState,
+} from "@/types/plugins";
+import { useApplicationStore } from "@/stores/useApplicationStore.ts";
+import { official_plugins } from "@/plugins/official_plugins.ts";
 
 const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 /**
@@ -18,9 +24,8 @@ export const computedPluginsComponent: ComputedRef<
 > = computed(() => {
     const components: Array<PluginComponentStore> = [];
     for (const plugin of Object.values(loadedPlugins.value)) {
-        console.log(plugin)
         components.push({
-            component: plugin.pluginObject.component,
+            component: markRaw(plugin.pluginObject.component),
             store: plugin.store,
             id: plugin.pluginObject.id,
         });
@@ -40,14 +45,14 @@ export function loadNewPlugin(plugin: IPlugin<any>) {
         return;
     }
     // 使用 markRaw 包裹组件，防止被 reactive 包裹
-    if (plugin.component.mainPage) {
-        Object.keys(plugin.component.mainPage).forEach((key) => {
-            if (plugin.component.mainPage?.key) {
-                plugin.component.mainPage[key] = markRaw(
-                    plugin.component.mainPage[key]
-                );
-            }
-        });
+    const mainPage = plugin.component?.mainPage;
+    if (mainPage) {
+        plugin.component.mainPage = Object.fromEntries(
+            Object.entries(mainPage).map(([key, component]) => [
+                key,
+                markRaw(component),
+            ])
+        );
     }
     const storeDefine = defineStore(plugin.id, {
         state: () =>
