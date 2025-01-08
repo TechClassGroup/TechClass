@@ -23,12 +23,18 @@ export interface IPlugin<T extends string = string> {
     init: (app: Store) => void;
 }
 
+interface PluginState<T extends string = string> extends StateTree {
+    componentStatus: Record<T, DraggableComponentConfig>;
+}
+
+export type PluginStore<T extends string = string> = Store<PluginState<T>>;
+
 /**
  * 插件实例
  */
 export interface InstancePlugin {
     pluginObject: IPlugin;
-    store: Store;
+    store: PluginStore;
 }
 
 /**
@@ -36,7 +42,7 @@ export interface InstancePlugin {
  */
 export interface PluginComponentStore {
     component: PluginComponent;
-    store: Store;
+    store: PluginStore;
     id: string;
 }
 
@@ -54,4 +60,3 @@ export interface DraggableComponentConfig {
     resizable: boolean;
     zIndex: number;
 }
-

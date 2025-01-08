@@ -5,7 +5,7 @@
 import logger from "./logger.ts";
 import {defineStore} from "pinia";
 import {computed, ComputedRef, markRaw, ref, Ref} from "vue";
-import {InstancePlugin, IPlugin, PluginComponentStore} from "@/types/plugins";
+import {InstancePlugin, IPlugin, PluginComponentStore, PluginStore,} from "@/types/plugins";
 import {useApplicationStore} from "@/stores/useApplicationStore.ts";
 import {official_plugins} from "@/plugins/official_plugins.ts";
 
@@ -32,6 +32,7 @@ export const computedPluginsComponent: ComputedRef<
  * @param plugin
  */
 export function loadNewPlugin(plugin: IPlugin) {
+    type ComponentKeys = keyof NonNullable<typeof plugin.component.mainPage>;
     logger.trace(`加载插件 ${plugin.name} id: ${plugin.id}`);
     if (loadedPlugins.value[plugin.id]) {
         logger.warn(`插件 ${plugin.name} id: ${plugin.id} 已加载`);
