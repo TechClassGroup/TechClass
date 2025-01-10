@@ -62,3 +62,7 @@ export interface DraggableComponentConfig {
     resizable: boolean;
     zIndex: number;
 }
+
+export interface PluginProps {
+    store: PluginStore;
+}
