@@ -106,6 +106,7 @@ export function registerPlugin(plugin: IPlugin<any>) {
     };
     logger.info(`插件 ${plugin.name} id: ${plugin.id} 加载成功`);
     console.log(loadedPlugins.value);
+    callPluginRegisterCallbacks(plugin.id);
 }
 
 /**
@@ -144,4 +145,25 @@ export function init_plugins() {
     }
 
     store.setting.needReloadPlugins = false; // 回调防止循环调用
+}
+
+const pluginRegisterCallbacks: Record<string, Function[]> = {};
+
+export function onPluginRegister(id: string, callback: Function) {
+    if (loadedPlugins.value[id]) {
+        callback();
+    }
+    if (!pluginRegisterCallbacks[id]) {
+        pluginRegisterCallbacks[id] = [];
+    }
+    pluginRegisterCallbacks[id].push(callback);
+}
+
+function callPluginRegisterCallbacks(id: string) {
+    if (pluginRegisterCallbacks[id]) {
+        for (const callback of pluginRegisterCallbacks[id]) {
+            callback();
+        }
+        delete pluginRegisterCallbacks[id];
+    }
 }
