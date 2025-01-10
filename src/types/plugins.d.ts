@@ -20,6 +20,7 @@ export interface IPlugin<T extends string = string> {
     id: string;
     description: string;
     component: PluginComponent<T>;
+    api?: Record<string, any>;
     init: (store: PluginStore<T>) => void;
 }
 
@@ -27,7 +28,10 @@ export interface PluginState<T extends string = string> extends StateTree {
     componentStatus: Record<T, DraggableComponentConfig>;
 }
 
-export type PluginStore<T extends string = string> = Store<string, PluginState<T>>;
+export type PluginStore<T extends string = string> = Store<
+    string,
+    PluginState<T>
+>;
 
 /**
  * 插件实例
