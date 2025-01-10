@@ -1,6 +1,22 @@
 <script lang="ts" setup>
-import {DraggableComponentConfig} from "@/types/plugins.js";
-import {computedPluginsComponent} from "../modules/plugins_manager.ts";
+import {DraggableComponentConfig, PluginComponentStore} from "@/types/plugins.js";
+import {computed, ComputedRef, markRaw} from "vue";
+import {loadedPlugins} from "@/modules/plugins_manager.ts";
+
+const computedPluginsComponent: ComputedRef<
+    Array<PluginComponentStore>
+> = computed(() => {
+  const components: Array<PluginComponentStore> = [];
+  for (const plugin of Object.values(loadedPlugins.value)) {
+    components.push({
+      component: markRaw(plugin.pluginObject.component),
+      store: plugin.store,
+      id: plugin.pluginObject.id,
+    });
+  }
+  return components;
+});
+
 
 const updateComponentStatus = (
     status: DraggableComponentConfig,

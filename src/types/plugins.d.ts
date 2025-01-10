@@ -70,3 +70,4 @@ export interface DraggableComponentConfig {
 export interface PluginProps {
     store: PluginStore;
 }
+

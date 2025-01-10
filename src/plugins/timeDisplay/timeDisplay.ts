@@ -16,6 +16,11 @@ const timeDisplay: IPlugin<MainComponentKey> = {
         },
         settingPage: null,
     },
+    api: {
+      updateAll: () => {
+
+      }
+    },
     init: () => {
 
     }
