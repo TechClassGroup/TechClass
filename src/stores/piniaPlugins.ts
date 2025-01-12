@@ -2,11 +2,11 @@
  * @fileOverview Pinia插件
  * @author erduotong
  */
-import {PiniaPluginContext, Store} from "pinia";
-import {watch} from "vue";
-import {throttle} from "lodash";
+import { PiniaPluginContext, Store } from "pinia";
+import { watch } from "vue";
+import { throttle } from "lodash";
 
-import {invoke} from "@tauri-apps/api/core";
+import { invoke } from "@tauri-apps/api/core";
 import logger from "@/modules/logger.ts";
 
 export interface ConfigStorageOptions {
@@ -31,9 +31,9 @@ type ConfigErrorKind = {
  * - 具有on_storage_load_complete方法，当存储加载完成时调用
  */
 export function ConfigStoragePiniaPlugin({
-                                             options,
-                                             store,
-                                         }: PiniaPluginContext & { options: ConfigStorageOptions }) {
+    options,
+    store,
+}: PiniaPluginContext & { options: ConfigStorageOptions }) {
     const config = options.config_storage;
     if (
         !config ||
@@ -74,10 +74,13 @@ export function ConfigStoragePiniaPlugin({
         }
 
         // 如果是对象，递归合并
-        const result = {...target};
+        const result = { ...target };
         for (const key in target) {
             if (Object.prototype.hasOwnProperty.call(target, key)) {
-                result[key] = safeDeepMerge(target[key], source, [...path, key]);
+                result[key] = safeDeepMerge(target[key], source, [
+                    ...path,
+                    key,
+                ]);
             }
         }
         return result;
@@ -87,14 +90,17 @@ export function ConfigStoragePiniaPlugin({
     logger.info(
         `[Config Storage Pinia Plugin] 加载: ${id} keys: ${keys.join(", ")}`
     );
-    invoke("load_content", {id})
+    invoke("load_content", { id })
         .then((content) => {
             if (content) {
                 // 遍历所有keys
                 keys.forEach((key) => {
                     if (content[key]) {
                         // 使用基于路径的安全合并
-                        const mergedData = safeDeepMerge(store[key], content[key]);
+                        const mergedData = safeDeepMerge(
+                            store[key],
+                            content[key]
+                        );
 
                         // 更新store
                         Object.keys(store[key]).forEach((k) => {
@@ -125,6 +131,10 @@ export function ConfigStoragePiniaPlugin({
             );
             // 强制保存一次，以便下次加载时可以加载
             store.syncNow();
+            // 回调
+            if (typeof options.on_storage_load_complete === "function") {
+                options.on_storage_load_complete(store);
+            }
         });
 
     // 调用Tauri后端本地化存储
@@ -142,10 +152,15 @@ export function ConfigStoragePiniaPlugin({
                 content,
             })
                 .then(() => {
-                    logger.trace(`[Config Storage Pinia Plugin] 存储成功: ${id}`);
+                    logger.trace(
+                        `[Config Storage Pinia Plugin] 存储成功: ${id}`
+                    );
                 })
                 .catch((error: ConfigErrorKind) => {
-                    logger.warn(`[Config Storage Pinia Plugin] 存储失败: ${id}`, error);
+                    logger.warn(
+                        `[Config Storage Pinia Plugin] 存储失败: ${id}`,
+                        error
+                    );
                     retryCount++;
                     if (retryCount <= maxRetries) {
                         attemptStorage();
@@ -167,7 +182,7 @@ export function ConfigStoragePiniaPlugin({
             () => {
                 storage_func();
             },
-            {deep: true}
+            { deep: true }
         )
     );
 
@@ -175,7 +190,9 @@ export function ConfigStoragePiniaPlugin({
         // 停止所有监听
         stopWatches.forEach((stop) => stop());
         logger.info(
-            `[Config Storage Pinia Plugin] 停止监听: ${id} keys: ${keys.join(", ")}`
+            `[Config Storage Pinia Plugin] 停止监听: ${id} keys: ${keys.join(
+                ", "
+            )}`
         );
     };
 
@@ -186,6 +203,8 @@ export function ConfigStoragePiniaPlugin({
     };
 
     logger.info(
-        `[Config Storage Pinia Plugin] 监听: ${id} keys: ${keys.join(", ")} 成功`
+        `[Config Storage Pinia Plugin] 监听: ${id} keys: ${keys.join(
+            ", "
+        )} 成功`
     );
 }

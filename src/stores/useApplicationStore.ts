@@ -55,5 +55,6 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
             },
             {deep: true}
         );
+        console.log('builded!')
     },
 });

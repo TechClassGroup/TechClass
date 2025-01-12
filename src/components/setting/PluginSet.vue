@@ -4,6 +4,7 @@ import {official_plugins} from "@/plugins/official_plugins.ts";
 import TcSwitch from "@/UI/TcSwitch.vue";
 import TcButton from "@/UI/TcButton.vue";
 import {init_plugins} from "@/modules/pluginsManager.ts";
+import {watch} from "vue";
 // 数据流动: 按钮更新 --> store变化 --> 按钮状态变化
 const store = useApplicationStore();
 
