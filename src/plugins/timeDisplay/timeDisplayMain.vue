@@ -30,8 +30,9 @@ onUnmounted(() => {
 <template>
   <div
       class="select-none text-4xl font-light text-gray-800
-           tracking-wider p-2 transition-all duration-300 hover:opacity-80
-           flex items-center justify-center h-full cursor-pointer"
+             tracking-wider p-4 bg-white shadow-lg rounded-lg
+             transition-all duration-300 hover:opacity-90
+             flex items-center justify-center h-full cursor-pointer"
 
   >
     <span class="min-w-[160px] text-center">{{ currentTime }}</span>

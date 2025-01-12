@@ -23,6 +23,7 @@ const timeDisplay: IPlugin<MainComponentKey> = {
     },
     init: () => {
 
-    }
+    },
+    
 }
 export default timeDisplay;
