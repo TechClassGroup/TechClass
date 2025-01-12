@@ -92,7 +92,26 @@ watch(
             <div
                 class="basis-1/4 min-w-44 max-w-64 p-3 bg-gray-200 rounded overflow-y-auto flex-col flex gap-2"
             >
-                <template v-for="(value, key) in routes">
+                <!-- 基础设置组 -->
+                <template v-for="(value, key) in baseRoutes">
+                    <tc-button
+                        @click="changePage(String(key))"
+                        class="hover:bg-gray-300 bg-gray-200"
+                    >
+                        <span class="text-gray-600"> {{ value.name }}</span>
+                    </tc-button>
+                </template>
+
+                <div
+                    v-if="Object.keys(officialPlugins).length > 0"
+                    class="flex items-center gap-2 mt-10 mb-1"
+                >
+                    <div class="h-[1px] bg-gray-300 flex-grow"></div>
+                    <span class="text-sm text-gray-500">官方插件</span>
+                    <div class="h-[1px] bg-gray-300 flex-grow"></div>
+                </div>
+
+                <template v-for="(value, key) in officialPlugins">
                     <tc-button
                         @click="changePage(String(key))"
                         class="hover:bg-gray-300 bg-gray-200"
