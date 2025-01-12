@@ -93,6 +93,14 @@ export function registerPlugin(plugin: IPlugin<any>) {
         getters: {
             ...(userGetters || {}), // 合并用户自定义的 getters
         },
+        ...((isOfficial && plugin.storeConfig?.storageConfig) ? {
+            config_storage: {
+                enabled: plugin.storeConfig.storageConfig.enabled,
+                keys: plugin.storeConfig.storageConfig.keys,
+                throttle_ms: plugin.storeConfig.storageConfig.throttle_ms,
+                max_retries: plugin.storeConfig.storageConfig.max_retries,
+            }
+        } : {})
 
 
     });
