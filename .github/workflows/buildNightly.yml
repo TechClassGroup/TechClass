@@ -18,6 +18,11 @@ jobs:
         with:
           node-version: lts/*
           cache: 'pnpm'
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: true
       - name: install dependencies
         run: pnpm install
       - name: install Rust stable
