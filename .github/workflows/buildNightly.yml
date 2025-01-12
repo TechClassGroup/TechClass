@@ -33,3 +33,9 @@ jobs:
           workspaces: './src-tauri -> target'
       - name: Build
         run: pnpm tauri build
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: TechClass-Nightly
+          path: src-tauri/target/release/bundle/nsis/*
+          retention-days: 30
