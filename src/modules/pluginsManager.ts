@@ -3,11 +3,15 @@
  */
 
 import logger from "./logger.ts";
-import {defineStore} from "pinia";
-import {markRaw, ref, Ref, watch} from "vue";
-import {DraggableComponentStatus, InstancePlugin, IPlugin,} from "@/types/plugins";
-import {useApplicationStore} from "@/stores/useApplicationStore.ts";
-import {official_plugins} from "@/plugins/official_plugins.ts";
+import { defineStore } from "pinia";
+import { markRaw, ref, Ref, watch } from "vue";
+import {
+    DraggableComponentStatus,
+    InstancePlugin,
+    IPlugin,
+} from "@/types/plugins";
+import { useApplicationStore } from "@/stores/useApplicationStore.ts";
+import { official_plugins } from "@/plugins/official_plugins.ts";
 
 export const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 
@@ -23,24 +27,40 @@ export function registerPlugin(plugin: IPlugin<any>) {
         logger.warn(`插件 ${plugin.name} id: ${plugin.id} 已加载`);
         return;
     }
-    // 使用 markRaw 包裹组件，防止被 reactive 包裹
-    const mainPage = plugin.component?.mainPage;
-    if (mainPage) {
-        plugin.component.mainPage = Object.fromEntries(
-            Object.entries(mainPage).map(([key, component]) => [
-                key,
-                markRaw(component),
-            ])
-        );
-    }
+    // 从插件中提取组件
+    const { mainPage, settingPage } = plugin.component ?? {};
+
+    // 包裹组件防止被reactive包裹，然后vue在那叫个不停
+    const processedPlugin = { ...plugin };
+    processedPlugin.component = {
+        // 处理主页面组件:
+        // 1. 如果存在主页面组件,使用 markRaw 包装每个组件防止 Vue 响应式处理
+        // 2. 如果不存在则为 null
+        mainPage: mainPage 
+            ? Object.fromEntries(
+                Object.entries(mainPage).map(([key, component]) => [
+                    key,
+                    markRaw(component)
+                ])
+            )
+            : mainPage,
+        
+        // 处理设置页面组件:
+        // 如果存在则用 markRaw 包装,否则保持原值
+        settingPage: settingPage ? markRaw(settingPage) : settingPage
+    };
+
     // 初始化 store
-    const userState = plugin.storeConfig?.state;
-    const userActions = plugin.storeConfig?.actions;
-    const userGetters = plugin.storeConfig?.getters;
-    const isOfficial = plugin.isOfficial;
+    const userState = processedPlugin.storeConfig?.state;
+    const userActions = processedPlugin.storeConfig?.actions;
+    const userGetters = processedPlugin.storeConfig?.getters;
+    const isOfficial = processedPlugin.isOfficial;
     const storeDefine = defineStore(plugin.id, {
         state: () => ({
-            componentStatus: {} as Record<ComponentKeys, DraggableComponentStatus>,
+            componentStatus: {} as Record<
+                ComponentKeys,
+                DraggableComponentStatus
+            >,
             ...(userState ? userState() : {}), // 合并用户自定义的 state
         }),
         actions: {
@@ -79,22 +99,22 @@ export function registerPlugin(plugin: IPlugin<any>) {
         getters: {
             ...(userGetters || {}), // 合并用户自定义的 getters
         },
-        ...((isOfficial && plugin.storeConfig?.storageConfig) ? {
-            config_storage: {
-                enabled: plugin.storeConfig.storageConfig.enabled,
-                keys: plugin.storeConfig.storageConfig.keys,
-                throttle_ms: plugin.storeConfig.storageConfig.throttle_ms,
-                max_retries: plugin.storeConfig.storageConfig.max_retries,
-            }
-        } : {})
-
-
+        ...(isOfficial && plugin.storeConfig?.storageConfig
+            ? {
+                  config_storage: {
+                      enabled: plugin.storeConfig.storageConfig.enabled,
+                      keys: plugin.storeConfig.storageConfig.keys,
+                      throttle_ms: plugin.storeConfig.storageConfig.throttle_ms,
+                      max_retries: plugin.storeConfig.storageConfig.max_retries,
+                  },
+              }
+            : {}),
     });
     const store = storeDefine();
 
     // 自动同步组件状态
     watch(
-        () => Object.keys(plugin.component.mainPage || {}),
+        () => Object.keys(processedPlugin.component.mainPage || {}),
         () => {
             store.updateComponentStatus();
         },
@@ -104,13 +124,12 @@ export function registerPlugin(plugin: IPlugin<any>) {
     );
     // 存入插件列表
     loadedPlugins.value[plugin.id] = {
-        pluginObject: plugin,
+        pluginObject: processedPlugin,
         store,
     };
     logger.info(`插件 ${plugin.name} id: ${plugin.id} 加载成功`);
     callPluginRegisterCallbacks(plugin.id);
 }
-
 
 /**
  * 初始化插件

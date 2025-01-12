@@ -11,7 +11,7 @@ export const computedPluginsComponent: ComputedRef<
     const components: Array<PluginComponentStore> = [];
     for (const plugin of Object.values(loadedPlugins.value)) {
         components.push({
-            component: markRaw(plugin.pluginObject.component),
+            component: plugin.pluginObject.component,
             store: plugin.store,
             id: plugin.pluginObject.id,
             isOfficial: plugin.pluginObject.isOfficial,

@@ -25,9 +25,3 @@ logger.info("前端启动成功");
 window.addEventListener('popstate', () => {
     history.pushState(null, '', location.href);
 });
-
-app.config.warnHandler = (msg, instance, trace) => {
-    console.warn("Vue警告:", msg);
-    console.warn("实例:", instance);
-    console.warn("调用栈:", trace);
-};
