@@ -69,8 +69,10 @@ export interface PluginState<T extends string = string> extends StateTree {
  * @template Getters - 即将被添加到插件的 `store` 中的 `getters` | 你可以和`pinia`中的`getters`一样定义
  */
 interface StoreConfig<T extends string = string, Actions = {}, Getters = {}> {
-    /** 插件存储的初始状态 */
-    state?: () => Partial<PluginState<T>>;
+    /** 插件存储的初始状态 注意: 不能使用key `componentStatus` */
+    state?: () => {
+        [key: string]: any;
+    };
     /** 插件存储的 actions */
     actions?: Actions;
     /** 插件存储的 getters */
