@@ -3,7 +3,7 @@ import {onMounted, onUnmounted, ref} from 'vue'
 import {PluginProps} from "@/types/plugins";
 
 const currentTime = ref('')
-const showSeconds = ref(true)
+
 const props = defineProps<PluginProps>()
 
 const updateTime = () => {
@@ -11,9 +11,14 @@ const updateTime = () => {
   const hours = now.getHours().toString().padStart(2, '0')
   const minutes = now.getMinutes().toString().padStart(2, '0')
   const seconds = now.getSeconds().toString().padStart(2, '0')
-  currentTime.value = showSeconds.value
-      ? `${hours}:${minutes}:${seconds}`
-      : `${hours}:${minutes}`
+  currentTime.value = [
+    props.store.storage.displayHour ? hours : null,
+    props.store.storage.displayMinute ? minutes : null,
+    props.store.storage.displaySecond ? seconds : null
+  ]
+      .filter(part => part !== null)
+      .join(':')
+
 }
 
 let timer: number
