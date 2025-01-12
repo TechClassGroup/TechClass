@@ -128,7 +128,7 @@ export function ConfigStoragePiniaPlugin({
             // 强制保存一次，以便下次加载时可以加载
             store.syncNow();
         }).finally(() => {
-        // 回调
+        // 调用生命周期函数
         if (typeof options.on_storage_load_complete === "function") {
             options.on_storage_load_complete(store);
         }
