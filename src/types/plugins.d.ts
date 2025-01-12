@@ -163,6 +163,10 @@ export interface PluginComponentStore {
     store: PluginStore;
     /** 插件的唯一标识符 */
     id: string;
+    /** 是否为官方插件 */
+    isOfficial: boolean;
+    /** 插件的名称 */
+    name: string;
 }
 
 /**

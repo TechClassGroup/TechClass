@@ -14,6 +14,8 @@ export const computedPluginsComponent: ComputedRef<
             component: markRaw(plugin.pluginObject.component),
             store: plugin.store,
             id: plugin.pluginObject.id,
+            isOfficial: plugin.pluginObject.isOfficial,
+            name: plugin.pluginObject.name,
         });
     }
     return components;
