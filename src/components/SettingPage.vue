@@ -54,8 +54,8 @@ function changePage(target: string) {
           class="basis-1/4 min-w-44 max-w-64 p-3 bg-gray-200 rounded overflow-y-auto flex-col flex gap-2">
         <template v-for="(value,key) in routes">
           <tc-button @click="changePage(String(key))"
-                     class="text-gray-900 hover:bg-gray-300 bg-gray-200">
-            {{ value.name }}
+                     class=" hover:bg-gray-300 bg-gray-200 ">
+           <span class="text-gray-600"> {{ value.name }}</span>
           </tc-button>
         </template>
       </div>
