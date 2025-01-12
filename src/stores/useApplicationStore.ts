@@ -3,7 +3,7 @@
  */
 import {defineStore, StoreDefinition} from "pinia";
 import logger from "@/modules/logger.ts";
-import {init_plugins} from "@/modules/plugins_manager.ts";
+import {init_plugins} from "@/modules/pluginsManager.ts";
 import {watch} from "vue";
 
 type AppStore = ReturnType<typeof useApplicationStore>
