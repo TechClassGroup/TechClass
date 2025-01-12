@@ -2,11 +2,11 @@
  * @fileOverview Pinia插件
  * @author erduotong
  */
-import { PiniaPluginContext, Store } from "pinia";
-import { watch } from "vue";
-import { throttle } from "lodash";
+import {PiniaPluginContext, Store} from "pinia";
+import {watch} from "vue";
+import {throttle} from "lodash";
 
-import { invoke } from "@tauri-apps/api/core";
+import {invoke} from "@tauri-apps/api/core";
 import logger from "@/modules/logger.ts";
 
 export interface ConfigStorageOptions {
@@ -31,9 +31,9 @@ type ConfigErrorKind = {
  * - 具有on_storage_load_complete方法，当存储加载完成时调用
  */
 export function ConfigStoragePiniaPlugin({
-    options,
-    store,
-}: PiniaPluginContext & { options: ConfigStorageOptions }) {
+                                             options,
+                                             store,
+                                         }: PiniaPluginContext & { options: ConfigStorageOptions }) {
     const config = options.config_storage;
     if (
         !config ||
@@ -74,7 +74,7 @@ export function ConfigStoragePiniaPlugin({
         }
 
         // 如果是对象，递归合并
-        const result = { ...target };
+        const result = {...target};
         for (const key in target) {
             if (Object.prototype.hasOwnProperty.call(target, key)) {
                 result[key] = safeDeepMerge(target[key], source, [
@@ -90,7 +90,7 @@ export function ConfigStoragePiniaPlugin({
     logger.info(
         `[Config Storage Pinia Plugin] 加载: ${id} keys: ${keys.join(", ")}`
     );
-    invoke("load_content", { id })
+    invoke("load_content", {id})
         .then((content) => {
             if (content) {
                 // 遍历所有keys
@@ -116,10 +116,6 @@ export function ConfigStoragePiniaPlugin({
                         );
                     }
                 });
-
-                if (typeof options.on_storage_load_complete === "function") {
-                    options.on_storage_load_complete(store);
-                }
             }
         })
         .catch((err: ConfigErrorKind) => {
@@ -131,11 +127,13 @@ export function ConfigStoragePiniaPlugin({
             );
             // 强制保存一次，以便下次加载时可以加载
             store.syncNow();
-            // 回调
-            if (typeof options.on_storage_load_complete === "function") {
-                options.on_storage_load_complete(store);
-            }
-        });
+        }).finally(() => {
+        // 回调
+        if (typeof options.on_storage_load_complete === "function") {
+            options.on_storage_load_complete(store);
+        }
+    })
+
 
     // 调用Tauri后端本地化存储
     const storage_func = throttle(() => {
@@ -182,7 +180,7 @@ export function ConfigStoragePiniaPlugin({
             () => {
                 storage_func();
             },
-            { deep: true }
+            {deep: true}
         )
     );
 
