@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {DraggableComponentConfig, PluginComponentStore} from "@/types/plugins.js";
+import {DraggableComponentStatus, PluginComponentStore} from "@/types/plugins.js";
 import {computed, ComputedRef, markRaw} from "vue";
 import {loadedPlugins} from "@/modules/plugins_manager.ts";
 
@@ -19,7 +19,7 @@ const computedPluginsComponent: ComputedRef<
 
 
 const updateComponentStatus = (
-    status: DraggableComponentConfig,
+    status: DraggableComponentStatus,
     left: number | "auto",
     top: number | "auto",
     width: number,
@@ -30,7 +30,7 @@ const updateComponentStatus = (
   status.width = width as any;
   status.height = height as any;
 };
-const onResizeDrag = ($event: any, status: DraggableComponentConfig) => {
+const onResizeDrag = ($event: any, status: DraggableComponentStatus) => {
   updateComponentStatus(status, $event[0], $event[1], $event[2], $event[3]);
 };
 

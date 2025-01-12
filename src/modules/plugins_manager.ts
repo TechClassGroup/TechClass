@@ -5,7 +5,7 @@
 import logger from "./logger.ts";
 import {defineStore} from "pinia";
 import {markRaw, ref, Ref, watch} from "vue";
-import {DraggableComponentConfig, InstancePlugin, IPlugin, PluginState,} from "@/types/plugins";
+import {DraggableComponentStatus, InstancePlugin, IPlugin, PluginState,} from "@/types/plugins";
 import {useApplicationStore} from "@/stores/useApplicationStore.ts";
 import {official_plugins} from "@/plugins/official_plugins.ts";
 
@@ -51,7 +51,7 @@ export function registerPlugin(plugin: IPlugin<any>) {
             ({
                 componentStatus: {} as Record<
                     ComponentKeys,
-                    DraggableComponentConfig
+                    DraggableComponentStatus
                 >,
             } satisfies PluginState<ComponentKeys>),
         actions: {
