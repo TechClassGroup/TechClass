@@ -4,6 +4,7 @@
 
 import timeDisplayMain from "./timeDisplayMain.vue";
 import {IPlugin} from "@/types/plugins";
+import timeDisplaySetting from "@/plugins/timeDisplay/timeDisplaySetting.vue";
 
 type MainComponentKey = "main";
 const timeDisplay: IPlugin<MainComponentKey> = {
@@ -15,8 +16,24 @@ const timeDisplay: IPlugin<MainComponentKey> = {
         mainPage: {
             main: timeDisplayMain,
         },
-        settingPage: null,
+        settingPage: timeDisplaySetting,
     },
+    storeConfig: {
+        state: () => {
+            return {
+                storage: {
+                    displayHour: true,
+                    displayMinute: true,
+                    displaySecond: true,
+                }
+            }
+        },
+        storageConfig: {
+            enabled: true,
+            throttle_ms: 1000,
+            keys: ["componentStatus", "storage"],
+        }
+    }
 
 }
 export default timeDisplay;
