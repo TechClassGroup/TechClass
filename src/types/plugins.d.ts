@@ -113,8 +113,6 @@ export interface IPlugin<
      * - 请注意安全性
      */
     api?: Record<string, any>;
-    /** 插件的初始化函数 */
-    init?: (store: PluginStore<T>) => void;
     /** 配置插件的store */
     storeConfig?: StoreConfig<T, Actions, Getters>;
 }

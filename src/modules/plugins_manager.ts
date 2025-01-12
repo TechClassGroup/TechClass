@@ -5,7 +5,7 @@
 import logger from "./logger.ts";
 import {defineStore} from "pinia";
 import {markRaw, ref, Ref, watch} from "vue";
-import {DraggableComponentStatus, InstancePlugin, IPlugin, PluginState,} from "@/types/plugins";
+import {DraggableComponentStatus, InstancePlugin, IPlugin,} from "@/types/plugins";
 import {useApplicationStore} from "@/stores/useApplicationStore.ts";
 import {official_plugins} from "@/plugins/official_plugins.ts";
 
@@ -46,14 +46,15 @@ export function registerPlugin(plugin: IPlugin<any>) {
             ])
         );
     }
+    // 初始化 store
+    const userState = plugin.storeConfig?.state;
+    const userActions = plugin.storeConfig?.actions;
+    const userGetters = plugin.storeConfig?.getters;
     const storeDefine = defineStore(plugin.id, {
-        state: () =>
-            ({
-                componentStatus: {} as Record<
-                    ComponentKeys,
-                    DraggableComponentStatus
-                >,
-            } satisfies PluginState<ComponentKeys>),
+        state: () => ({
+            componentStatus: {} as Record<ComponentKeys, DraggableComponentStatus>,
+            ...(userState ? userState() : {}), // 合并用户自定义的 state
+        }),
         actions: {
             /**
              * 更新组件的拖动状态
@@ -85,12 +86,15 @@ export function registerPlugin(plugin: IPlugin<any>) {
                     }
                 }
             },
+            ...(userActions || {}), // 合并用户自定义的 actions
         },
+        getters: {
+            ...(userGetters || {}), // 合并用户自定义的 getters
+        }
     });
-
-    // 直接使用 storeDefine 的返回类型，不需要类型转换
     const store = storeDefine();
-    // 一些监听器
+
+    // 自动同步组件状态
     watch(
         () => Object.keys(plugin.component.mainPage || {}),
         () => {
@@ -100,6 +104,7 @@ export function registerPlugin(plugin: IPlugin<any>) {
             immediate: true,
         }
     );
+    // 存入插件列表
     loadedPlugins.value[plugin.id] = {
         pluginObject: plugin,
         store,
@@ -109,19 +114,6 @@ export function registerPlugin(plugin: IPlugin<any>) {
     callPluginRegisterCallbacks(plugin.id);
 }
 
-/**
- * 卸载插件
- * @param id 插件的ID
- */
-export function unloadPlugin(id: string) {
-    if (!loadedPlugins.value[id]) {
-        logger.warn(`插件 id: ${id} 不存在`);
-        return;
-    }
-    logger.trace(`卸载插件 id: ${id}`);
-    delete loadedPlugins.value[id];
-    logger.info(`插件 id: ${id} 卸载成功`);
-}
 
 /**
  * 初始化插件
