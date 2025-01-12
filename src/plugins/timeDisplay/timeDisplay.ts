@@ -10,6 +10,7 @@ const timeDisplay: IPlugin<MainComponentKey> = {
     name: "时钟",
     id: "timeDisplay",
     description: "显示当前时间",
+    isOfficial: true,
     component: {
         mainPage: {
             main: timeDisplayMain,

@@ -31,6 +31,7 @@ export function getPluginApi(id: string): Record<string, any> | null {
  */
 export function registerPlugin(plugin: IPlugin<any>) {
     type ComponentKeys = keyof NonNullable<typeof plugin.component.mainPage>;
+
     logger.trace(`加载插件 ${plugin.name} id: ${plugin.id}`);
     if (loadedPlugins.value[plugin.id]) {
         logger.warn(`插件 ${plugin.name} id: ${plugin.id} 已加载`);
@@ -50,6 +51,7 @@ export function registerPlugin(plugin: IPlugin<any>) {
     const userState = plugin.storeConfig?.state;
     const userActions = plugin.storeConfig?.actions;
     const userGetters = plugin.storeConfig?.getters;
+    const isOfficial = plugin.isOfficial;
     const storeDefine = defineStore(plugin.id, {
         state: () => ({
             componentStatus: {} as Record<ComponentKeys, DraggableComponentStatus>,
@@ -90,7 +92,9 @@ export function registerPlugin(plugin: IPlugin<any>) {
         },
         getters: {
             ...(userGetters || {}), // 合并用户自定义的 getters
-        }
+        },
+
+
     });
     const store = storeDefine();
 

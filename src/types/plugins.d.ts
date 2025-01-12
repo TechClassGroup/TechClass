@@ -3,6 +3,7 @@
  */
 import {defineComponent} from "vue";
 import {Store} from "pinia";
+import {ConfigStorageOptions} from "@/stores/piniaPlugins.ts";
 
 /**
  * 可拖拽组件的配置参数。
@@ -77,6 +78,26 @@ interface StoreConfig<T extends string = string, Actions = {}, Getters = {}> {
     actions?: Actions;
     /** 插件存储的 getters */
     getters?: Getters;
+    /**
+     * 持久化存储的配置
+     * - 默认来说，持久化存储会根据当前的state的结构，再动态获取值。
+     * -
+     */
+    storageConfig?: {
+        /** 是否启用持久化存储 */
+        enabled: boolean;
+        /** 持久化存储的键值 */
+        keys: (string | 'componentStatus')[];
+        /**
+         * 持久化存储的延迟时间 单位: ms
+         */
+        throttle_ms?: number;
+        /**
+         * 最大重试次数
+         *  最大的重试次数，如果超过这个次数则不再重试存储
+         */
+        max_retries?: number;
+    }
 }
 
 /**
@@ -107,6 +128,8 @@ export interface IPlugin<
     id: string;
     /** 插件的描述 */
     description: string;
+    /** 是否为官方插件 */
+    isOfficial: boolean;
     /** 插件的组件定义 */
     component: PluginComponent<T>;
     /**
