@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  $END$
+  <div>
+    <h1>课程表编辑器设置</h1>
+  </div>
 </template>
 
 <style scoped>
