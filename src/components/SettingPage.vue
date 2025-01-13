@@ -98,11 +98,7 @@ watch(
                 class="basis-1/4 min-w-44 max-w-64 p-3 bg-gray-200/70 backdrop-blur-sm rounded-lg overflow-y-auto flex-col flex gap-1 m-1"
             >
                 <!-- 基础设置组 -->
-                <TransitionGroup
-                    name="list"
-                    tag="div"
-                    class="flex flex-col gap-1"
-                >
+                <TransitionGroup tag="div" class="flex flex-col gap-1">
                     <template v-for="(value, key) in baseRoutes" :key="key">
                         <div
                             @click="changePage(String(key))"
@@ -182,23 +178,37 @@ watch(
 </template>
 
 <style scoped>
-.list-move,
-.list-enter-active,
-.list-leave-active,
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
+.list-move {
+    transition: transform 0.3s ease;
 }
 
-.list-enter-from,
-.list-leave-to,
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.3s ease;
+}
+
+.list-enter-from {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.list-leave-to {
+    opacity: 0;
+    transform: translateX(-30px);
 }
 
 .list-leave-active {
-  position: absolute;
+    position: absolute;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: translateX(-30px);
 }
 </style>
