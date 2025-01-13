@@ -83,13 +83,13 @@ watch(
         :class="store.setting.open ? 'scale-100' : 'scale-95'"
     >
       <button
-          class="absolute top-3 right-3 m-2 w-10 h-10 hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center"
+          class="absolute top-1 right-1 m-2 w-8 h-8 hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center"
           @click="store.reverseSettingOpen()"
       >
         <img
             alt="关闭窗口"
             src="@assets/images/web-window-close.svg"
-            class="w-5 h-5"
+            class="w-6 h-6"
         />
       </button>
 
@@ -163,7 +163,7 @@ watch(
         </TransitionGroup>
       </div>
 
-      <div class="bg-gray-100 flex-grow p-4 rounded-lg ml-1">
+      <div class="bg-gray-100 flex-grow p-8 rounded-lg ml-1">
         <component
             :is="routes[store.setting.current_page].component"
             v-bind="
