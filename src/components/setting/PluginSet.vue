@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {useApplicationStore} from "@/stores/useApplicationStore.ts";
-import {official_plugins} from "@/plugins/official_plugins.ts";
+import {officialPlugins} from "@/plugins/officialPlugins.ts";
 import TcSwitch from "@/UI/TcSwitch.vue";
 import TcButton from "@/UI/TcButton.vue";
 import {init_plugins} from "@/modules/pluginsManager.ts";
@@ -40,7 +40,7 @@ const reload_plugins = () => {
       </tc-button>
     </div>
 
-    <template v-for="item in official_plugins" :key="item.id">
+    <template v-for="item in officialPlugins" :key="item.id">
       <div
           class="flex items-center justify-between p-4 border-t border-gray-500"
       >

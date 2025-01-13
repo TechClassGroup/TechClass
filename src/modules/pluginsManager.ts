@@ -11,7 +11,7 @@ import {
     IPlugin,
 } from "@/types/plugins";
 import { useApplicationStore } from "@/stores/useApplicationStore.ts";
-import { official_plugins } from "@/plugins/official_plugins.ts";
+import { officialPlugins } from "@/plugins/officialPlugins.ts";
 
 export const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 
@@ -140,7 +140,7 @@ export function init_plugins() {
     const enable_official_plugins = store.storage.pluginsList.official;
     const enable_custom_plugins = store.storage.pluginsList.custom;
     for (const plugin of enable_official_plugins) {
-        const pluginObject = official_plugins.find((p) => p.id === plugin);
+        const pluginObject = officialPlugins.find((p) => p.id === plugin);
         if (pluginObject) registerPlugin(pluginObject);
         else {
             logger.warn(`官方插件 ${plugin} 不存在 加载失败`);

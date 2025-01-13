@@ -3,6 +3,6 @@
  */
 import timeDisplay from "@/plugins/timeDisplay/timeDisplay.ts";
 
-export const official_plugins = [
+export const officialPlugins = [
     timeDisplay,
 ]
