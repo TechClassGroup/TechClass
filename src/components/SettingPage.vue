@@ -78,6 +78,7 @@ watch(
   <div
       :class="store.setting.open ? 'z-50 opacity-100' : '-z-50 opacity-0'"
       class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black/30 transition-all duration-300"
+      @click.self="store.reverseSettingOpen()"
   >
     <div
         class="relative w-[1200px] max-h-[90vh] h-[800px] p-1 max-w-[70vw] bg-gray-100 rounded-xl flex overflow-hidden shadow-2xl transform transition-transform duration-300"
