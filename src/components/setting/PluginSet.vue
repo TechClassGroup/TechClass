@@ -30,13 +30,22 @@ const reload_plugins = () => {
   <div class="p-2">
     <div class="flex items-center mb-6">
       <h1 class="text-2xl font-medium leading-8">插件列表</h1>
-      <tc-button
-          v-if="store.setting.needReloadPlugins"
-          @click="reload_plugins"
-          class="ml-auto h-8"
+      <Transition
+          enter-active-class="transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+          enter-from-class="transform scale-90 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-90 opacity-0"
       >
-        立即重新加载
-      </tc-button>
+        <tc-button
+            v-if="store.setting.needReloadPlugins"
+            @click="reload_plugins"
+            class="ml-auto h-8"
+        >
+          立即重新加载
+        </tc-button>
+      </Transition>
     </div>
 
     <div class="space-y-3">
