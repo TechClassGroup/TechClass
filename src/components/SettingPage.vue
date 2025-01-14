@@ -122,7 +122,7 @@ watch(
         <Transition name="fade">
           <div
               v-if="Object.keys(officialPlugins).length > 0"
-              class="flex items-center gap-2 mt-6 mb-1 px-2"
+              class="flex items-center gap-2 mt-8 mb-1 px-2"
           >
             <div class="h-[1px] bg-gray-300 flex-grow"></div>
             <span class="text-sm text-gray-500 font-medium"
