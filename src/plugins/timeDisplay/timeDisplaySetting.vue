@@ -7,7 +7,10 @@ const props = defineProps<PluginProps>();
 const store = props.store;
 
 const isSecondDisabled = computed(() => {
-  return store.storage.displayHour && !store.storage.displayMinute;
+  return (
+      (store.storage.displayHour && !store.storage.displayMinute) ||
+      !store.storage.displayMinute
+  );
 });
 
 watch(isSecondDisabled, (newValue) => {
