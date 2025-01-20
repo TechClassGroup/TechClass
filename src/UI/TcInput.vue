@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, nextTick } from "vue";
 
 interface Props {
     /**
@@ -17,6 +17,12 @@ interface Props {
      * @default "text"
      */
     type?: string;
+
+    /**
+     * 输入框尺寸
+     * @default "default"
+     */
+    size?: "small" | "default" | "large";
 
     /**
      * 是否禁用输入框
@@ -40,18 +46,39 @@ interface Props {
      * @default false
      */
     required?: boolean;
+
+    /**
+     * 文本域行数，仅在 type="textarea" 时有效
+     */
+    rows?: number;
+
+    /**
+     * 自适应内容高度，仅对 type="textarea" 有效
+     * 可传入对象，如 { minRows: 2, maxRows: 6 }
+     */
+    autosize?: boolean | { minRows?: number; maxRows?: number };
 }
 
 const props = withDefaults(defineProps<Props>(), {
     type: "text",
+    size: "default",
     disabled: false,
     error: false,
     required: false,
+    rows: 2,
 });
 
 const model = defineModel();
+const textareaRef = ref<HTMLTextAreaElement>();
+
+const sizeClasses = computed(() => ({
+    "py-1 px-2 text-sm": props.size === "small",
+    "px-4 py-2": props.size === "default",
+    "px-4 py-3 text-lg": props.size === "large",
+}));
 
 const inputClasses = computed(() => ({
+    ...sizeClasses.value,
     "border-red-500": props.error,
     "border-gray-300": !props.error,
     "hover:border-[#0078D4] hover:shadow-sm": !props.disabled && !props.error,
@@ -60,6 +87,41 @@ const inputClasses = computed(() => ({
     "bg-gray-100 cursor-not-allowed": props.disabled,
     "bg-white": !props.disabled,
 }));
+
+// 自适应高度相关函数
+const updateTextareaHeight = async () => {
+    if (props.type !== "textarea" || !props.autosize || !textareaRef.value)
+        return;
+
+    await nextTick();
+    const textarea = textareaRef.value;
+    const minRows =
+        typeof props.autosize === "object" ? props.autosize.minRows || 1 : 1;
+    const maxRows =
+        typeof props.autosize === "object"
+            ? props.autosize.maxRows || Infinity
+            : Infinity;
+
+    textarea.style.height = "auto";
+    const lineHeight = parseInt(getComputedStyle(textarea).lineHeight);
+    const minHeight = minRows * lineHeight;
+    const maxHeight = maxRows * lineHeight;
+
+    const scrollHeight = textarea.scrollHeight;
+    textarea.style.height = `${Math.min(
+        Math.max(scrollHeight, minHeight),
+        maxHeight
+    )}px`;
+};
+
+// 监听值变化以更新高度
+const handleInput = (e: Event) => {
+    const value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
+    model.value = value;
+    if (props.type === "textarea" && props.autosize) {
+        updateTextareaHeight();
+    }
+};
 </script>
 
 <template>
@@ -69,13 +131,25 @@ const inputClasses = computed(() => ({
             <span v-if="required" class="text-red-500">*</span>
         </label>
 
-        <input
+        <textarea
+            v-if="type === 'textarea'"
+            ref="textareaRef"
             :value="model"
-            @input="e => model = (e.target as HTMLInputElement).value"
+            @input="handleInput"
+            :disabled="disabled"
+            :placeholder="placeholder"
+            :rows="rows"
+            class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full resize-none"
+            :class="inputClasses"
+        />
+        <input
+            v-else
+            :value="model"
+            @input="handleInput"
             :type="type"
             :disabled="disabled"
             :placeholder="placeholder"
-            class="px-4 py-2 rounded-lg border outline-none transition-all duration-300 ease-in-out w-full"
+            class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full"
             :class="inputClasses"
         />
 
@@ -90,11 +164,13 @@ const inputClasses = computed(() => ({
 </template>
 
 <style scoped>
-input::placeholder {
+input::placeholder,
+textarea::placeholder {
     transition: color 0.3s ease;
 }
 
-input:focus::placeholder {
+input:focus::placeholder,
+textarea:focus::placeholder {
     color: #999;
 }
 </style>
