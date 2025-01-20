@@ -68,7 +68,7 @@ const props = withDefaults(defineProps<Props>(), {
     rows: 2,
 });
 
-const model = defineModel();
+const model = defineModel<string>();
 const textareaRef = ref<HTMLTextAreaElement>();
 
 const sizeClasses = computed(() => ({
