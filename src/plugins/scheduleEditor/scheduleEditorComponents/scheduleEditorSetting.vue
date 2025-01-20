@@ -1,11 +1,11 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import SubjectEditor from "@/plugins/scheduleEditor/scheduleEditorComponents/subjectEditor.vue";
 </script>
 
 <template>
   <div>
-   <subject-editor></subject-editor>
+    <subject-editor></subject-editor>
   </div>
 </template>
 
