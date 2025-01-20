@@ -12,7 +12,7 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 p-2 bg-gray-50 rounded-lg">
+  <div class="flex flex-col gap-2 p-2  bg-gray-50 rounded-lg">
     <TransitionGroup class="flex flex-col gap-2" name="list" tag="div">
       <div
           v-for="(subject, id) in subjects"

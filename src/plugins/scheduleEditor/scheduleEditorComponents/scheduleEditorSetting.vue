@@ -1,14 +1,9 @@
 <script lang="ts" setup>
-
 import SubjectEditor from "@/plugins/scheduleEditor/scheduleEditorComponents/subjectEditor.vue";
 </script>
 
 <template>
-  <div>
     <subject-editor></subject-editor>
-  </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
