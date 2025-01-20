@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, nextTick } from "vue";
+import {computed, nextTick, ref} from "vue";
 
 interface Props {
     /**
@@ -116,8 +116,7 @@ const updateTextareaHeight = async () => {
 
 // 监听值变化以更新高度
 const handleInput = (e: Event) => {
-    const value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
-    model.value = value;
+  model.value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
     if (props.type === "textarea" && props.autosize) {
         updateTextareaHeight();
     }
