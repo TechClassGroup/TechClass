@@ -105,11 +105,33 @@ function deleteSubject(id: string) {
 
 <template>
     <div class="flex gap-4 h-[100%]">
-        <div class="w-64 flex flex-col overflow-y-auto scrollbar-stable">
+        <div class="w-64 flex flex-col">
+            <div class="bg-white rounded-lg p-2 mb-2 flex gap-2 shadow-sm">
+                <button
+                    class="flex-1 px-2 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
+                    @click="addSubject"
+                >
+                    添加
+                </button>
+                <button
+                    class="flex-1 px-2 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
+                    @click="copySubject(selectedSubjectId)"
+                    :disabled="!selectedSubjectId"
+                >
+                    复制
+                </button>
+                <button
+                    class="flex-1 px-2 py-1 text-sm rounded hover:bg-gray-100 transition-colors text-red-600"
+                    @click="deleteSubject(selectedSubjectId)"
+                    :disabled="!selectedSubjectId"
+                >
+                    删除
+                </button>
+            </div>
             <SubjectDisplay
                 :selected-subject-id="selectedSubjectId"
                 :subjects="subjects"
-                class="flex-1 break-all"
+                class="flex-1 break-all overflow-y-auto scrollbar-stable"
                 @select="handleSubjectSelect"
             />
         </div>
