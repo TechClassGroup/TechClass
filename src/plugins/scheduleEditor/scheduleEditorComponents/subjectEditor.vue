@@ -105,7 +105,7 @@ function deleteSubject(id: string) {
 
 <template>
     <div class="flex gap-4 h-[100%]">
-        <div class="w-64 flex flex-col">
+        <div class="flex-1 max-w-60 flex flex-col">
             <div class="bg-white rounded-lg p-2 mb-2 flex gap-2 shadow-sm">
                 <button
                     class="flex-1 px-2 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
