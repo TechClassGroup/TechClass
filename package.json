@@ -19,6 +19,7 @@
     "@types/lodash": "^4.17.13",
     "lodash": "^4.17.21",
     "pinia": "^2.2.6",
+    "uuid": "^11.0.5",
     "vue": "^3.3.4",
     "vue-draggable-resizable": "^3.0.0"
   },

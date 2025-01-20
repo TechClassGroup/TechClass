@@ -1,5 +1,5 @@
 import {IPlugin} from "@/types/plugins";
-import scheduleEditorSetting from "@/plugins/scheduleEditor/scheduleEditorSetting.vue";
+import scheduleEditorSetting from "@/plugins/scheduleEditor/scheduleEditorComponents/scheduleEditorSetting.vue";
 
 /**
  * @fileOverview 课表编辑器插件
