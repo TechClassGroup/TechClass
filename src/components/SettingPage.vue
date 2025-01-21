@@ -96,7 +96,7 @@ watch(
             </button>
 
             <div
-                class="w-60 min-w-60 p-3 bg-gray-200/70 backdrop-blur-sm rounded-lg overflow-y-auto flex-col flex gap-1 m-1"
+                class="w-1/4 max-w-52  p-3 bg-gray-200/70 backdrop-blur-sm rounded-lg overflow-y-auto flex-col flex gap-1 m-1"
             >
                 <!-- 基础设置组 -->
                 <TransitionGroup tag="div" class="flex flex-col gap-1">
@@ -161,7 +161,7 @@ watch(
                 </TransitionGroup>
             </div>
 
-            <div class="bg-gray-100 flex-grow p-8 rounded-lg ml-1">
+            <div class="bg-gray-100 w-3/4 p-8 rounded-lg ml-1 flex-grow">
                 <component
                     :is="routes[store.setting.current_page].component"
                     v-bind="
