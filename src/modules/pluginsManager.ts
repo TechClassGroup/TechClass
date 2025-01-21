@@ -3,15 +3,11 @@
  */
 
 import logger from "./logger.ts";
-import { defineStore } from "pinia";
-import { markRaw, ref, Ref, watch } from "vue";
-import {
-    DraggableComponentStatus,
-    InstancePlugin,
-    IPlugin,
-} from "@/types/plugins";
-import { useApplicationStore } from "@/stores/useApplicationStore.ts";
-import { officialPlugins } from "@/plugins/officialPlugins.ts";
+import {defineStore} from "pinia";
+import {markRaw, ref, Ref, watch} from "vue";
+import {DraggableComponentStatus, InstancePlugin, IPlugin,} from "@/types/plugins";
+import {useApplicationStore} from "@/stores/useApplicationStore.ts";
+import {officialPlugins} from "@/plugins/officialPlugins.ts";
 
 export const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 
@@ -28,26 +24,26 @@ export function registerPlugin(plugin: IPlugin<any>) {
         return;
     }
     // 从插件中提取组件
-    const { mainPage, settingPage } = plugin.component ?? {};
+    const {mainPage, settingPage} = plugin.component ?? {};
 
     // 包裹组件防止被reactive包裹，然后vue在那叫个不停
-    const processedPlugin = { ...plugin };
+    const processedPlugin = {...plugin};
     processedPlugin.component = {
         // 处理主页面组件:
         // 1. 如果存在主页面组件,使用 markRaw 包装每个组件防止 Vue 响应式处理
         // 2. 如果不存在则为 null
-        mainPage: mainPage 
+        mainPage: mainPage
             ? Object.fromEntries(
                 Object.entries(mainPage).map(([key, component]) => [
                     key,
-                    markRaw(component)
+                    markRaw(component),
                 ])
             )
             : mainPage,
-        
+
         // 处理设置页面组件:
         // 如果存在则用 markRaw 包装,否则保持原值
-        settingPage: settingPage ? markRaw(settingPage) : settingPage
+        settingPage: settingPage ? markRaw(settingPage) : settingPage,
     };
 
     // 初始化 store
@@ -101,13 +97,13 @@ export function registerPlugin(plugin: IPlugin<any>) {
         },
         ...(isOfficial && plugin.storeConfig?.storageConfig
             ? {
-                  config_storage: {
-                      enabled: plugin.storeConfig.storageConfig.enabled,
-                      keys: plugin.storeConfig.storageConfig.keys,
-                      throttle_ms: plugin.storeConfig.storageConfig.throttle_ms,
-                      max_retries: plugin.storeConfig.storageConfig.max_retries,
-                  },
-              }
+                config_storage: {
+                    enabled: plugin.storeConfig.storageConfig.enabled,
+                    keys: plugin.storeConfig.storageConfig.keys,
+                    throttle_ms: plugin.storeConfig.storageConfig.throttle_ms,
+                    max_retries: plugin.storeConfig.storageConfig.max_retries,
+                },
+            }
             : {}),
     });
     const store = storeDefine();
@@ -127,32 +123,65 @@ export function registerPlugin(plugin: IPlugin<any>) {
         pluginObject: processedPlugin,
         store,
     };
+    // 生命周期钩子
+    if (processedPlugin.hooks?.onMounted) {
+        processedPlugin.hooks.onMounted(store);
+    }
     logger.info(`插件 ${plugin.name} id: ${plugin.id} 加载成功`);
     callPluginRegisterCallbacks(plugin.id);
+}
+
+function unregisterPlugin(id: string) {
+    if (loadedPlugins.value[id]) {
+        const plugin = loadedPlugins.value[id];
+        if (plugin.pluginObject.hooks?.onUnmounted) {
+            plugin.pluginObject.hooks.onUnmounted();
+        }
+        delete loadedPlugins.value[id];
+        logger.info(
+            `插件 ${plugin.pluginObject.name} id: ${plugin.pluginObject.id} 卸载成功`
+        );
+    } else {
+        logger.warn(`插件 ${id} 不存在 卸载失败`);
+    }
 }
 
 /**
  * 初始化插件
  */
 export function init_plugins() {
-    loadedPlugins.value = {}; // 重置插件列表
     const store = useApplicationStore();
     const enable_official_plugins = store.storage.pluginsList.official;
-    const enable_custom_plugins = store.storage.pluginsList.custom;
-    for (const plugin of enable_official_plugins) {
-        const pluginObject = officialPlugins.find((p) => p.id === plugin);
-        if (pluginObject) registerPlugin(pluginObject);
-        else {
-            logger.warn(`官方插件 ${plugin} 不存在 加载失败`);
-            // 移除不存在的插件
-            enable_official_plugins.splice(
-                enable_official_plugins.indexOf(plugin),
-                1
-            );
-        }
-    }
 
-    store.setting.needReloadPlugins = false; // 回调防止循环调用
+    // 获取当前已加载的插件ID列表
+    const currentPluginIds = Object.keys(loadedPlugins.value);
+
+    // 卸载不在启用列表中的插件
+    currentPluginIds.forEach((id) => {
+        if (!enable_official_plugins.includes(id)) {
+            unregisterPlugin(id);
+        }
+    });
+
+    // 加载新的插件
+    enable_official_plugins.forEach((pluginId: string) => {
+        // 如果插件已经加载，则跳过
+        if (loadedPlugins.value[pluginId]) return;
+
+        const pluginObject = officialPlugins.find((p) => p.id === pluginId);
+        if (pluginObject) {
+            registerPlugin(pluginObject);
+        } else {
+            logger.warn(`官方插件 ${pluginId} 不存在 加载失败`);
+            // 从启用列表中移除不存在的插件
+            const index = enable_official_plugins.indexOf(pluginId);
+            if (index > -1) {
+                enable_official_plugins.splice(index, 1);
+            }
+        }
+    });
+
+    store.setting.needReloadPlugins = false;
 }
 
 const pluginRegisterCallbacks: Record<string, Function[]> = {};

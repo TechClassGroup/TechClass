@@ -3,7 +3,6 @@
  */
 import {defineComponent} from "vue";
 import {Store} from "pinia";
-import {ConfigStorageOptions} from "@/stores/piniaPlugins.ts";
 
 /**
  * 可拖拽组件的配置参数。
@@ -140,6 +139,21 @@ export interface IPlugin<
     api?: Record<string, any>;
     /** 配置插件的store */
     storeConfig?: StoreConfig<T, Actions, Getters>;
+    /**
+     * 插件的生命周期钩子
+     */
+    hooks?: {
+        /**
+         * 插件挂载时的钩子函数
+         * @param store - 插件的 pinia store 实例
+         */
+        onMounted?: (store: PluginStore<T>) => void;
+        /**
+         * 插件卸载时的钩子函数
+         */
+        onUnmounted?: () => void;
+    }
+
 }
 
 /**
