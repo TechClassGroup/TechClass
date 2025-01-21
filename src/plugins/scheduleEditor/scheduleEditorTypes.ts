@@ -6,7 +6,7 @@ export interface Subject {
     isActive: boolean;
     attach?: {
         [key: string]: any;
-    }
+    };
 }
 
 export type SubjectObject = {

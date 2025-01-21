@@ -4,9 +4,9 @@ import {SubjectObject} from "@/plugins/scheduleEditor/scheduleEditorTypes.ts";
 import SubjectDisplay from "./subjectDisplay.vue";
 import SubjectChecker from "./subjectChecker.vue";
 import {v4 as uuidv4} from "uuid";
-import {useScheduleEditorSetting} from "@/plugins/scheduleEditor/scheduleEditor.ts";
+import {scheduleEditorState} from "@/plugins/scheduleEditor/scheduleEditor.ts";
 
-const subjects = useScheduleEditorSetting().subjects;
+const subjects = scheduleEditorState.value.subjects;
 
 const selectedSubjectId = ref<string>("");
 
