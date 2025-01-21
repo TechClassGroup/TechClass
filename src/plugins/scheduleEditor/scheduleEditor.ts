@@ -68,6 +68,7 @@ export const scheduleEditor: IPlugin = {
             const store = useScheduleEditorSetting()
         },
         onUnmounted: () => {
+            // 象征意义上的内存清理 (实则并没有什么用)
             const store = useScheduleEditorSetting()
             store.$dispose()
         }
