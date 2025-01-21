@@ -4,6 +4,7 @@ import {SubjectObject} from "@/plugins/scheduleEditor/scheduleEditorTypes.ts";
 import {ref} from "vue";
 
 const createScheduleEditorStore = () => {
+    // 测试数据
     return {
         subjects: {
             "550e8400-e29b-41d4-a716-446655440000": {

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import {SubjectObject} from "@/plugins/scheduleEditor/scheduleEditorTypes.ts";
-import SubjectDisplay from "./subjectDisplay.vue";
-import SubjectChecker from "./subjectChecker.vue";
+import SubjectEditorDisplay from "./subjectEditorDisplay.vue";
+import SubjectEditorChecker from "./subjectEditorChecker.vue";
 import {v4 as uuidv4} from "uuid";
 import {scheduleEditorState} from "@/plugins/scheduleEditor/scheduleEditor.ts";
 
@@ -93,7 +93,7 @@ function deleteSubject(id: string) {
           删除
         </button>
       </div>
-      <SubjectDisplay
+      <SubjectEditorDisplay
           :selected-subject-id="selectedSubjectId"
           :subjects="subjects"
           class="flex-1 break-all overflow-y-auto scrollbar-stable"
@@ -103,7 +103,7 @@ function deleteSubject(id: string) {
     <div
         class="flex-1 bg-white rounded-lg flex flex-col overflow-y-auto scrollbar-stable"
     >
-      <SubjectChecker
+      <SubjectEditorChecker
           :subject="subjects[selectedSubjectId]"
           :subject-id="selectedSubjectId"
           class="flex-1 break-all"
