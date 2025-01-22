@@ -54,7 +54,6 @@ function addSubject() {
         shortName: "新",
         notes: "",
         teacherName: "",
-        isActive: true,
     };
     selectedSubjectId.value = newId;
 }

@@ -4,6 +4,7 @@ import { TimetableObject } from "@/plugins/scheduleEditor/scheduleEditorTypes";
 import { DateTime } from "luxon";
 import { scheduleEditorState } from "@/plugins/scheduleEditor/scheduleStore";
 import TcInput from "@/UI/TcInput.vue";
+import TcSwitch from "@/UI/TcSwitch.vue";
 
 const selectedTimetableId = defineModel<string>("selectedTimetableId", {
     required: true,
@@ -75,8 +76,9 @@ function updateTime(field: "startTime" | "endTime", timeStr: string) {
     }
 }
 
-function updateType(type: "lesson" | "break") {
+function updateType(type: string) {
     if (!currentLayout.value) return;
+    if (type !== "lesson" && type !== "break") return;
 
     if (type === "lesson") {
         Object.assign(currentLayout.value, {
@@ -88,7 +90,7 @@ function updateType(type: "lesson" | "break") {
     } else {
         Object.assign(currentLayout.value, {
             type: "break",
-            breakName: "休息时间",
+            breakName: "课间",
         });
         // @ts-ignore
         delete currentLayout.value.subjectId;
@@ -107,6 +109,11 @@ function updateSubject(subjectId: string) {
 
 function formatTimeForInput(time: DateTime): string {
     return time.toFormat("HH:mm");
+}
+
+function updateHide(hide: boolean) {
+    if (!currentLayout.value) return;
+    currentLayout.value.hide = hide;
 }
 </script>
 
@@ -140,11 +147,14 @@ function formatTimeForInput(time: DateTime): string {
                             class="block text-sm font-medium text-gray-700 mb-1"
                             >开始时间</label
                         >
-                        <input
+                        <TcInput
                             type="time"
-                            :value="formatTimeForInput(currentLayout.startTime)"
-                            @input="(e) => updateTime('startTime', (e.target as HTMLInputElement).value)"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            :model-value="
+                                formatTimeForInput(currentLayout.startTime)
+                            "
+                            @update:model-value="
+                                (value) => updateTime('startTime', value)
+                            "
                             min="00:00"
                             max="23:59"
                             step="60"
@@ -155,11 +165,14 @@ function formatTimeForInput(time: DateTime): string {
                             class="block text-sm font-medium text-gray-700 mb-1"
                             >结束时间</label
                         >
-                        <input
+                        <TcInput
                             type="time"
-                            :value="formatTimeForInput(currentLayout.endTime)"
-                            @input="(e) => updateTime('endTime', (e.target as HTMLInputElement).value)"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            :model-value="
+                                formatTimeForInput(currentLayout.endTime)
+                            "
+                            @update:model-value="
+                                (value) => updateTime('endTime', value)
+                            "
                             min="00:00"
                             max="23:59"
                             step="60"
@@ -171,43 +184,32 @@ function formatTimeForInput(time: DateTime): string {
             <!-- 类型选择 -->
             <div class="space-y-4">
                 <h3 class="text-lg font-medium text-gray-900">类型设置</h3>
-                <div class="flex gap-4">
-                    <button
-                        class="flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors"
-                        :class="
-                            currentLayout.type === 'lesson'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        "
-                        @click="updateType('lesson')"
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                        >选择类型</label
                     >
-                        课程
-                    </button>
-                    <button
-                        class="flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors"
-                        :class="
-                            currentLayout.type === 'break'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        "
-                        @click="updateType('break')"
+                    <select
+                        :value="currentLayout.type"
+                        @change="(e) => updateType((e.target as HTMLSelectElement).value)"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
                     >
-                        休息
-                    </button>
+                        <option value="lesson">课程</option>
+                        <option value="break">课间</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- 课程/休息时间设置 -->
+            <!-- 课程设置 -->
             <div class="space-y-4" v-if="currentLayout.type === 'lesson'">
                 <h3 class="text-lg font-medium text-gray-900">课程设置</h3>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1"
-                        >选择课程</label
+                        >选择默认课程</label
                     >
                     <select
                         :value="currentLayout.subjectId"
                         @change="(e) => updateSubject((e.target as HTMLSelectElement).value)"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
                     >
                         <option value="">无</option>
                         <option
@@ -219,20 +221,36 @@ function formatTimeForInput(time: DateTime): string {
                         </option>
                     </select>
                 </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700"
+                        >独立显示</label
+                    >
+                    <TcSwitch
+                        :model-value="currentLayout.hide"
+                        @update:model-value="updateHide"
+                    />
+                </div>
             </div>
 
             <div class="space-y-4" v-else>
-                <h3 class="text-lg font-medium text-gray-900">休息时间设置</h3>
+                <h3 class="text-lg font-medium text-gray-900">课间名称</h3>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1"
-                        >休息时间名称</label
+                        >课间名称</label
                     >
-                    <input
-                        type="text"
-                        :value="currentLayout.breakName"
-                        @input="(e) => updateBreakName((e.target as HTMLInputElement).value)"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    <TcInput
+                        :model-value="currentLayout.breakName"
+                        @update:model-value="updateBreakName"
                         placeholder="例如：课间休息"
+                    />
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700"
+                        >独立显示</label
+                    >
+                    <TcSwitch
+                        :model-value="currentLayout.hide"
+                        @update:model-value="updateHide"
                     />
                 </div>
             </div>

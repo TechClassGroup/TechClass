@@ -60,6 +60,7 @@ function addLayout() {
         startTime: now.set({ hour: 8, minute: 0 }),
         endTime: now.set({ hour: 8, minute: 45 }),
         subjectId: "",
+        hide:false
     };
     selectedLayoutId.value = newId;
 }

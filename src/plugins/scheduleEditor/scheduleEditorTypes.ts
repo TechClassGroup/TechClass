@@ -23,6 +23,10 @@ export interface Timetable {
 interface BaseLayout {
     startTime: DateTime;
     endTime: DateTime;
+    /**
+     * 是否单独显示 (为true时，只有时间适合时，才会显示在一个独立的位置，而不是和课程一起显示)
+     */
+    hide: boolean;
     attach?: {
         [key: string]: any;
     };
@@ -30,11 +34,17 @@ interface BaseLayout {
 
 interface LessonLayout extends BaseLayout {
     type: "lesson";
+    /**
+     * 默认课程的ID
+     */
     subjectId: string;
 }
 
 interface BreakLayout extends BaseLayout {
     type: "break";
+    /**
+     * 课间休息的名称
+     */
     breakName: string;
 }
 

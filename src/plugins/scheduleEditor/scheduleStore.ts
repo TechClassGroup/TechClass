@@ -46,12 +46,14 @@ const createScheduleEditorStore = () => {
                         startTime: DateTime.fromObject({ hour: 8, minute: 0 }),
                         endTime: DateTime.fromObject({ hour: 8, minute: 45 }),
                         subjectId: "550e8400-e29b-41d4-a716-446655440000",
+                        hide:false
                     },
                     "550e8400-e29b-41d4-a716-446655440003": {
                         type: "break",
                         startTime: DateTime.fromObject({ hour: 8, minute: 45 }),
                         endTime: DateTime.fromObject({ hour: 9, minute: 0 }),
                         breakName: "课间休息",
+                        hide:true
                     },
                 },
             },
