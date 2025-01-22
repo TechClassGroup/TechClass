@@ -3,7 +3,6 @@ export interface Subject {
     shortName: string;
     notes: string;
     teacherName: string;
-    isActive: boolean;
     attach?: {
         [key: string]: any;
     };

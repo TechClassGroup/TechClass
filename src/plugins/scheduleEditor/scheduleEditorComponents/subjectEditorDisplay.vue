@@ -35,16 +35,7 @@ defineEmits<{
                                 >({{ subject.shortName }})</span
                             >
                         </div>
-                        <div
-                            :class="
-                                subject.isActive
-                                    ? 'bg-emerald-100 text-emerald-700'
-                                    : 'bg-red-100 text-red-700'
-                            "
-                            class="text-[10px] inline-flex items-center px-1.5 py-0.5 rounded-full ml-auto"
-                        >
-                            {{ subject.isActive ? "已启用" : "已停用" }}
-                        </div>
+
                     </div>
                     <div
                         v-if="subject.notes"

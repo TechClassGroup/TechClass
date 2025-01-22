@@ -3,7 +3,9 @@
 </script>
 
 <template>
-123123
+  <div class="flex gap-4 h-[100%]">
+
+  </div>
 </template>
 
 <style scoped>
