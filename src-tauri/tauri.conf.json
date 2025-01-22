@@ -49,6 +49,9 @@
           "German",
           "Spanish"
         ]
+      },
+      "webviewInstallMode": {
+        "type": "embedBootstrapper"
       }
     }
   }
