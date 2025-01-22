@@ -49,6 +49,7 @@ function deleteTimetable(id: string | number) {
         }
     }
 }
+
 </script>
 
 <template>
@@ -68,8 +69,9 @@ function deleteTimetable(id: string | number) {
             </TcButton>
             <TcButton
                 class="flex-1"
-                variant="outlined"
+                variant="tonal"
                 :disabled="!selectedTimetableId"
+                color="error"
                 @click="deleteTimetable(selectedTimetableId)"
             >
                 删除

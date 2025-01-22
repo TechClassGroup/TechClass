@@ -106,7 +106,8 @@ function deleteLayout(id: string | number) {
             </TcButton>
             <TcButton
                 class="flex-1"
-                variant="outlined"
+                variant="tonal"
+                color="error"
                 :disabled="!selectedLayoutId"
                 @click="deleteLayout(selectedLayoutId)"
             >

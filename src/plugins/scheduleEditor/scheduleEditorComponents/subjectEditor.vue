@@ -86,7 +86,8 @@ function deleteSubject(id: string) {
                 </TcButton>
                 <TcButton
                     class="flex-1"
-                    variant="outlined"
+                    variant="tonal"
+                    color="error"
                     @click="deleteSubject(selectedSubjectId)"
                     :disabled="!selectedSubjectId"
                 >
