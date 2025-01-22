@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { TimetableObject } from "@/plugins/scheduleEditor/scheduleEditorTypes";
 import { DateTime } from "luxon";
-import { scheduleEditorState } from "@/plugins/scheduleEditor/scheduleEditor";
+import { scheduleEditorState } from "@/plugins/scheduleEditor/scheduleStore";
 import TcInput from "@/UI/TcInput.vue";
 
 const selectedTimetableId = defineModel<string>("selectedTimetableId", {
@@ -209,7 +209,7 @@ function formatTimeForInput(time: DateTime): string {
                         @change="(e) => updateSubject((e.target as HTMLSelectElement).value)"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                        <option value="">请选择课程</option>
+                        <option value="">无</option>
                         <option
                             v-for="(subject, id) in subjects"
                             :key="id"
