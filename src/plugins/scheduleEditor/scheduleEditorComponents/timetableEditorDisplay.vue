@@ -49,7 +49,6 @@ function deleteTimetable(id: string | number) {
         }
     }
 }
-
 </script>
 
 <template>
@@ -80,29 +79,67 @@ function deleteTimetable(id: string | number) {
 
         <!-- 时间表列表 -->
         <div class="flex-1 overflow-y-auto scrollbar-stable">
-            <div
-                v-for="(timetable, id) in timetables"
-                :key="id"
-                class="p-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 relative"
-                :class="{ 'bg-blue-50': id === selectedTimetableId }"
-                @click="selectedTimetableId = id"
-            >
-                <div class="font-medium text-gray-900">
-                    {{ timetable.name }}
-                </div>
-                <div class="text-sm text-gray-500 mt-1">
-                    {{ Object.keys(timetable.layouts).length }} 个课程
-                </div>
-                <div
-                    v-if="id === selectedTimetableId"
-                    class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"
-                ></div>
+            <div class="flex flex-col gap-2 p-2 bg-gray-50 rounded-lg">
+                <TransitionGroup
+                    class="flex flex-col gap-2"
+                    name="list"
+                    tag="div"
+                >
+                    <div
+                        v-for="(timetable, id) in timetables"
+                        :key="id"
+                        :class="[
+                            selectedTimetableId === id
+                                ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                        ]"
+                        class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
+                        @click="selectedTimetableId = id"
+                    >
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium">{{
+                                        timetable.name
+                                    }}</span>
+                                </div>
+                            </div>
+                            <div class="text-xs text-gray-500 pl-0.5">
+                                {{ Object.keys(timetable.layouts).length }}
+                                个课程
+                            </div>
+                        </div>
+                    </div>
+                </TransitionGroup>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.list-move {
+    transition: transform 0.3s ease;
+}
+
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.3s ease;
+}
+
+.list-enter-from {
+    transform: translateX(-30px);
+    opacity: 0;
+}
+
+.list-leave-to {
+    transform: translateX(-30px);
+    opacity: 0;
+}
+
+.list-leave-active {
+    position: absolute;
+}
+
 button:disabled {
     opacity: 0.5;
     cursor: not-allowed;

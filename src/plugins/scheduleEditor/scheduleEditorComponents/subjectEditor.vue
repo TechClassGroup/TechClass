@@ -97,13 +97,11 @@ function deleteSubject(id: string) {
             <SubjectEditorDisplay
                 :selected-subject-id="selectedSubjectId"
                 :subjects="subjects"
-                class="flex-1 break-all overflow-y-auto scrollbar-stable"
+                class="flex-1 break-all overflow-y-auto"
                 @select="handleSubjectSelect"
             />
         </div>
-        <div
-            class="flex-1 bg-white rounded-lg flex flex-col overflow-y-auto scrollbar-stable"
-        >
+        <div class="flex-1 bg-white rounded-lg flex flex-col overflow-y-auto">
             <SubjectEditorChecker
                 :subject="subjects[selectedSubjectId]"
                 :subject-id="selectedSubjectId"
@@ -120,27 +118,5 @@ function deleteSubject(id: string) {
     word-wrap: break-word;
     word-break: break-all;
     overflow-wrap: break-word;
-}
-
-.scrollbar-stable {
-    scrollbar-gutter: stable;
-}
-
-/* 自定义滚动条样式 */
-.scrollbar-stable::-webkit-scrollbar {
-    width: 8px;
-}
-
-.scrollbar-stable::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.scrollbar-stable::-webkit-scrollbar-thumb {
-    background-color: #d1d5db;
-    border-radius: 4px;
-}
-
-.scrollbar-stable::-webkit-scrollbar-thumb:hover {
-    background-color: #9ca3af;
 }
 </style>

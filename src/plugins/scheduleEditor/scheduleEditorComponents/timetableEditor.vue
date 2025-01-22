@@ -13,69 +13,48 @@ const selectedLayoutId = ref<string>("");
 <template>
     <div class="flex gap-4 h-[100%]">
         <!-- 时间表列表 -->
-        <div
-            class="flex-1 max-w-60 bg-white rounded-lg shadow-md overflow-hidden"
-        >
-            <div class="p-4 bg-primary-600 text-white">
-                <h2 class="text-lg font-medium">时间表</h2>
+        <div class="flex-1 max-w-60 flex flex-col">
+            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+                <h2 class="text-lg font-medium px-2 text-center">时间表</h2>
             </div>
-            <TimetableEditorDisplay
-                v-model:selected-timetable-id="selectedTimetableId"
-                v-model:timetables="timetables"
-            />
+            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+                <TimetableEditorDisplay
+                    v-model:selected-timetable-id="selectedTimetableId"
+                    v-model:timetables="timetables"
+                />
+            </div>
         </div>
 
         <!-- 课程列表 -->
-        <div
-            class="flex-1 max-w-96 bg-white rounded-lg shadow-md overflow-hidden"
-        >
-            <div class="p-4 bg-primary-600 text-white">
-                <h2 class="text-lg font-medium">课程列表</h2>
+        <div class="flex-1 max-w-96 flex flex-col">
+            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+                <h2 class="text-lg font-medium px-2 text-center">课程列表</h2>
             </div>
-            <TimetableLayoutList
-                v-model:selected-timetable-id="selectedTimetableId"
-                v-model:selected-layout-id="selectedLayoutId"
-                v-model:timetables="timetables"
-            />
+            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+                <TimetableLayoutList
+                    v-model:selected-timetable-id="selectedTimetableId"
+                    v-model:selected-layout-id="selectedLayoutId"
+                    v-model:timetables="timetables"
+                />
+            </div>
         </div>
 
         <!-- 检查器 -->
-        <div class="flex-1 bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-4 bg-primary-600 text-white">
-                <h2 class="text-lg font-medium">课程详情</h2>
+        <div class="flex-1 flex flex-col">
+            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+                <h2 class="text-lg font-medium px-2 text-center">课程详情</h2>
             </div>
-            <TimetableLayoutChecker
-                v-model:selected-timetable-id="selectedTimetableId"
-                v-model:selected-layout-id="selectedLayoutId"
-                v-model:timetables="timetables"
-            />
+            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+                <TimetableLayoutChecker
+                    v-model:selected-timetable-id="selectedTimetableId"
+                    v-model:selected-layout-id="selectedLayoutId"
+                    v-model:timetables="timetables"
+                />
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.bg-primary-600 {
-    background-color: #1976d2;
-}
-
-:deep(.scrollbar-stable) {
-    scrollbar-gutter: stable;
-}
-
-:deep(.scrollbar-stable::-webkit-scrollbar) {
-    width: 8px;
-}
-
-:deep(.scrollbar-stable::-webkit-scrollbar-track) {
-    background: transparent;
-}
-
-:deep(.scrollbar-stable::-webkit-scrollbar-thumb) {
-    background-color: #d1d5db;
-    border-radius: 4px;
-}
-
-:deep(.scrollbar-stable::-webkit-scrollbar-thumb:hover) {
-    background-color: #9ca3af;
-}
+/* 自定义滚动条样式 */
 </style>

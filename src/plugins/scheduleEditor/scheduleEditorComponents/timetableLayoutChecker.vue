@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { TimetableObject } from "@/plugins/scheduleEditor/scheduleEditorTypes";
 import { DateTime } from "luxon";
 import { scheduleEditorState } from "@/plugins/scheduleEditor/scheduleEditor";
+import TcInput from "@/UI/TcInput.vue";
 
 const selectedTimetableId = defineModel<string>("selectedTimetableId", {
     required: true,
@@ -16,20 +17,31 @@ const timetables = defineModel<TimetableObject>("timetables", {
 
 const subjects = scheduleEditorState.value.subjects;
 
-const currentLayout = computed(() => {
+const currentTimetable = computed(() => {
     if (
         !selectedTimetableId.value ||
-        !selectedLayoutId.value ||
-        !timetables.value[selectedTimetableId.value]?.layouts[
-            selectedLayoutId.value
-        ]
+        !timetables.value[selectedTimetableId.value]
     ) {
         return null;
     }
-    return timetables.value[selectedTimetableId.value].layouts[
-        selectedLayoutId.value
-    ];
+    return timetables.value[selectedTimetableId.value];
 });
+
+const currentLayout = computed(() => {
+    if (
+        !currentTimetable.value ||
+        !selectedLayoutId.value ||
+        !currentTimetable.value.layouts[selectedLayoutId.value]
+    ) {
+        return null;
+    }
+    return currentTimetable.value.layouts[selectedLayoutId.value];
+});
+
+function updateTimetableName(name: string) {
+    if (!currentTimetable.value) return;
+    currentTimetable.value.name = name;
+}
 
 function updateTime(field: "startTime" | "endTime", timeStr: string) {
     if (!currentLayout.value) return;
@@ -99,114 +111,142 @@ function formatTimeForInput(time: DateTime): string {
 </script>
 
 <template>
-    <div class="p-4 flex flex-col gap-6" v-if="currentLayout">
-        <!-- 时间设置 -->
-        <div class="space-y-4">
-            <h3 class="text-lg font-medium text-gray-900">时间设置</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1"
-                        >开始时间</label
-                    >
-                    <input
-                        type="time"
-                        :value="formatTimeForInput(currentLayout.startTime)"
-                        @input="(e) => updateTime('startTime', (e.target as HTMLInputElement).value)"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        min="00:00"
-                        max="23:59"
-                        step="60"
-                    />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1"
-                        >结束时间</label
-                    >
-                    <input
-                        type="time"
-                        :value="formatTimeForInput(currentLayout.endTime)"
-                        @input="(e) => updateTime('endTime', (e.target as HTMLInputElement).value)"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        min="00:00"
-                        max="23:59"
-                        step="60"
-                    />
-                </div>
-            </div>
-        </div>
-
-        <!-- 类型选择 -->
-        <div class="space-y-4">
-            <h3 class="text-lg font-medium text-gray-900">类型设置</h3>
-            <div class="flex gap-4">
-                <button
-                    class="flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors"
-                    :class="
-                        currentLayout.type === 'lesson'
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    "
-                    @click="updateType('lesson')"
-                >
-                    课程
-                </button>
-                <button
-                    class="flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors"
-                    :class="
-                        currentLayout.type === 'break'
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    "
-                    @click="updateType('break')"
-                >
-                    休息
-                </button>
-            </div>
-        </div>
-
-        <!-- 课程/休息时间设置 -->
-        <div class="space-y-4" v-if="currentLayout.type === 'lesson'">
-            <h3 class="text-lg font-medium text-gray-900">课程设置</h3>
+    <div class="p-4 flex flex-col gap-6">
+        <!-- 时间表基本信息 -->
+        <div v-if="currentTimetable" class="space-y-4">
+            <h3 class="text-lg font-medium text-gray-900">时间表设置</h3>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >选择课程</label
+                    >时间表名称</label
                 >
-                <select
-                    :value="currentLayout.subjectId"
-                    @change="(e) => updateSubject((e.target as HTMLSelectElement).value)"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                    <option value="">请选择课程</option>
-                    <option
-                        v-for="(subject, id) in subjects"
-                        :key="id"
-                        :value="id"
-                    >
-                        {{ subject.name }}
-                    </option>
-                </select>
-            </div>
-        </div>
-
-        <div class="space-y-4" v-else>
-            <h3 class="text-lg font-medium text-gray-900">休息时间设置</h3>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >休息时间名称</label
-                >
-                <input
-                    type="text"
-                    :value="currentLayout.breakName"
-                    @input="(e) => updateBreakName((e.target as HTMLInputElement).value)"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="例如：课间休息"
+                <TcInput
+                    :model-value="currentTimetable.name"
+                    placeholder="请输入时间表名称"
+                    @update:model-value="updateTimetableName"
                 />
             </div>
         </div>
-    </div>
 
-    <div v-else class="p-4 text-center text-gray-500">
-        请选择一个课程进行编辑
+        <div v-if="currentTimetable" class="h-[1px] bg-gray-200"></div>
+
+        <!-- 课程布局详情 -->
+        <template v-if="currentLayout">
+            <!-- 时间设置 -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-900">时间设置</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >开始时间</label
+                        >
+                        <input
+                            type="time"
+                            :value="formatTimeForInput(currentLayout.startTime)"
+                            @input="(e) => updateTime('startTime', (e.target as HTMLInputElement).value)"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            min="00:00"
+                            max="23:59"
+                            step="60"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >结束时间</label
+                        >
+                        <input
+                            type="time"
+                            :value="formatTimeForInput(currentLayout.endTime)"
+                            @input="(e) => updateTime('endTime', (e.target as HTMLInputElement).value)"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            min="00:00"
+                            max="23:59"
+                            step="60"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- 类型选择 -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-900">类型设置</h3>
+                <div class="flex gap-4">
+                    <button
+                        class="flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors"
+                        :class="
+                            currentLayout.type === 'lesson'
+                                ? 'bg-blue-100 text-blue-700'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        "
+                        @click="updateType('lesson')"
+                    >
+                        课程
+                    </button>
+                    <button
+                        class="flex-1 px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors"
+                        :class="
+                            currentLayout.type === 'break'
+                                ? 'bg-blue-100 text-blue-700'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        "
+                        @click="updateType('break')"
+                    >
+                        休息
+                    </button>
+                </div>
+            </div>
+
+            <!-- 课程/休息时间设置 -->
+            <div class="space-y-4" v-if="currentLayout.type === 'lesson'">
+                <h3 class="text-lg font-medium text-gray-900">课程设置</h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                        >选择课程</label
+                    >
+                    <select
+                        :value="currentLayout.subjectId"
+                        @change="(e) => updateSubject((e.target as HTMLSelectElement).value)"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                        <option value="">请选择课程</option>
+                        <option
+                            v-for="(subject, id) in subjects"
+                            :key="id"
+                            :value="id"
+                        >
+                            {{ subject.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-4" v-else>
+                <h3 class="text-lg font-medium text-gray-900">休息时间设置</h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                        >休息时间名称</label
+                    >
+                    <input
+                        type="text"
+                        :value="currentLayout.breakName"
+                        @input="(e) => updateBreakName((e.target as HTMLInputElement).value)"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="例如：课间休息"
+                    />
+                </div>
+            </div>
+        </template>
+
+        <div
+            v-else-if="!selectedTimetableId"
+            class="p-4 text-center text-gray-500"
+        >
+            请选择一个时间表
+        </div>
+        <div v-else class="p-4 text-center text-gray-500">
+            请选择一个课程进行编辑
+        </div>
     </div>
 </template>
 
