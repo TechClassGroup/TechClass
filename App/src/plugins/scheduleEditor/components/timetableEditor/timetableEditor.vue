@@ -42,7 +42,7 @@ const selectedLayoutId = ref<string>("");
         <!-- 检查器 -->
         <div class="flex-1 flex flex-col">
             <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
-                <h2 class="text-lg font-medium px-2 text-center">课程详情</h2>
+                <h2 class="text-lg font-medium px-2 text-center">详情</h2>
             </div>
             <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
                 <TimetableLayoutChecker
