@@ -79,6 +79,16 @@ interface BreakLayout extends BaseLayout {
     breakName: string;
 }
 
+type ClassType = {
+    /** 时间ID */
+    timeId: string;
+    /** 课程ID */
+    subjectId: string;
+    /** 附加信息 */
+    attach?: {
+        [key: string]: any;
+    };
+};
 /**
  * 课程表接口
  */
@@ -88,22 +98,11 @@ interface Curriculum {
     /** 关联的时间表ID */
     timetableId: string;
 
-    /** 
+    /**
      * 课程安排列表
      * 对课程表规定的时间的具体实现
      */
-    classes: [
-        {
-            /** 时间ID */
-            timeId: string;
-            /** 课程ID */
-            subjectId: string;
-            /** 附加信息 */
-            attach?: {
-                [key: string]: any;
-            };
-        }
-    ];
+    classes: ClassType[];
     /** 附加信息 */
     attach?: {
         [key: string]: any;
@@ -135,4 +134,4 @@ export type ScheduleEditorStore = {
     subjects: SubjectObject;
     timetables: TimetableObject;
     curriculums: CurriculumObject;
-}
+};

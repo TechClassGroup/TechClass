@@ -1,49 +1,52 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import CurriculumEditorList from "./curriculumEditorList.vue";
 import CurriculumEditorDisplay from "./curriculumEditorDisplay.vue";
 import CurriculumEditorChecker from "./curriculumEditorChecker.vue";
+
+const selectedCurriculumId = ref("");
 </script>
 
 <template>
     <div class="flex gap-4 h-[100%]">
-
-        <div class="w-1/4 flex flex-col gap-4">
-            <div class="bg-gray-50 rounded-lg">
-                <div class="p-2 flex gap-2 border-b border-gray-200">
-                    <div class="text-lg font-medium text-center">左侧面板</div>
-                </div>
+        <!-- 课程表列表 -->
+        <div class="flex-1 max-w-60 flex flex-col">
+            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+                <h2 class="text-lg font-medium px-2 text-center">课程表列表</h2>
             </div>
-            <div class="flex-1 bg-gray-50 rounded-lg p-4 overflow-y-auto">
-              <curriculum-editor-list />
-            </div>
-        </div>
-
-
-        <div class="flex-1 flex flex-col gap-4">
-            <div class="bg-gray-50 rounded-lg">
-                <div class="p-2 flex gap-2 border-b border-gray-200">
-                    <div class="text-lg font-medium text-center">中间面板</div>
-                </div>
-            </div>
-            <div class="flex-1 bg-gray-50 rounded-lg p-4 overflow-y-auto">
-               <curriculum-editor-display></curriculum-editor-display>
+            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+                <curriculum-editor-list
+                    v-model:selected-curriculum-id="selectedCurriculumId"
+                />
             </div>
         </div>
 
-
-        <div class="w-1/4 flex flex-col gap-4">
-            <div class="bg-gray-50 rounded-lg">
-                <div class="p-2 flex gap-2 border-b border-gray-200">
-                    <div class="text-lg font-medium text-center">右侧面板</div>
-                </div>
+        <!-- 课程表详情 -->
+        <div class="flex-1 max-w-96 flex flex-col">
+            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+                <h2 class="text-lg font-medium px-2 text-center">课程表详情</h2>
             </div>
-            <div class="flex-1 bg-gray-50 rounded-lg p-4 overflow-y-auto">
-              <curriculum-editor-checker></curriculum-editor-checker>
+            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+                <curriculum-editor-display
+                    v-model:selected-curriculum-id="selectedCurriculumId"
+                />
+            </div>
+        </div>
+
+        <!-- 课程表设置 -->
+        <div class="flex-1 flex flex-col">
+            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+                <h2 class="text-lg font-medium px-2 text-center">课程表设置</h2>
+            </div>
+            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+                <curriculum-editor-checker
+                    v-model:selected-curriculum-id="selectedCurriculumId"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-/* 可以在这里添加额外的样式 */
+/* 自定义样式 */
 </style>
