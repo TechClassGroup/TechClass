@@ -130,3 +130,9 @@ export type TimetableObject = {
 export type CurriculumObject = {
     [key: string]: Curriculum;
 };
+
+export type ScheduleEditorStore = {
+    subjects: SubjectObject;
+    timetables: TimetableObject;
+    curriculums: CurriculumObject;
+}

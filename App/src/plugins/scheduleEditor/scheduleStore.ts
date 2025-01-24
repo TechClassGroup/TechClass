@@ -1,8 +1,8 @@
 import { ref } from "vue";
 import { DateTime } from "luxon";
-import { SubjectObject, TimetableObject } from "./scheduleEditorTypes";
+import { ScheduleEditorStore } from "./scheduleEditorTypes";
 
-const createScheduleEditorStore = () => {
+function createScheduleEditorStore(): ScheduleEditorStore {
     // 测试数据
     return {
         subjects: {
@@ -36,7 +36,7 @@ const createScheduleEditorStore = () => {
                 notes: "化学实验课",
                 teacherName: "陈老师",
             },
-        } as SubjectObject,
+        },
         timetables: {
             "550e8400-e29b-41d4-a716-446655440001": {
                 name: "标准课表",
@@ -46,22 +46,77 @@ const createScheduleEditorStore = () => {
                         startTime: DateTime.fromObject({ hour: 8, minute: 0 }),
                         endTime: DateTime.fromObject({ hour: 8, minute: 45 }),
                         subjectId: "550e8400-e29b-41d4-a716-446655440000",
-                        hide:false
+                        hide: false,
                     },
                     "550e8400-e29b-41d4-a716-446655440003": {
                         type: "break",
                         startTime: DateTime.fromObject({ hour: 8, minute: 45 }),
                         endTime: DateTime.fromObject({ hour: 9, minute: 0 }),
                         breakName: "课间休息",
-                        hide:true
+                        hide: true,
                     },
                 },
             },
-        } as TimetableObject,
+            "b1234567-e29b-41d4-a716-446655440abc": {
+                name: "下午课表",
+                layouts: {
+                    "c1234567-e29b-41d4-a716-446655440def": {
+                        type: "lesson",
+                        startTime: DateTime.fromObject({
+                            hour: 14,
+                            minute: 30,
+                        }),
+                        endTime: DateTime.fromObject({ hour: 15, minute: 15 }),
+                        subjectId: "550e8400-e29b-41d4-a716-446655440000",
+                        hide: false,
+                    },
+                    "d1234567-e29b-41d4-a716-446655440ghi": {
+                        type: "break",
+                        startTime: DateTime.fromObject({
+                            hour: 15,
+                            minute: 15,
+                        }),
+                        endTime: DateTime.fromObject({ hour: 15, minute: 30 }),
+                        breakName: "下午休息",
+                        hide: true,
+                    },
+                },
+            },
+        },
+        curriculums: {
+            "e1234567-e29b-41d4-a716-446655440jkl": {
+                name: "周一课表",
+                timetableId: "550e8400-e29b-41d4-a716-446655440001",
+                classes: [
+                    {
+                        timeId: "550e8400-e29b-41d4-a716-446655440002",
+                        subjectId: "7a8b9c10-d11e-12f1-3g45-678901234567",
+                    },
+                ],
+            },
+            "f1234567-e29b-41d4-a716-446655440mno": {
+                name: "周二课表",
+                timetableId: "b1234567-e29b-41d4-a716-446655440abc",
+                classes: [
+                    {
+                        timeId: "c1234567-e29b-41d4-a716-446655440def",
+                        subjectId: "2c3d4e5f-6g7h-8i9j-0k1l-234567890abc",
+                    },
+                ],
+            },
+            "g1234567-e29b-41d4-a716-446655440pqr": {
+                name: "周三课表",
+                timetableId: "550e8400-e29b-41d4-a716-446655440001",
+                classes: [
+                    {
+                        timeId: "550e8400-e29b-41d4-a716-446655440002",
+                        subjectId: "9d8c7b6a-5e4f-3g2h-1i0j-klmnopqrstuv",
+                    },
+                ],
+            },
+        },
     };
-};
-
-type ScheduleEditorStore = ReturnType<typeof createScheduleEditorStore>;
+}
 
 // 创建响应式状态
 export const scheduleEditorState = ref<ScheduleEditorStore>(
