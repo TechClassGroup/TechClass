@@ -1,14 +1,27 @@
 <script lang="ts" setup>
 import SubjectEditor from "./subjectEditor/subjectEditor.vue";
 import TimetableEditor from "./timetableEditor/timetableEditor.vue";
+import CurriculumEditor from "./curriculumEditor/curriculumEditor.vue";
 import TcButton from "../../../UI/TcButton.vue";
 import { ref } from "vue";
 
-const currentTab = ref<"subject" | "timetable">("subject");
-const tabs = [
-    { key: "subject", label: "课程编辑" },
-    { key: "timetable", label: "时间表编辑" },
-] as const;
+const tabs = {
+    subject: {
+        label: "课程编辑",
+        component: SubjectEditor,
+    },
+    timetable: {
+        label: "时间表编辑",
+        component: TimetableEditor,
+    },
+    curriculum: {
+        label: "课表编辑",
+        component: CurriculumEditor,
+    },
+} as const;
+
+type TabKey = keyof typeof tabs;
+const currentTab = ref<TabKey>("subject");
 </script>
 
 <template>
@@ -18,11 +31,11 @@ const tabs = [
             class="flex gap-1 bg-gray-50 p-1 rounded-lg w-fit border border-gray-200 shadow-sm"
         >
             <tc-button
-                v-for="tab in tabs"
-                :key="tab.key"
+                v-for="(tab, key) in tabs"
+                :key="key"
                 size="small"
-                :variant="currentTab === tab.key ? 'filled' : 'text'"
-                @click="currentTab = tab.key"
+                :variant="currentTab === key ? 'filled' : 'text'"
+                @click="currentTab = key"
             >
                 {{ tab.label }}
             </tc-button>
@@ -30,10 +43,7 @@ const tabs = [
 
         <!-- 内容区域 -->
         <div class="flex-1 min-h-0">
-            <component
-                :is="currentTab === 'subject' ? SubjectEditor : TimetableEditor"
-                class="h-full"
-            />
+            <component :is="tabs[currentTab].component" class="h-full" />
         </div>
     </div>
 </template>
