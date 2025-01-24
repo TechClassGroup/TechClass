@@ -30,12 +30,12 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: './App/src-tauri -> target'
       - name: Build
-        run: pnpm tauri build
+        run: pnpm --filter @techclass/app tauri build
       - name: upload
         uses: actions/upload-artifact@v4
         with:
           name: TechClass-Nightly
-          path: src-tauri/target/release/bundle/nsis/*
+          path: App/src-tauri/target/release/bundle/nsis/*
           retention-days: 30
