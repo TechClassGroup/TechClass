@@ -99,9 +99,10 @@ function deleteTimetable(id: string | number) {
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center">
                                 <div class="flex items-center gap-2">
-                                    <span class="font-medium">{{
-                                        timetable.name
-                                    }}</span>
+                                    <span
+                                        class="font-medium break-all whitespace-normal"
+                                        >{{ timetable.name }}</span
+                                    >
                                 </div>
                             </div>
                             <div class="text-xs text-gray-500 pl-0.5">
