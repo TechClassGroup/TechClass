@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-export interface Subject {
+interface Subject {
     name: string;
     shortName: string;
     notes: string;
@@ -10,7 +10,7 @@ export interface Subject {
     };
 }
 
-export interface Timetable {
+interface Timetable {
     name: string;
     layouts: {
         [key: string]: LessonLayout | BreakLayout;
