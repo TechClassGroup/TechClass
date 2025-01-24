@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { TimetableObject } from "../scheduleEditorTypes";
+import { TimetableObject } from "../../scheduleEditorTypes";
 import { v4 as uuidv4 } from "uuid";
-import TcButton from "../../../UI/TcButton.vue";
+import TcButton from "../../../../UI/TcButton.vue";
 
 const selectedTimetableId = defineModel<string | number>(
     "selectedTimetableId",

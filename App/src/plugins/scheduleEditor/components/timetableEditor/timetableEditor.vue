@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { scheduleEditorState } from "../scheduleStore";
+import { scheduleEditorState } from "../../scheduleStore";
 import TimetableEditorDisplay from "./timetableEditorDisplay.vue";
 import TimetableLayoutList from "./timetableLayoutList.vue";
 import TimetableLayoutChecker from "./timetableLayoutChecker.vue";

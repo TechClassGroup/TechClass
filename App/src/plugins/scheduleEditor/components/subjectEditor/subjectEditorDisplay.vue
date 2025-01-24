@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { SubjectObject } from "../scheduleEditorTypes.ts";
+import { SubjectObject } from "../../scheduleEditorTypes.ts";
 
 defineProps<{
     subjects: SubjectObject;

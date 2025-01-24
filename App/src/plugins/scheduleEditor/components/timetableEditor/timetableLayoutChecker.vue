@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { TimetableObject } from "../scheduleEditorTypes";
+import { TimetableObject } from "../../scheduleEditorTypes";
 import { DateTime } from "luxon";
-import { scheduleEditorState } from "../scheduleStore";
-import TcInput from "../../../UI/TcInput.vue";
-import TcSwitch from "../../../UI/TcSwitch.vue";
+import { scheduleEditorState } from "../../scheduleStore";
+import TcInput from "../../../../UI/TcInput.vue";
+import TcSwitch from "../../../../UI/TcSwitch.vue";
 
 const selectedTimetableId = defineModel<string>("selectedTimetableId", {
     required: true,

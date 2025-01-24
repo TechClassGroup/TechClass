@@ -1,5 +1,5 @@
 import { IPlugin } from "../../types/plugins";
-import scheduleEditorSetting from "./scheduleEditorComponents/scheduleEditorSetting.vue";
+import scheduleEditorSetting from "./components/scheduleEditorSetting.vue";
 import { initializeStore, clearStore } from "./scheduleStore.ts";
 
 /**

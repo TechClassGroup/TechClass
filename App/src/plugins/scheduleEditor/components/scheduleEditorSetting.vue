@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import SubjectEditor from "./subjectEditor.vue";
-import TimetableEditor from "./timetableEditor.vue";
+import SubjectEditor from "./subjectEditor/subjectEditor.vue";
+import TimetableEditor from "./timetableEditor/timetableEditor.vue";
 import TcButton from "../../../UI/TcButton.vue";
 import { ref } from "vue";
 
