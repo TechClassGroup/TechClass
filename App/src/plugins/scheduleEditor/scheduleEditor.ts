@@ -1,6 +1,6 @@
 import { IPlugin } from "../../types/plugins";
 import scheduleEditorSetting from "./components/scheduleEditorSetting.vue";
-import { initializeStore, clearStore } from "./scheduleStore.ts";
+import { initializeStore, clearStore } from "./scheduleStore";
 
 /**
  * @fileOverview 课表编辑器插件
