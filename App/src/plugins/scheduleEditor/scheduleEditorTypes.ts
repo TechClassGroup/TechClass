@@ -1,7 +1,7 @@
 /**
  * @fileOverview 课程表编辑器的类型定义
  */
-import { DateTime } from "luxon";
+import {DateTime} from "luxon";
 
 /**
  * 课程信息接口
@@ -89,6 +89,7 @@ type ClassType = {
         [key: string]: any;
     };
 };
+
 /**
  * 课程表接口
  */
@@ -107,6 +108,34 @@ interface Curriculum {
     attach?: {
         [key: string]: any;
     };
+}
+
+type TimeGroupLayout = {
+    curriculumId: string;
+    attach?: {
+        [key: string]: any;
+    }
+}
+
+interface TimeGroup {
+    granularity: "day" | "week" | "month" | "year";
+    cycle: number;
+    /**
+     * 开始时间
+     * 为null时，表示继承父级时间组的开始时间
+     * 为DateTime时，表示具体的开始时间
+     */
+    startTime: DateTime | null;
+    /**
+     * 对周期中每个时间段的分布
+     * example:
+     * cycle = 2
+     * 那么layout的长度应该为2，每个元素对应一个时间段
+     */
+    layout: TimeGroupLayout[],
+    attach?: {
+        [key: string]: any;
+    }
 }
 
 /**
@@ -129,9 +158,12 @@ export type TimetableObject = {
 export type CurriculumObject = {
     [key: string]: Curriculum;
 };
-
+export type timeGroupObject = {
+    [key: string]: timeGroupObject;
+}
 export type ScheduleEditorStore = {
     subjects: SubjectObject;
     timetables: TimetableObject;
     curriculums: CurriculumObject;
+    timeGroups: timeGroupObject;
 };
