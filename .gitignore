@@ -8,11 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+**/node_modules
 dist
 dist-ssr
 *.local
 .gitmessage
-# Editor directories and files
 .idea
 .DS_Store
 *.suo
@@ -23,3 +23,9 @@ dist-ssr
 .continuerules
 .cursorrules
 .vscode/
+
+
+docs-site/src/.vuepress/.cache/
+docs-site/src/.vuepress/.temp/
+docs-site/src/.vuepress/dist/
+
