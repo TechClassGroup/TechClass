@@ -34,12 +34,6 @@ export default defineConfig({
                         use: [
                             {
                                 loader: "builtin:swc-loader",
-                            },
-                            {
-                                loader: path.resolve(
-                                    __dirname,
-                                    "scripts/markdownLoader.ts"
-                                ),
                                 options: {
                                     sourceMap: true,
                                     jsc: {
@@ -48,6 +42,12 @@ export default defineConfig({
                                         },
                                     },
                                 },
+                            },
+                            {
+                                loader: path.resolve(
+                                    __dirname,
+                                    "scripts/markdownLoader.js"
+                                ),
                             },
                         ],
                     },

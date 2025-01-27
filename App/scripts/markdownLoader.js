@@ -6,7 +6,7 @@ const md = new MarkdownIt({
     typographer: true,
 });
 
-export default function (source: string) {
+export default function (source) {
     const content = md.render(source);
 
     return `
