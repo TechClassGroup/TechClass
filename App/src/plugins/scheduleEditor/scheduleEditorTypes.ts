@@ -111,14 +111,28 @@ interface Curriculum {
 }
 
 type TimeGroupLayout = {
-    curriculumId: string;
+    /**
+     * layout的类型 可以选择是另一个timeGroup或者是一个课表
+     */
+    type: "curriculum" | "timegroup";
+    id: string;
     attach?: {
         [key: string]: any;
     }
 }
 
 interface TimeGroup {
+    /**
+     * 时间组的名称
+     */
+    name: string;
+    /**
+     * 时间组的粒度
+     */
     granularity: "day" | "week" | "month" | "year";
+    /**
+     * 时间组的周期 比如以天为粒度，周期为2，那么就要给这两天分配对应的课表/时间组
+     */
     cycle: number;
     /**
      * 开始时间
@@ -158,6 +172,9 @@ export type TimetableObject = {
 export type CurriculumObject = {
     [key: string]: Curriculum;
 };
+/**
+ * 时间组对象类型，key为时间组ID
+ */
 export type timeGroupObject = {
     [key: string]: timeGroupObject;
 }
