@@ -5,7 +5,6 @@ import ComponentsBoard from "./ComponentsBoard.vue";
 
 import SettingPage from "./SettingPage.vue";
 import {useApplicationStore} from "../stores/useApplicationStore";
-import markdownContent from "@docs/guide/bar/README.md";
 
 const store = useApplicationStore();
 
@@ -22,8 +21,6 @@ const store = useApplicationStore();
     <side-dock></side-dock>
     <components-board class="flex-grow overflow-hidden"></components-board>
   </div>
-  <markdownContent></markdownContent>
-
 
 </template>
 
