@@ -24,7 +24,7 @@ dist-ssr
 .vscode/
 
 
-docs-site/src/.vuepress/.cache/
-docs-site/src/.vuepress/.temp/
-docs-site/src/.vuepress/dist/
+docs/src/.vuepress/.cache/
+docs/src/.vuepress/.temp/
+docs/src/.vuepress/dist/
 

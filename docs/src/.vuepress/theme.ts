@@ -15,7 +15,7 @@ export default hopeTheme({
 
   repo: "vuepress-theme-hope/vuepress-theme-hope",
 
-  docsDir: "../docs/",
+  docsDir: "src",
 
   // 导航栏
   navbar,
