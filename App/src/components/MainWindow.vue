@@ -4,7 +4,7 @@ import SideDock from "./SideDock.vue";
 import ComponentsBoard from "./ComponentsBoard.vue";
 
 import SettingPage from "./SettingPage.vue";
-import {useApplicationStore} from "../stores/useApplicationStore.ts";
+import {useApplicationStore} from "../stores/useApplicationStore";
 import markdownContent from "@docs/README.md"
 
 const store = useApplicationStore();
