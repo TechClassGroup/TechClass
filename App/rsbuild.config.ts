@@ -1,8 +1,8 @@
 import {defineConfig} from '@rsbuild/core';
 import {pluginVue} from "@rsbuild/plugin-vue";
-
+import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
 export default defineConfig({
-    plugins: [pluginVue()],
+    plugins: [pluginVue(),pluginHtmlMinifierTerser()],
     html: {
         template: 'index.html',
     },
