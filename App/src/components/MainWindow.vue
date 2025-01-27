@@ -5,7 +5,7 @@ import ComponentsBoard from "./ComponentsBoard.vue";
 
 import SettingPage from "./SettingPage.vue";
 import {useApplicationStore} from "../stores/useApplicationStore";
-import markdownContent from "@docs/README.md"
+import markdownContent from "@docs/guide/bar/README.md";
 
 const store = useApplicationStore();
 
