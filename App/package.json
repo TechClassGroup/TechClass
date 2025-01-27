@@ -19,6 +19,7 @@
     "@types/lodash": "^4.17.13",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
+    "markdown-it": "^14.1.0",
     "pinia": "^2.2.6",
     "uuid": "^11.0.5",
     "vue": "^3.3.4",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@tauri-apps/cli": "^2",
     "@types/luxon": "^3.4.2",
+    "@types/markdown-it": "^14.1.2",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "rsbuild-plugin-html-minifier-terser": "^1.1.1",
