@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference
+
 import MarkdownIt from "markdown-it";
 
 const md = new MarkdownIt({
@@ -10,7 +12,8 @@ const md = new MarkdownIt({
 
 export default function (source) {
     const content = md.render(source);
-
+    const filePath = this.resourcePath;
+    this.addDependency(filePath);
     return `
     import { h } from 'vue'
     const content = ${JSON.stringify(content)}
