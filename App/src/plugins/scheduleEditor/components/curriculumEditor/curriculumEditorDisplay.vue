@@ -108,34 +108,81 @@ function getClassSubjectId(timeId: string): string {
                     <div
                         v-for="(layout, id) in currentTimetable.layouts"
                         :key="id"
-                        v-show="layout.type === 'lesson'"
                         class="p-4 hover:bg-gray-50"
                     >
                         <div class="flex items-center gap-4">
+                            <!-- 时间显示 -->
                             <div class="text-sm font-medium text-gray-500 w-24">
                                 {{ formatTime(layout.startTime) }} -
                                 {{ formatTime(layout.endTime) }}
                             </div>
-                            <select
-                                :value="getClassSubjectId(String(id))"
-                                @change="
-                                    (e) =>
-                                        updateSubject(
-                                            String(id),
-                                            (e.target as HTMLSelectElement).value
-                                        )
-                                "
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
-                            >
-                                <option value="">请选择课程</option>
-                                <option
-                                    v-for="(subject, subjectId) in subjects"
-                                    :key="subjectId"
-                                    :value="subjectId"
-                                >
-                                    {{ subject.name }}
-                                </option>
-                            </select>
+
+                            <!-- 课程时段 -->
+                            <template v-if="layout.type === 'lesson'">
+                                <div class="flex-1">
+                                    <!-- 如果时间表定义了默认课程 -->
+                                    <div
+                                        v-if="layout.subjectId"
+                                        class="flex flex-col gap-1"
+                                    >
+                                        <div class="text-sm text-gray-500">
+                                            默认课程：{{
+                                                getSubjectName(layout.subjectId)
+                                            }}
+                                        </div>
+                                        <select
+                                            :value="
+                                                getClassSubjectId(String(id))
+                                            "
+                                            @change="(e) => updateSubject(String(id), (e.target as HTMLSelectElement).value)"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                                        >
+                                            <option value="">
+                                                继承默认课程
+                                            </option>
+                                            <option
+                                                v-for="(
+                                                    subject, subjectId
+                                                ) in subjects"
+                                                :key="subjectId"
+                                                :value="subjectId"
+                                            >
+                                                {{ subject.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- 如果时间表未定义默认课程 -->
+                                    <div v-else>
+                                        <select
+                                            :value="
+                                                getClassSubjectId(String(id))
+                                            "
+                                            @change="(e) => updateSubject(String(id), (e.target as HTMLSelectElement).value)"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                                        >
+                                            <option value="">请选择课程</option>
+                                            <option
+                                                v-for="(
+                                                    subject, subjectId
+                                                ) in subjects"
+                                                :key="subjectId"
+                                                :value="subjectId"
+                                            >
+                                                {{ subject.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- 课间时段 -->
+                            <template v-else>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-500">
+                                        {{ layout.breakName }}
+                                    </div>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </div>
