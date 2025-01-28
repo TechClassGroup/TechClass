@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { scheduleEditorState } from "../../scheduleStore";
+import TimeGroupDisplay from "./timeGroupDisplay.vue";
+import TimeGroupLayoutList from "./timeGroupLayoutList.vue";
+import TimeGroupChecker from "./timeGroupChecker.vue";
+
+const selectedTimeGroupId = ref<string>("");
+const selectedLayoutIndex = ref<number>(-1);
 
 const timeGroups = scheduleEditorState.value.timeGroups;
-const selectedTimeGroupId = ref<string>("");
-const selectedTimeId = ref<string>("");
 </script>
 
 <template>
@@ -15,17 +19,24 @@ const selectedTimeId = ref<string>("");
                 <h2 class="text-lg font-medium px-2 text-center">时间组</h2>
             </div>
             <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
-                <!-- TimeGroupDisplay组件将在这里 -->
+                <TimeGroupDisplay
+                    v-model:selected-time-group-id="selectedTimeGroupId"
+                    v-model:time-groups="timeGroups"
+                />
             </div>
         </div>
 
-        <!-- 时间段列表 -->
+        <!-- 布局列表 -->
         <div class="flex-1 max-w-96 flex flex-col">
             <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
-                <h2 class="text-lg font-medium px-2 text-center">时间段列表</h2>
+                <h2 class="text-lg font-medium px-2 text-center">布局列表</h2>
             </div>
             <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
-                <!-- TimeList组件将在这里 -->
+                <TimeGroupLayoutList
+                    v-model:selected-time-group-id="selectedTimeGroupId"
+                    v-model:selected-layout-index="selectedLayoutIndex"
+                    v-model:time-groups="timeGroups"
+                />
             </div>
         </div>
 
@@ -35,7 +46,10 @@ const selectedTimeId = ref<string>("");
                 <h2 class="text-lg font-medium px-2 text-center">详情</h2>
             </div>
             <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
-                <!-- TimeChecker组件将在这里 -->
+                <TimeGroupChecker
+                    v-model:selected-time-group-id="selectedTimeGroupId"
+                    v-model:time-groups="timeGroups"
+                />
             </div>
         </div>
     </div>
