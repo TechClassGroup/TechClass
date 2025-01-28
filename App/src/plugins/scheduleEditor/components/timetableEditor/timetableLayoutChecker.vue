@@ -84,6 +84,7 @@ function updateType(type: string) {
         Object.assign(currentLayout.value, {
             type: "lesson",
             subjectId: "",
+            hide: false,
         });
         // @ts-ignore
         delete currentLayout.value.breakName;
@@ -91,6 +92,7 @@ function updateType(type: string) {
         Object.assign(currentLayout.value, {
             type: "break",
             breakName: "课间",
+            hide: true,
         });
         // @ts-ignore
         delete currentLayout.value.subjectId;
@@ -223,7 +225,7 @@ function updateHide(hide: boolean) {
                 </div>
                 <div class="flex items-center gap-2">
                     <label class="text-sm font-medium text-gray-700"
-                        >独立显示</label
+                        >合并显示</label
                     >
                     <TcSwitch
                         :model-value="currentLayout.hide"
@@ -246,7 +248,7 @@ function updateHide(hide: boolean) {
                 </div>
                 <div class="flex items-center gap-2">
                     <label class="text-sm font-medium text-gray-700"
-                        >独立显示</label
+                        >合并显示</label
                     >
                     <TcSwitch
                         :model-value="currentLayout.hide"
