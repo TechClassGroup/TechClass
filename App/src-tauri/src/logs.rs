@@ -34,6 +34,7 @@ pub fn init() {
         .start()
         .unwrap();
     info!("日志已初始化");
+    info!("{} 版本: {}", app_info::NAME, app_info::VERSION);
 }
 fn process_content(content: String) -> String {
     let parsed_content = serde_json::from_str::<String>(&content).unwrap_or(content);
