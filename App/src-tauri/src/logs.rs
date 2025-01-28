@@ -9,13 +9,14 @@ use crate::contestants::{app_info, PATH_BASIC};
 const LOG_SIZE: u64 = 10 * 1024 * 1024;
 const LOG_PREFIX: &str = app_info::NAME;
 const LOG_SUFFIX: &str = "log";
+const LOG_LEVEL: &str = env!("RUST_LOG_LEVEL");
 lazy_static! {
     pub static ref PATH_LOG: std::path::PathBuf = PATH_BASIC.join("logs");
 }
 
 /// 初始化日志系统
 pub fn init() {
-    flexi_logger::Logger::try_with_str("trace")
+    flexi_logger::Logger::try_with_str(LOG_LEVEL)
         .unwrap()
         .log_to_file(
             FileSpec::default()
@@ -35,6 +36,7 @@ pub fn init() {
         .unwrap();
     info!("日志已初始化");
     info!("{} 版本: {}", app_info::NAME, app_info::VERSION);
+    info!("日志级别: {}", LOG_LEVEL);
 }
 fn process_content(content: String) -> String {
     let parsed_content = serde_json::from_str::<String>(&content).unwrap_or(content);
