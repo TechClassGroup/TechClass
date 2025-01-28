@@ -26,6 +26,7 @@
     "vue-draggable-resizable": "^3.0.0"
   },
   "devDependencies": {
+    "@iarna/toml": "^2.2.5",
     "@tauri-apps/cli": "^2",
     "@types/luxon": "^3.4.2",
     "@types/markdown-it": "^14.1.2",
