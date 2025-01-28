@@ -22,7 +22,7 @@ dist-ssr
 .continuerules
 .cursorrules
 .vscode/
-
+tsconfig.tsbuildinfo
 
 docs/src/.vuepress/.cache/
 docs/src/.vuepress/.temp/
