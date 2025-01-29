@@ -6,6 +6,8 @@ pub enum IpcError {
     Io(#[from] std::io::Error),
     #[error(transparent)]
     Json(#[from] serde_json::Error),
+    #[error("无效的插件类型")]
+    InvalidPluginType,
 }
 
 #[derive(serde::Serialize)]
@@ -14,6 +16,7 @@ pub enum IpcError {
 pub enum IpcErrorKind {
     Io(String),
     Json(String),
+    InvalidPluginType(String),
 }
 
 impl serde::Serialize for IpcError {
@@ -25,6 +28,7 @@ impl serde::Serialize for IpcError {
         let error_kind = match self {
             Self::Io(_) => IpcErrorKind::Io(error_message),
             Self::Json(_) => IpcErrorKind::Json(error_message),
+            Self::InvalidPluginType => IpcErrorKind::InvalidPluginType(error_message),
         };
         error_kind.serialize(serializer)
     }

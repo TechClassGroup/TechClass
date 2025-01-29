@@ -2,12 +2,13 @@
  * @fileOverview Pinia插件
  * @author erduotong
  */
-import {PiniaPluginContext, Store} from "pinia";
-import {watch} from "vue";
-import {throttle} from "lodash";
+import { PiniaPluginContext, Store } from "pinia";
+import { watch } from "vue";
+import { throttle } from "lodash";
 
-import {invoke} from "@tauri-apps/api/core";
-import logger from "../modules/logger.ts";
+import { invoke } from "@tauri-apps/api/core";
+import logger from "../modules/logger";
+import { IPCErrorKind, PluginType } from "../types/rsShared";
 
 export interface ConfigStorageOptions {
     config_storage?: {
@@ -21,7 +22,7 @@ export interface ConfigStorageOptions {
 }
 
 type ConfigErrorKind = {
-    kind: IPCErrorKind.Io | IPCErrorKind.Json;
+    kind: IPCErrorKind.Io | IPCErrorKind.Json | IPCErrorKind.InvalidPluginType;
 };
 
 /**
@@ -31,9 +32,9 @@ type ConfigErrorKind = {
  * - 具有on_storage_load_complete方法，当存储加载完成时调用
  */
 export function ConfigStoragePiniaPlugin({
-                                             options,
-                                             store,
-                                         }: PiniaPluginContext & { options: ConfigStorageOptions }) {
+    options,
+    store,
+}: PiniaPluginContext & { options: ConfigStorageOptions }) {
     const config = options.config_storage;
     if (
         !config ||
@@ -74,7 +75,7 @@ export function ConfigStoragePiniaPlugin({
         }
 
         // 如果是对象，递归合并
-        const result = {...target};
+        const result = { ...target };
         for (const key in target) {
             if (Object.prototype.hasOwnProperty.call(target, key)) {
                 result[key] = safeDeepMerge(target[key], source, [
@@ -90,7 +91,7 @@ export function ConfigStoragePiniaPlugin({
     logger.info(
         `[Config Storage Pinia Plugin] 加载: ${id} keys: ${keys.join(", ")}`
     );
-    invoke("load_content", {id})
+    invoke("load_content", { id: id, pluginType: PluginType.Official })
         .then((content) => {
             if (content) {
                 // 遍历所有keys
@@ -127,13 +128,13 @@ export function ConfigStoragePiniaPlugin({
             );
             // 强制保存一次，以便下次加载时可以加载
             store.syncNow();
-        }).finally(() => {
-        // 调用生命周期函数
-        if (typeof options.on_storage_load_complete === "function") {
-            options.on_storage_load_complete(store);
-        }
-    })
-
+        })
+        .finally(() => {
+            // 调用生命周期函数
+            if (typeof options.on_storage_load_complete === "function") {
+                options.on_storage_load_complete(store);
+            }
+        });
 
     // 调用Tauri后端本地化存储
     const storage_func = throttle(() => {
@@ -146,8 +147,9 @@ export function ConfigStoragePiniaPlugin({
             }, {} as Record<string, any>);
 
             invoke("storage_content", {
-                id,
-                content,
+                id: id,
+                content: content,
+                pluginType: PluginType.Official,
             })
                 .then(() => {
                     logger.trace(
@@ -156,7 +158,7 @@ export function ConfigStoragePiniaPlugin({
                 })
                 .catch((error: ConfigErrorKind) => {
                     logger.warn(
-                        `[Config Storage Pinia Plugin] 存储失败: ${id}`,
+                        `[Config Storage Pinia Plugin] 存储失败: ${id} ${error}`,
                         error
                     );
                     retryCount++;
@@ -164,7 +166,7 @@ export function ConfigStoragePiniaPlugin({
                         attemptStorage();
                     } else {
                         logger.error(
-                            `[Config Storage Pinia Plugin] 达到最大重试次数: ${id}`
+                            `[Config Storage Pinia Plugin] 达到最大重试次数: ${id} ${error}`
                         );
                     }
                 });
@@ -180,7 +182,7 @@ export function ConfigStoragePiniaPlugin({
             () => {
                 storage_func();
             },
-            {deep: true}
+            { deep: true }
         )
     );
 

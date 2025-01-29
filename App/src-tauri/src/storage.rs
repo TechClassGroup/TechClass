@@ -4,6 +4,7 @@ use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 
+use crate::frontend_fs::PluginType;
 use crate::{contestants::PATH_BASIC, error::IpcError};
 use lazy_static::lazy_static;
 use log::{trace, warn};
@@ -11,28 +12,38 @@ use serde_json::Value;
 
 lazy_static! {
     pub static ref PATH_CONFIG: PathBuf = PATH_BASIC.join("config");
+    pub static ref PATH_PLUGIN: PathBuf = PATH_BASIC.join("plugins");
 }
+
 const CONFIG_SUFFIX: &str = "config.json";
 
 /// 获取存储路径
-fn get_path(id: &str) -> Result<PathBuf, std::io::Error> {
-    let dir_path = PATH_CONFIG.join(id);
+fn get_path(id: &str, plugin_type: PluginType) -> Result<PathBuf, std::io::Error> {
+    let dir_path = match plugin_type {
+        PluginType::Official => PATH_PLUGIN.join(id),
+        PluginType::Custom => PATH_CONFIG.join(id),
+    };
     // 确保目录存在
     if !dir_path.exists() {
         std::fs::create_dir_all(&dir_path)?;
     }
     Ok(dir_path)
 }
-fn get_config_path(id: &str) -> Result<PathBuf, std::io::Error> {
+fn get_config_path(id: &str, plugin_type: PluginType) -> Result<PathBuf, IpcError> {
     let file_name = format!("{id}.{CONFIG_SUFFIX}");
-    let config_path = get_path(id)?.join(&file_name);
+    let config_path = get_path(id, plugin_type)?.join(&file_name);
     Ok(config_path)
 }
 
 #[tauri::command]
 /// 写入内容到[id]
-pub async fn storage_content(id: String, content: Value) -> Result<(), IpcError> {
-    let path = get_config_path(&id).map_err(IpcError::Io)?;
+pub async fn storage_content(
+    id: String,
+    content: Value,
+    plugin_type: String,
+) -> Result<(), IpcError> {
+    let plugin_type = PluginType::from_str(&plugin_type)?;
+    let path = get_config_path(&id, plugin_type)?;
     let stringified_content = match serde_json::to_vec(&content) {
         Ok(content) => content,
         Err(e) => {
@@ -64,8 +75,9 @@ pub async fn storage_content(id: String, content: Value) -> Result<(), IpcError>
 }
 #[tauri::command]
 /// 把存储着[id]的内容读取出来
-pub fn load_content(id: String) -> Result<Value, IpcError> {
-    let path = get_config_path(&id).map_err(IpcError::Io)?;
+pub fn load_content(id: String, plugin_type: String) -> Result<Value, IpcError> {
+    let plugin_type = PluginType::from_str(&plugin_type)?;
+    let path = get_config_path(&id, plugin_type)?;
     if !path.exists() {
         if let Err(e) = OpenOptions::new().write(true).create(true).open(path) {
             warn!("创建文件时出错: {}", e);
