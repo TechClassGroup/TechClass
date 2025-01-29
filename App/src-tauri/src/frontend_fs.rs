@@ -27,8 +27,8 @@ lazy_static! {
 /// 获取存储路径
 pub fn get_path(id: &str, plugin_type: PluginType) -> Result<PathBuf, std::io::Error> {
     let dir_path = match plugin_type {
-        PluginType::Official => PATH_PLUGIN.join(id),
-        PluginType::Custom => PATH_CONFIG.join(id),
+        PluginType::Official => PATH_CONFIG.join(id),
+        PluginType::Custom => PATH_PLUGIN.join(id),
     };
     // 确保目录存在
     if !dir_path.exists() {

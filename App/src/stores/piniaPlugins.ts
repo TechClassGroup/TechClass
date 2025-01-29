@@ -104,9 +104,16 @@ export function ConfigStoragePiniaPlugin({
                         );
 
                         // 更新store
-                        Object.keys(store[key]).forEach((k) => {
-                            store[key][k] = mergedData[k];
-                        });
+                        if (
+                            typeof store[key] === "object" &&
+                            !Array.isArray(store[key])
+                        ) {
+                            Object.keys(store[key]).forEach((k) => {
+                                store[key][k] = mergedData[k];
+                            });
+                        } else {
+                            store[key] = mergedData;
+                        }
 
                         logger.info(
                             `[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`
@@ -124,7 +131,7 @@ export function ConfigStoragePiniaPlugin({
                 `[Config Storage Pinia Plugin] 加载失败: ${id} keys: ${keys.join(
                     ", "
                 )}`,
-                err
+                `err: ${err}`
             );
             // 强制保存一次，以便下次加载时可以加载
             store.syncNow();

@@ -4,15 +4,13 @@ use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 
-use crate::frontend_fs::{get_path, PluginType};
 use crate::error::IpcError;
+use crate::frontend_fs::{get_path, PluginType};
 
-use log::{trace, warn};
+use log::warn;
 use serde_json::Value;
 
-
 const CONFIG_SUFFIX: &str = "config.json";
-
 
 fn get_config_path(id: &str, plugin_type: PluginType) -> Result<PathBuf, IpcError> {
     let file_name = format!("{id}.{CONFIG_SUFFIX}");
@@ -83,7 +81,7 @@ pub fn load_content(id: String, plugin_type: String) -> Result<Value, IpcError> 
         warn!("读取文件内容时出错: {}", e);
         return Err(IpcError::Io(e));
     }
-    trace!("{content}");
+
     let json_content: Value = match serde_json::from_str(&content) {
         Ok(content) => content,
         Err(e) => {
