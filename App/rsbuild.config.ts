@@ -1,10 +1,12 @@
-import { defineConfig, rspack } from "@rsbuild/core";
-import { pluginVue } from "@rsbuild/plugin-vue";
-import { pluginHtmlMinifierTerser } from "rsbuild-plugin-html-minifier-terser";
+import {defineConfig, rspack} from "@rsbuild/core";
+import {pluginVue} from "@rsbuild/plugin-vue";
+import {pluginHtmlMinifierTerser} from "rsbuild-plugin-html-minifier-terser";
 import path from "path";
 import * as fs from "fs";
 import * as toml from "@iarna/toml";
+
 const isProduction = process.env.NODE_ENV === "production";
+
 function getLogLevel() {
     const cargoPath = path.resolve(__dirname, "src-tauri/Cargo.toml");
     const cargoContent = fs.readFileSync(cargoPath, "utf-8");
@@ -18,12 +20,11 @@ function getLogLevel() {
             }
         }
     };
-    const logLevel = isProduction
+    return isProduction
         ? cargoData.package.metadata.loglevel.releaseFrontend
         : cargoData.package.metadata.loglevel.debugFrontend;
-
-    return logLevel;
 }
+
 function getLogLevelFlags() {
     const levels = ["trace", "debug", "info", "warn", "error"];
     const currentLevel = getLogLevel();
@@ -39,6 +40,7 @@ function getLogLevelFlags() {
         __LOG_LEVEL_INFO__: JSON.stringify(levelIndex <= 2),
         __LOG_LEVEL_WARN__: JSON.stringify(levelIndex <= 3),
         __LOG_LEVEL_ERROR__: JSON.stringify(levelIndex <= 4),
+        __IS_DEV__: JSON.stringify(!isProduction),
     };
 }
 
