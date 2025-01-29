@@ -3,7 +3,6 @@
 use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::path::PathBuf;
-use crate::frontend_fs::PATH_CONFIG;
 
 use crate::frontend_fs::{get_path, PluginType};
 use crate::error::IpcError;
