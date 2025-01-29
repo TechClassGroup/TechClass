@@ -16,19 +16,23 @@ const CONFIG_SUFFIX: &str = "config.json";
 
 /// 获取存储路径
 fn get_path(id: &str) -> Result<PathBuf, std::io::Error> {
-    let file_name = format!("{id}.{CONFIG_SUFFIX}");
     let dir_path = PATH_CONFIG.join(id);
     // 确保目录存在
     if !dir_path.exists() {
         std::fs::create_dir_all(&dir_path)?;
     }
-    Ok(dir_path.join(&file_name))
+    Ok(dir_path)
+}
+fn get_config_path(id: &str) -> Result<PathBuf, std::io::Error> {
+    let file_name = format!("{id}.{CONFIG_SUFFIX}");
+    let config_path = get_path(id)?.join(&file_name);
+    Ok(config_path)
 }
 
 #[tauri::command]
 /// 写入内容到[id]
 pub async fn storage_content(id: String, content: Value) -> Result<(), IpcError> {
-    let path = get_path(&id).map_err(IpcError::Io)?;
+    let path = get_config_path(&id).map_err(IpcError::Io)?;
     let stringified_content = match serde_json::to_vec(&content) {
         Ok(content) => content,
         Err(e) => {
@@ -61,7 +65,7 @@ pub async fn storage_content(id: String, content: Value) -> Result<(), IpcError>
 #[tauri::command]
 /// 把存储着[id]的内容读取出来
 pub fn load_content(id: String) -> Result<Value, IpcError> {
-    let path = get_path(&id).map_err(IpcError::Io)?;
+    let path = get_config_path(&id).map_err(IpcError::Io)?;
     if !path.exists() {
         if let Err(e) = OpenOptions::new().write(true).create(true).open(path) {
             warn!("创建文件时出错: {}", e);
