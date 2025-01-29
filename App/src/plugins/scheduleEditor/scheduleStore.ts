@@ -1,6 +1,7 @@
 import {ref} from "vue";
 import {DateTime} from "luxon";
 import {ScheduleEditorStore} from "./scheduleEditorTypes";
+import {PluginStore} from "../../types/plugins";
 
 function createScheduleEditorStore(): ScheduleEditorStore {
     // 测试数据
@@ -164,12 +165,14 @@ function createScheduleEditorStore(): ScheduleEditorStore {
 export const scheduleEditorState = ref<ScheduleEditorStore>(
     {} as ScheduleEditorStore
 );
-
+export let scheduleEditorStore : PluginStore | null = null;
 // 初始化和清理函数
-export function initializeStore() {
+export function initializeStore(store: PluginStore) {
     scheduleEditorState.value = createScheduleEditorStore();
+    scheduleEditorStore = store;
 }
 
 export function clearStore() {
     scheduleEditorState.value = {} as ScheduleEditorStore;
+    scheduleEditorStore = null;
 }
