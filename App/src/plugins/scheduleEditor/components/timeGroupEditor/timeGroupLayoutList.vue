@@ -125,7 +125,7 @@ const availableTimeGroups = computed(() => {
                                 >
                                 <select
                                     :value="layout.type"
-                                    @change="(e) => updateLayoutType(index, e.target.value as 'curriculum' | 'timegroup')"
+                                    @change="(e: Event) => updateLayoutType(index, ((e.target as HTMLSelectElement).value) as 'curriculum' | 'timegroup')"
                                     class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4] bg-gray-50"
                                 >
                                     <option value="curriculum">课表</option>
@@ -147,10 +147,10 @@ const availableTimeGroups = computed(() => {
                                 <select
                                     :value="layout.id"
                                     @change="
-                                        (e) =>
+                                        (e: Event) =>
                                             updateLayoutId(
                                                 index,
-                                                e.target.value
+                                                (e.target as HTMLSelectElement).value
                                             )
                                     "
                                     class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4] bg-gray-50"
