@@ -82,7 +82,7 @@ const availableTimeGroups = computed(() => {
 </script>
 
 <template>
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full bg-gray-50">
         <div class="flex-1 overflow-y-auto scrollbar-stable p-4">
             <div class="flex flex-col gap-4">
                 <TransitionGroup

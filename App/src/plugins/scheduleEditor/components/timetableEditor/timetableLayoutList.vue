@@ -117,8 +117,8 @@ function deleteLayout(id: string | number) {
         </div>
 
         <!-- 课程列表 -->
-        <div class="flex-1 overflow-y-auto scrollbar-stable">
-            <div class="flex flex-col gap-2 p-2 bg-gray-50 rounded-lg">
+        <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+            <div class="flex flex-col gap-2 p-2  rounded-lg h-full">
                 <TransitionGroup
                     class="flex flex-col gap-2"
                     name="list"
