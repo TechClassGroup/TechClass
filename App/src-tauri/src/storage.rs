@@ -3,32 +3,18 @@
 use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::path::PathBuf;
+use crate::frontend_fs::PATH_CONFIG;
 
-use crate::frontend_fs::PluginType;
-use crate::{contestants::PATH_BASIC, error::IpcError};
-use lazy_static::lazy_static;
+use crate::frontend_fs::{get_path, PluginType};
+use crate::error::IpcError;
+
 use log::{trace, warn};
 use serde_json::Value;
 
-lazy_static! {
-    pub static ref PATH_CONFIG: PathBuf = PATH_BASIC.join("config");
-    pub static ref PATH_PLUGIN: PathBuf = PATH_BASIC.join("plugins");
-}
 
 const CONFIG_SUFFIX: &str = "config.json";
 
-/// 获取存储路径
-fn get_path(id: &str, plugin_type: PluginType) -> Result<PathBuf, std::io::Error> {
-    let dir_path = match plugin_type {
-        PluginType::Official => PATH_PLUGIN.join(id),
-        PluginType::Custom => PATH_CONFIG.join(id),
-    };
-    // 确保目录存在
-    if !dir_path.exists() {
-        std::fs::create_dir_all(&dir_path)?;
-    }
-    Ok(dir_path)
-}
+
 fn get_config_path(id: &str, plugin_type: PluginType) -> Result<PathBuf, IpcError> {
     let file_name = format!("{id}.{CONFIG_SUFFIX}");
     let config_path = get_path(id, plugin_type)?.join(&file_name);

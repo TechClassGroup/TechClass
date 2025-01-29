@@ -8,6 +8,8 @@ pub enum IpcError {
     Json(#[from] serde_json::Error),
     #[error("无效的插件类型")]
     InvalidPluginType,
+    #[error("不允许的路径")]
+    PathTraversal,
 }
 
 #[derive(serde::Serialize)]
@@ -17,6 +19,7 @@ pub enum IpcErrorKind {
     Io(String),
     Json(String),
     InvalidPluginType(String),
+    PathTraversal(String),
 }
 
 impl serde::Serialize for IpcError {
@@ -29,6 +32,7 @@ impl serde::Serialize for IpcError {
             Self::Io(_) => IpcErrorKind::Io(error_message),
             Self::Json(_) => IpcErrorKind::Json(error_message),
             Self::InvalidPluginType => IpcErrorKind::InvalidPluginType(error_message),
+            Self::PathTraversal => IpcErrorKind::PathTraversal(error_message),
         };
         error_kind.serialize(serializer)
     }
