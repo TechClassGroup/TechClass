@@ -94,16 +94,28 @@ const formattedStartTime = computed(() => {
 <template>
     <div class="p-4">
         <div v-if="currentTimeGroup" class="space-y-6">
-            <!-- 时间组名称 -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >时间组名称</label
-                >
-                <TcInput
-                    :model-value="currentTimeGroup.name"
-                    placeholder="请输入时间组名称"
-                    @update:model-value="updateName"
-                />
+            <!-- 顶部切换按钮组 -->
+            <div class="flex gap-4 items-center">
+                <!-- 时间组名称 -->
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                        >时间组名称</label
+                    >
+                    <TcInput
+                        :model-value="currentTimeGroup.name"
+                        placeholder="请输入时间组名称"
+                        @update:model-value="updateName"
+                    />
+                </div>
+
+                <!-- 开始时间继承设置 -->
+                <div class="flex items-center gap-2 pt-6">
+                    <span class="text-sm text-gray-600">继承父组件时间</span>
+                    <TcSwitch
+                        :model-value="isInheritStartTime"
+                        @update:model-value="updateStartTimeInherit"
+                    />
+                </div>
             </div>
 
             <!-- 粒度设置 -->
@@ -133,7 +145,7 @@ const formattedStartTime = computed(() => {
                 >
                 <TcInput
                     type="number"
-                    :model-value="currentTimeGroup.cycle"
+                    :model-value="String(currentTimeGroup.cycle)"
                     min="1"
                     @update:model-value="(value) => updateCycle(Number(value))"
                 />
@@ -145,29 +157,16 @@ const formattedStartTime = computed(() => {
             </div>
 
             <!-- 开始时间设置 -->
-            <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <label class="text-sm font-medium text-gray-700"
-                        >开始时间</label
-                    >
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-600">继承父组件</span>
-                        <TcSwitch
-                            :model-value="isInheritStartTime"
-                            @update:model-value="updateStartTimeInherit"
-                        />
-                    </div>
-                </div>
+            <div v-if="!isInheritStartTime">
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >开始时间</label
+                >
                 <TcInput
-                    v-if="!isInheritStartTime"
                     type="date"
                     :model-value="formattedStartTime"
                     @update:model-value="updateStartTime"
                     class="w-full"
                 />
-                <p v-else class="text-sm text-gray-500 italic">
-                    将继承父时间组的开始时间
-                </p>
             </div>
         </div>
 
