@@ -2,7 +2,7 @@
  * @fileOverview 插件的类型
  */
 import {defineComponent} from "vue";
-import {Store} from "./pinia";
+import type {StateTree, Store} from "pinia";
 
 /**
  * 可拖拽组件的配置参数。
@@ -85,7 +85,7 @@ interface StoreConfig<T extends string = string, Actions = {}, Getters = {}> {
         /** 是否启用持久化存储 */
         enabled: boolean;
         /** 持久化存储的键值 */
-        keys: (string | 'componentStatus')[];
+        keys: (string | "componentStatus")[];
         /**
          * 持久化存储的延迟时间 单位: ms
          */
@@ -95,7 +95,7 @@ interface StoreConfig<T extends string = string, Actions = {}, Getters = {}> {
          *  最大的重试次数，如果超过这个次数则不再重试存储
          */
         max_retries?: number;
-    }
+    };
 }
 
 /**
@@ -151,8 +151,7 @@ export interface IPlugin<
          * 插件卸载时的钩子函数
          */
         onUnmounted?: () => void;
-    }
-
+    };
 }
 
 /**
