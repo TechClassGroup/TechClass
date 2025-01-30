@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {v4 as uuidv4} from "uuid";
-import {scheduleEditorProfile} from "../../scheduleStore";
 import TcButton from "../../../../UI/TcButton.vue";
+import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
 
 const selectedCurriculumId = defineModel<string>("selectedCurriculumId", {
     required: true,

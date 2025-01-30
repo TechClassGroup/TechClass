@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {scheduleEditorProfile} from "../../scheduleStore";
 import TimetableEditorDisplay from "./timetableEditorDisplay.vue";
 import TimetableLayoutList from "./timetableLayoutList.vue";
 import TimetableLayoutChecker from "./timetableLayoutChecker.vue";
+import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
 
 const timetables = scheduleEditorProfile.value.timetables;
 const selectedTimetableId = ref<string>("");

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {scheduleEditorProfile} from "../../scheduleStore";
 import TimeGroupDisplay from "./timeGroupDisplay.vue";
 import TimeGroupLayoutList from "./timeGroupLayoutList.vue";
 import TimeGroupChecker from "./timeGroupChecker.vue";
+import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
 
 const selectedTimeGroupId = ref<string>("");
 const selectedLayoutIndex = ref<number>(-1);

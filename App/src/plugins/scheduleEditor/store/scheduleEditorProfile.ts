@@ -1,13 +1,26 @@
-import {ref, watch} from "vue";
+// 创建响应式状态
+import {ScheduleEditorStore} from "../scheduleEditorTypes";
+import logger from "../../../modules/logger";
+import {PluginFs} from "../../../modules/pluginUtils";
 import {DateTime} from "luxon";
-import {ScheduleEditorStore} from "./scheduleEditorTypes";
-import {PluginStore} from "../../types/plugins";
-import {PluginFs} from "../../modules/pluginUtils";
-import logger from "../../modules/logger";
+import {ref, watch} from "vue";
 import {throttle} from "lodash";
 
+
+export const scheduleEditorProfile = ref<ScheduleEditorStore>(
+    {} as ScheduleEditorStore
+);
+
+/**
+ * @fileOverview 档案的store
+ */
+
+let fileSystem: PluginFs | null = null;
+const scheduleEditorStoreProfileName: string = "scheduleEditor.profile.json";
+let profileWatcher: null | ReturnType<typeof watch> = null;
+
+
 function createScheduleEditorProfile(): ScheduleEditorStore {
-    // 测试数据
     return {
         subjects: {},
         timetables: {},
@@ -15,15 +28,6 @@ function createScheduleEditorProfile(): ScheduleEditorStore {
         timeGroups: {},
     };
 }
-
-// 创建响应式状态
-export const scheduleEditorProfile = ref<ScheduleEditorStore>(
-    {} as ScheduleEditorStore
-);
-export let scheduleEditorStore: PluginStore | null = null;
-let fileSystem: PluginFs | null = null;
-let profileWatcher: null | ReturnType<typeof watch> = null;
-const scheduleEditorStoreProfileName: string = "scheduleEditor.profile.json";
 
 const saveProfile = (function () {
     let isSavingProfile = false;
@@ -108,18 +112,15 @@ function deserializeDateTime(profile: any) {
     return profile;
 }
 
-// 初始化和清理函数
-export function initializeStore(store: PluginStore, fs: PluginFs) {
-    scheduleEditorProfile.value = createScheduleEditorProfile();
-    scheduleEditorStore = store;
+export function init(fs: PluginFs) {
     fileSystem = fs;
+    scheduleEditorProfile.value = createScheduleEditorProfile();
     fs.readFile(scheduleEditorStoreProfileName)
         .then((data) => {
             try {
                 const profile = JSON.parse(data);
                 // 处理 DateTime 的反序列化
-                const deserializedProfile = deserializeDateTime(profile);
-                scheduleEditorProfile.value = deserializedProfile;
+                scheduleEditorProfile.value = deserializeDateTime(profile);
                 console.log(scheduleEditorProfile.value);
                 logger.trace("[scheduleEditor] 档案数据加载成功");
             } catch (error) {
@@ -132,19 +133,17 @@ export function initializeStore(store: PluginStore, fs: PluginFs) {
             logger.error("[scheduleEditor] 读取档案数据失败", e);
             saveProfile(); // 立刻保存一次全新的档案
         });
-    const saveProfileThrottled = throttle(saveProfile, 300);
     profileWatcher = watch(
         scheduleEditorProfile,
         () => {
+
+            const saveProfileThrottled = throttle(saveProfile, 300);
             saveProfileThrottled();
         },
         {deep: true}
     );
 }
 
-export function clearStore() {
+export function clear() {
     saveProfile();
-    scheduleEditorProfile.value = {} as ScheduleEditorStore;
-    scheduleEditorStore = null;
-    fileSystem = null;
 }

@@ -4,7 +4,7 @@ import TimetableEditor from "./timetableEditor/timetableEditor.vue";
 import CurriculumEditor from "./curriculumEditor/curriculumEditor.vue";
 import TcButton from "../../../UI/TcButton.vue";
 import TimeGroupEditor from "./timeGroupEditor/timeGroupEditor.vue";
-import {scheduleEditorStore} from "../scheduleStore";
+import {scheduleEditorStore} from "../store/scheduleStore";
 
 const tabs = {
   subject: {
