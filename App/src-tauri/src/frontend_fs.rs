@@ -51,16 +51,14 @@ impl SafePathBuf {
     pub fn new(id: String, plugin_type: PluginType, path: PathBuf) -> Result<Self, IpcError> {
         let base_path = get_path(&id, plugin_type)?;
 
-        // 标准化路径（移除 . 和 ..）
+    
         let canonical_path = path.canonicalize().map_err(IpcError::Io)?;
         let canonical_base = base_path.canonicalize().map_err(IpcError::Io)?;
 
-        // 确保路径在基础路径下
         if !canonical_path.starts_with(&canonical_base) {
             return Err(IpcError::PathTraversal);
         }
 
-        // 计算相对路径
         let relative_path = canonical_path
             .strip_prefix(&canonical_base)
             .map_err(|_| IpcError::PathTraversal)?

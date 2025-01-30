@@ -80,7 +80,6 @@ interface StoreConfig<T extends string = string, Actions = {}, Getters = {}> {
     /**
      * 持久化存储的配置
      * - 默认来说，持久化存储会根据当前的state的结构，再动态获取值。
-     * -
      */
     storageConfig?: {
         /** 是否启用持久化存储 */
