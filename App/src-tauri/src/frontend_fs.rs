@@ -12,6 +12,7 @@ use crate::{
     shared::{FsItemInfo, PluginType},
 };
 use lazy_static::lazy_static;
+use log::{debug, info, warn};
 
 lazy_static! {
     pub static ref PATH_CONFIG: PathBuf = PATH_BASIC.join("config");
@@ -78,24 +79,25 @@ pub mod fs_api {
 
     /// 创建一个安全的路径
     #[inline]
-    fn create_safe_path(
-        id: String,
-        plugin_type: String,
-        path: String,
-    ) -> Result<SafePathBuf, IpcError> {
-        let plugin_type = PluginType::from_str(&plugin_type)?;
-        let base = get_path(&id, plugin_type)?;
+    fn create_safe_path(id: &str, plugin_type: &str, path: &str) -> Result<SafePathBuf, IpcError> {
+        let plugin_type_enum = PluginType::from_str(plugin_type)?;
+        let base = get_path(id, plugin_type_enum)?;
         let base = base.canonicalize()?;
+        debug!(
+            "创建安全路径 - ID: {}, 类型: {}, 路径: {}",
+            id, plugin_type, path
+        );
         let mut safe_path = SafePathBuf {
             base: Arc::new(base.clone()),
             relative: PathBuf::new(),
         };
 
         if !path.is_empty() {
-            let target_path = base.join(&path);
+            let target_path = base.join(path);
             // 检查目标路径是否在基础路径下
             if let Ok(canonical_path) = target_path.canonicalize() {
                 if !canonical_path.starts_with(&base) {
+                    warn!("检测到路径遍历尝试 - ID: {}, 路径: {}", id, path);
                     return Err(IpcError::PathPermissionDenied(
                         "Path traversal detected".to_string(),
                     ));
@@ -105,6 +107,7 @@ pub mod fs_api {
                 // 如果路径不存在，仍然进行安全检查
                 let normalized_path = target_path.components().collect::<PathBuf>();
                 if !normalized_path.starts_with(&base) {
+                    warn!("检测到路径遍历尝试 - ID: {}, 路径: {}", id, path);
                     return Err(IpcError::PathPermissionDenied(
                         "Path traversal detected".to_string(),
                     ));
@@ -122,7 +125,8 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<FsItemInfo, IpcError> {
-        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        let safe_path: PathBuf = create_safe_path(&id, &plugin_type, &path)?.into();
+        debug!("检查路径状态 - ID: {}, 路径: {}", id, path);
 
         Ok(FsItemInfo {
             exists: safe_path.exists(),
@@ -138,10 +142,12 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<String, IpcError> {
-        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        let safe_path: PathBuf = create_safe_path(&id, &plugin_type, &path)?.into();
         if !safe_path.is_file() {
+            warn!("尝试读取非文件 - ID: {}, 路径: {}", id, path);
             return Err(IpcError::NotFile);
         }
+        debug!("读取文件 - ID: {}, 路径: {}", id, path);
         fs::read_to_string(safe_path).map_err(IpcError::Io)
     }
 
@@ -153,13 +159,16 @@ pub mod fs_api {
         path: String,
         content: String,
     ) -> Result<(), IpcError> {
-        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        let safe_path: PathBuf = create_safe_path(&id, &plugin_type, &path)?.into();
         if safe_path.is_dir() {
+            warn!("尝试写入到目录 - ID: {}, 路径: {}", id, path);
             return Err(IpcError::IsDir);
         }
         if let Some(parent) = safe_path.parent() {
+            debug!("创建父目录 - ID: {}, 路径: {:?}", id, parent);
             fs::create_dir_all(parent).map_err(IpcError::Io)?;
         }
+        debug!("写入文件 - ID: {}, 路径: {}", id, path);
         fs::write(safe_path, content).map_err(IpcError::Io)
     }
 
@@ -170,27 +179,32 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<(), IpcError> {
-        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        let safe_path: PathBuf = create_safe_path(&id, &plugin_type, &path)?.into();
         if !safe_path.is_file() {
+            warn!("尝试删除非文件 - ID: {}, 路径: {}", id, path);
             return Err(IpcError::NotFile);
         }
+        info!("删除文件 - ID: {}, 路径: {}", id, path);
         fs::remove_file(safe_path).map_err(IpcError::Io)
     }
 
     /// 创建目录 (递归)
     #[tauri::command]
     pub async fn create_dir(id: String, plugin_type: String, path: String) -> Result<(), IpcError> {
-        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        let safe_path: PathBuf = create_safe_path(&id, &plugin_type, &path)?.into();
+        info!("创建目录 - ID: {}, 路径: {}", id, path);
         fs::create_dir_all(safe_path).map_err(IpcError::Io)
     }
 
     /// 删除目录 (递归)
     #[tauri::command]
     pub async fn remove_dir(id: String, plugin_type: String, path: String) -> Result<(), IpcError> {
-        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        let safe_path: PathBuf = create_safe_path(&id, &plugin_type, &path)?.into();
         if !safe_path.is_dir() {
+            warn!("尝试删除非目录 - ID: {}, 路径: {}", id, path);
             return Err(IpcError::NotDir);
         }
+        info!("删除目录 - ID: {}, 路径: {}", id, path);
         fs::remove_dir_all(safe_path).map_err(IpcError::Io)
     }
 }

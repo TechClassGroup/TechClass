@@ -4,6 +4,7 @@ use crate::error::IpcError;
 use serde::Serialize;
 
 /// 插件类型
+#[derive(Debug)]
 pub enum PluginType {
     Official,
     Custom,
