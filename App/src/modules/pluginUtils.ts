@@ -1,9 +1,9 @@
 /**
  * @fileOverview 插件的一些工具函数
  */
-import {computed, ComputedRef, markRaw} from "vue";
+import {computed, ComputedRef} from "vue";
 import {PluginComponentStore} from "../types/plugins";
-import {loadedPlugins} from "./pluginsManager.ts";
+import {loadedPlugins} from "./pluginsManager";
 
 export const computedPluginsComponent: ComputedRef<
     Array<PluginComponentStore>

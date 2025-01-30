@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import logger from "../modules/logger.ts";
-import { useApplicationStore } from "../stores/useApplicationStore.ts";
+import logger from "../modules/logger";
+import {useApplicationStore} from "../stores/useApplicationStore";
 import About from "./setting/About.vue";
-import { computed, defineComponent, markRaw, watch } from "vue";
+import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSet from "./setting/PluginSet.vue";
-import { computedPluginsComponent } from "../modules/pluginUtils.ts";
-import { PluginStore } from "../types/plugins";
+import {computedPluginsComponent} from "../modules/pluginUtils";
+import {PluginStore} from "../types/plugins";
 
 const store = useApplicationStore();
 

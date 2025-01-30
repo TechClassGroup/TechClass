@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {useApplicationStore} from "../stores/useApplicationStore.ts";
+import {useApplicationStore} from "../stores/useApplicationStore";
 
 const store = useApplicationStore();
 </script>

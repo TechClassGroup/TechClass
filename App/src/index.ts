@@ -1,12 +1,12 @@
 import {createApp} from "vue";
 import App from "./App.vue";
 import "./assets/styles/main.css"
-import logger from "./modules/logger.ts";
+import logger from "./modules/logger";
 import {createPinia} from "pinia";
 import "vue-draggable-resizable/style.css"
 // @ts-ignore
 import VueDraggableResizable from 'vue-draggable-resizable'
-import {ConfigStoragePiniaPlugin} from "./stores/piniaPlugins.ts";
+import {ConfigStoragePiniaPlugin} from "./stores/piniaPlugins";
 
 logger.info('\n\n🚀🚀🚀 应用启动中... 🚀🚀🚀\n\n');
 const pinia = createPinia();

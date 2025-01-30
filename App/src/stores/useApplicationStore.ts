@@ -2,11 +2,11 @@
  * @fileOverview 应用程序的一些状态
  */
 import {defineStore, StoreDefinition} from "pinia";
-import logger from "../modules/logger.ts";
-import {init_plugins} from "../modules/pluginsManager.ts";
+import logger from "../modules/logger";
+import {init_plugins} from "../modules/pluginsManager";
 import {watch} from "vue";
 
-type AppStore = ReturnType<typeof useApplicationStore>
+type AppStore = ReturnType<typeof useApplicationStore>;
 
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: () => {
@@ -30,7 +30,8 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
         },
         reverseSettingOpen() {
             logger.trace(
-                `设置界面当前状态: ${this.setting.open} 将切换到: ${!this.setting.open}`
+                `设置界面当前状态: ${this.setting.open} 将切换到: ${!this
+                    .setting.open}`
             );
             this.setting.open = !this.setting.open;
         },
@@ -38,7 +39,6 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
             init_plugins();
             this.setting.needReloadPlugins = false;
         },
-
     },
 
     config_storage: {
@@ -49,9 +49,9 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     on_storage_load_complete(store: AppStore) {
         init_plugins();
         watch(
-            () => (store).storage.pluginsList,
+            () => store.storage.pluginsList,
             () => {
-                (store).setting.needReloadPlugins = true;
+                store.setting.needReloadPlugins = true;
             },
             {deep: true}
         );

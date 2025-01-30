@@ -1,10 +1,15 @@
-import { ConfigStorageOptions } from "../stores/piniaPlugins";
-
 /**
  * @fileOverview Pinia类型定义
  */
-declare module "./pinia" {
+declare module "pinia" {
     // noinspection JSUnusedGlobalSymbols
-    export interface DefineStoreOptionsBase<S, Store>
-        extends ConfigStorageOptions {}
+    export interface DefineStoreOptionsBase<S, Store> {
+        config_storage?: {
+            enabled: boolean;
+            keys: string[];
+            throttle_ms: number;
+            max_retries?: number;
+        };
+        on_storage_load_complete?: (store: Store) => void;
+    }
 }

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import {useApplicationStore} from "../../stores/useApplicationStore.ts";
-import {officialPlugins} from "../../plugins/officialPlugins.ts";
+import {useApplicationStore} from "../../stores/useApplicationStore";
+import {officialPlugins} from "../../plugins/officialPlugins";
 import TcSwitch from "../../UI/TcSwitch.vue";
 import TcButton from "../../UI/TcButton.vue";
-import {init_plugins} from "../../modules/pluginsManager.ts";
+import {init_plugins} from "../../modules/pluginsManager";
 // 数据流动: 按钮更新 --> store变化 --> 按钮状态变化
 const store = useApplicationStore();
 

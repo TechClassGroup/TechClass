@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {DraggableComponentStatus, PluginComponentStore} from "../types/plugins.js";
-import {computedPluginsComponent} from "../modules/pluginUtils.ts";
+import {DraggableComponentStatus} from "../types/plugins.js";
+import {computedPluginsComponent} from "../modules/pluginUtils";
 
 const updateComponentStatus = (
     status: DraggableComponentStatus,

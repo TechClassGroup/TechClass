@@ -2,12 +2,12 @@
  * @fileOverview 插件管理器
  */
 
-import logger from "./logger.ts";
+import logger from "./logger";
 import {defineStore} from "pinia";
 import {markRaw, ref, Ref, watch} from "vue";
 import {DraggableComponentStatus, InstancePlugin, IPlugin,} from "../types/plugins";
-import {useApplicationStore} from "../stores/useApplicationStore.ts";
-import {officialPlugins} from "../plugins/officialPlugins.ts";
+import {useApplicationStore} from "../stores/useApplicationStore";
+import {officialPlugins} from "../plugins/officialPlugins";
 
 export const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 
