@@ -2,13 +2,13 @@
  * @fileOverview Pinia插件
  * @author erduotong
  */
-import { PiniaPluginContext, Store } from "pinia";
-import { watch } from "vue";
-import { throttle } from "lodash";
+import {PiniaPluginContext, Store} from "pinia";
+import {watch} from "vue";
+import {throttle} from "lodash";
 
-import { invoke } from "@tauri-apps/api/core";
+import {invoke} from "@tauri-apps/api/core";
 import logger from "../modules/logger";
-import { IPCErrorKind, PluginType } from "../types/rsShared";
+import {IpcErrorKind, PluginType} from "../types/rsShared";
 
 export interface ConfigStorageOptions {
     config_storage?: {
@@ -22,7 +22,7 @@ export interface ConfigStorageOptions {
 }
 
 type ConfigErrorKind = {
-    kind: IPCErrorKind.Io | IPCErrorKind.Json | IPCErrorKind.InvalidPluginType;
+    kind: IpcErrorKind.Io | IpcErrorKind.Json | IpcErrorKind.InvalidPluginType;
 };
 
 /**
