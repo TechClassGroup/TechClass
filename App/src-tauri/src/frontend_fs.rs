@@ -37,24 +37,13 @@ pub struct SafePathBuf {
 
 impl SafePathBuf {
     /// 创建一个新的安全路径
-    pub fn new(id: String, plugin_type: PluginType, path: PathBuf) -> Result<Self, IpcError> {
+    pub fn new(id: String, plugin_type: PluginType) -> Result<Self, IpcError> {
         let base_path = get_path(&id, plugin_type)?;
-
-        let canonical_path = path.canonicalize().map_err(IpcError::Io)?;
-        let canonical_base = base_path.canonicalize().map_err(IpcError::Io)?;
-
-        if !canonical_path.starts_with(&canonical_base) {
-            return Err(IpcError::PathTraversal);
-        }
-
-        let relative_path = canonical_path
-            .strip_prefix(&canonical_base)
-            .map_err(|_| IpcError::PathTraversal)?
-            .to_path_buf();
+        let base_path = base_path.canonicalize().map_err(IpcError::Io)?; // 确保目录规范
 
         Ok(Self {
             base_path,
-            relative_path,
+            relative_path: PathBuf::new(),
         })
     }
 
@@ -110,7 +99,7 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<FsItemInfo, IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
         let path = safe_path.to_path_buf();
 
         if !path.exists() {
@@ -137,7 +126,7 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<String, IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
         fs::read_to_string(safe_path.to_path_buf()).map_err(IpcError::Io)
     }
 
@@ -149,7 +138,7 @@ pub mod fs_api {
         path: String,
         content: String,
     ) -> Result<(), IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
         fs::write(safe_path.to_path_buf(), content).map_err(IpcError::Io)
     }
 
@@ -160,7 +149,7 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<(), IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
         fs::remove_file(safe_path.to_path_buf()).map_err(IpcError::Io)
     }
 }
