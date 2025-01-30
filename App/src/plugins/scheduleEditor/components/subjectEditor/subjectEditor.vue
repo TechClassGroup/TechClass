@@ -4,10 +4,10 @@ import {SubjectObject} from "../../scheduleEditorTypes";
 import SubjectEditorDisplay from "./subjectEditorDisplay.vue";
 import SubjectEditorChecker from "./subjectEditorChecker.vue";
 import {v4 as uuidv4} from "uuid";
-import {scheduleEditorState} from "../../scheduleStore";
+import {scheduleEditorProfile} from "../../scheduleStore";
 import TcButton from "../../../../UI/TcButton.vue";
 
-const subjects = scheduleEditorState.value.subjects;
+const subjects = scheduleEditorProfile.value.subjects;
 
 const selectedSubjectId = ref<string>("");
 
@@ -61,7 +61,7 @@ function addSubject() {
 function deleteSubject(id: string) {
     if (subjects[id]) {
         // 清理所有引用了该课程的时间表
-        Object.values(scheduleEditorState.value.timetables).forEach(
+      Object.values(scheduleEditorProfile.value.timetables).forEach(
             (timetable) => {
                 Object.values(timetable.layouts).forEach((layout) => {
                     if (layout.type === "lesson" && layout.subjectId === id) {

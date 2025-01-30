@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { TimetableObject } from "../../scheduleEditorTypes";
-import { DateTime } from "luxon";
-import { scheduleEditorState } from "../../scheduleStore";
+import {computed} from "vue";
+import {TimetableObject} from "../../scheduleEditorTypes";
+import {DateTime} from "luxon";
+import {scheduleEditorProfile} from "../../scheduleStore";
 import TcInput from "../../../../UI/TcInput.vue";
 import TcSwitch from "../../../../UI/TcSwitch.vue";
 
@@ -16,7 +16,7 @@ const timetables = defineModel<TimetableObject>("timetables", {
     required: true,
 });
 
-const subjects = scheduleEditorState.value.subjects;
+const subjects = scheduleEditorProfile.value.subjects;
 
 const currentTimetable = computed(() => {
     if (

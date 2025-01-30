@@ -8,6 +8,7 @@ import {markRaw, ref, Ref, watch} from "vue";
 import {DraggableComponentStatus, InstancePlugin, IPlugin,} from "../types/plugins";
 import {useApplicationStore} from "../stores/useApplicationStore";
 import {officialPlugins} from "../plugins/officialPlugins";
+import {PluginFs} from "./pluginUtils";
 
 export const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 
@@ -125,7 +126,10 @@ export function registerPlugin(plugin: IPlugin<any>) {
     };
     // 生命周期钩子
     if (processedPlugin.hooks?.onMounted) {
-        processedPlugin.hooks.onMounted(store);
+        const filesystem = new PluginFs(plugin);
+        processedPlugin.hooks.onMounted(store, {
+            fs: filesystem,
+        });
     }
     logger.info(`插件 ${plugin.name} id: ${plugin.id} 加载成功`);
     callPluginRegisterCallbacks(plugin.id);

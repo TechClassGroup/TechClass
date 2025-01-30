@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { timeGroupObject } from "../../scheduleEditorTypes";
-import { scheduleEditorState } from "../../scheduleStore";
-import TcButton from "../../../../UI/TcButton.vue";
+import {computed} from "vue";
+import {timeGroupObject} from "../../scheduleEditorTypes";
+import {scheduleEditorProfile} from "../../scheduleStore";
 
 const selectedTimeGroupId = defineModel<string>("selectedTimeGroupId", {
     required: true,
@@ -14,7 +13,7 @@ const timeGroups = defineModel<timeGroupObject>("timeGroups", {
     required: true,
 });
 
-const curriculums = scheduleEditorState.value.curriculums;
+const curriculums = scheduleEditorProfile.value.curriculums;
 
 const currentTimeGroup = computed(() => {
     if (

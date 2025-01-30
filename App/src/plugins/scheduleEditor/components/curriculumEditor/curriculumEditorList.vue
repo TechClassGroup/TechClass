@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { v4 as uuidv4 } from "uuid";
-import { scheduleEditorState } from "../../scheduleStore";
+import {computed} from "vue";
+import {v4 as uuidv4} from "uuid";
+import {scheduleEditorProfile} from "../../scheduleStore";
 import TcButton from "../../../../UI/TcButton.vue";
 
 const selectedCurriculumId = defineModel<string>("selectedCurriculumId", {
     required: true,
 });
 
-const curriculums = computed(() => scheduleEditorState.value.curriculums);
+const curriculums = computed(() => scheduleEditorProfile.value.curriculums);
 
 function generateUniqueId(): string {
     let newId = uuidv4();

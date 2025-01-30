@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { scheduleEditorState } from "../../scheduleStore";
-import { DateTime } from "luxon";
+import {computed} from "vue";
+import {scheduleEditorProfile} from "../../scheduleStore";
+import {DateTime} from "luxon";
 
 const selectedCurriculumId = defineModel<string>("selectedCurriculumId", {
     required: true,
 });
 
-const curriculums = computed(() => scheduleEditorState.value.curriculums);
-const timetables = computed(() => scheduleEditorState.value.timetables);
-const subjects = computed(() => scheduleEditorState.value.subjects);
+const curriculums = computed(() => scheduleEditorProfile.value.curriculums);
+const timetables = computed(() => scheduleEditorProfile.value.timetables);
+const subjects = computed(() => scheduleEditorProfile.value.subjects);
 
 const currentCurriculum = computed(() => {
     if (

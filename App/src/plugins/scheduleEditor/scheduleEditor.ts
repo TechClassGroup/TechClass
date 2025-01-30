@@ -1,6 +1,6 @@
-import { IPlugin, PluginStore } from "../../types/plugins";
+import {IPlugin, PluginStore} from "../../types/plugins";
 import scheduleEditorSetting from "./components/scheduleEditorSetting.vue";
-import { clearStore, initializeStore } from "./scheduleStore";
+import {clearStore, initializeStore} from "./scheduleStore";
 
 /**
  * @fileOverview 课表编辑器插件
@@ -15,8 +15,8 @@ export const scheduleEditor: IPlugin = {
         settingPage: scheduleEditorSetting,
     },
     hooks: {
-        onMounted: (store: PluginStore) => {
-            initializeStore(store);
+        onMounted: (store: PluginStore, api) => {
+            initializeStore(store, api.fs);
         },
         onUnmounted: () => {
             clearStore();

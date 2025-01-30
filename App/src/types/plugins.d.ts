@@ -3,6 +3,7 @@
  */
 import {defineComponent} from "vue";
 import type {StateTree, Store} from "pinia";
+import {PluginFs} from "../modules/pluginUtils";
 
 /**
  * 可拖拽组件的配置参数。
@@ -110,6 +111,16 @@ export type PluginStore<T extends string = string> = Store<
 >;
 
 /**
+ * 提供的API
+ */
+interface PluginApi {
+    /**
+     * 文件操作API
+     */
+    fs: PluginFs;
+}
+
+/**
  * 插件对象的定义。
  * @template T - 组件名称的类型，默认为字符串类型。
  * @template Actions -  即将被添加到插件的 `store` 中的 `actions`  | 你可以和`pinia`中的`actions`一样定义
@@ -146,7 +157,7 @@ export interface IPlugin<
          * 插件挂载时的钩子函数
          * @param store - 插件的 pinia store 实例
          */
-        onMounted?: (store: PluginStore<T>) => void;
+        onMounted?: (store: PluginStore<T>, api: PluginApi) => void;
         /**
          * 插件卸载时的钩子函数
          */

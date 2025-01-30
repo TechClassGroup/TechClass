@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { scheduleEditorState } from "../../scheduleStore";
+import {ref} from "vue";
+import {scheduleEditorProfile} from "../../scheduleStore";
 import TimeGroupDisplay from "./timeGroupDisplay.vue";
 import TimeGroupLayoutList from "./timeGroupLayoutList.vue";
 import TimeGroupChecker from "./timeGroupChecker.vue";
@@ -8,7 +8,7 @@ import TimeGroupChecker from "./timeGroupChecker.vue";
 const selectedTimeGroupId = ref<string>("");
 const selectedLayoutIndex = ref<number>(-1);
 
-const timeGroups = scheduleEditorState.value.timeGroups;
+const timeGroups = scheduleEditorProfile.value.timeGroups;
 </script>
 
 <template>
