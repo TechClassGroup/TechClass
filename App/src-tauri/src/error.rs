@@ -14,6 +14,8 @@ pub enum IpcError {
     NotFile,
     #[error("目标不是目录")]
     NotDir,
+    #[error("目标是目录")]
+    IsDir,
 }
 
 #[derive(serde::Serialize)]
@@ -26,6 +28,7 @@ pub enum IpcErrorKind {
     PathPermissionDenied(String),
     NotFile(String),
     NotDir(String),
+    IsDir(String),
 }
 
 impl serde::Serialize for IpcError {
@@ -41,6 +44,7 @@ impl serde::Serialize for IpcError {
             Self::PathPermissionDenied(_) => IpcErrorKind::PathPermissionDenied(error_message),
             Self::NotFile => IpcErrorKind::NotFile(error_message),
             Self::NotDir => IpcErrorKind::NotDir(error_message),
+            Self::IsDir => IpcErrorKind::IsDir(error_message),
         };
         error_kind.serialize(serializer)
     }

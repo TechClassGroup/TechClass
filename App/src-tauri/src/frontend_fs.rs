@@ -85,17 +85,33 @@ pub mod fs_api {
     ) -> Result<SafePathBuf, IpcError> {
         let plugin_type = PluginType::from_str(&plugin_type)?;
         let base = get_path(&id, plugin_type)?;
-        let mut safe_path = SafePathBuf::build(base)?;
+        let base = base.canonicalize()?;
+        let mut safe_path = SafePathBuf {
+            base: Arc::new(base.clone()),
+            relative: PathBuf::new(),
+        };
 
         if !path.is_empty() {
-            safe_path = match safe_path.join(path) {
-                Ok(path) => path,
-                Err(e) if e.kind() == io::ErrorKind::PermissionDenied => {
-                    return Err(IpcError::PathPermissionDenied(e.to_string()))
+            let target_path = base.join(&path);
+            // 检查目标路径是否在基础路径下
+            if let Ok(canonical_path) = target_path.canonicalize() {
+                if !canonical_path.starts_with(&base) {
+                    return Err(IpcError::PathPermissionDenied(
+                        "Path traversal detected".to_string(),
+                    ));
                 }
-                Err(e) => return Err(IpcError::Io(e))
-            };
-        };
+                safe_path.relative = path.into();
+            } else {
+                // 如果路径不存在，仍然进行安全检查
+                let normalized_path = target_path.components().collect::<PathBuf>();
+                if !normalized_path.starts_with(&base) {
+                    return Err(IpcError::PathPermissionDenied(
+                        "Path traversal detected".to_string(),
+                    ));
+                }
+                safe_path.relative = path.into();
+            }
+        }
         Ok(safe_path)
     }
 
@@ -138,6 +154,9 @@ pub mod fs_api {
         content: String,
     ) -> Result<(), IpcError> {
         let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        if safe_path.is_dir() {
+            return Err(IpcError::IsDir);
+        }
         if let Some(parent) = safe_path.parent() {
             fs::create_dir_all(parent).map_err(IpcError::Io)?;
         }

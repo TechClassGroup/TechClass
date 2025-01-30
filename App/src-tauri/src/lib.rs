@@ -1,3 +1,5 @@
+use frontend_fs::fs_api;
+
 pub mod contestants;
 pub mod error;
 pub mod frontend_fs;
@@ -15,7 +17,13 @@ pub fn run() {
             logs::log_warn,
             logs::log_error,
             storage::storage_content,
-            storage::load_content
+            storage::load_content,
+            fs_api::exists,
+            fs_api::read_file,
+            fs_api::write_file,
+            fs_api::remove_file,
+            fs_api::create_dir,
+            fs_api::remove_dir,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

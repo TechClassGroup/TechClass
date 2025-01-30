@@ -9,6 +9,7 @@ export enum IpcErrorKind {
     PathTraversal = "PathTraversal",
     NotFile = "NotFile",
     NotDir = "NotDir",
+    IsDir = "IsDir",
 }
 
 export interface IpcError {
