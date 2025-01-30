@@ -92,6 +92,16 @@ pub mod fs_api {
     use super::*;
     use std::fs;
 
+    /// 创建一个安全的路径
+    #[inline]
+    fn create_safe_path(
+        id: String,
+        plugin_type: String,
+        path: String,
+    ) -> Result<SafePathBuf, IpcError> {
+        SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)
+    }
+
     /// 检查路径状态
     #[tauri::command]
     pub async fn exists(
@@ -99,7 +109,7 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<FsItemInfo, IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
+        let safe_path = create_safe_path(id, plugin_type, path)?;
         let path = safe_path.to_path_buf();
 
         if !path.exists() {
@@ -126,7 +136,7 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<String, IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
+        let safe_path = create_safe_path(id, plugin_type, path)?;
         fs::read_to_string(safe_path.to_path_buf()).map_err(IpcError::Io)
     }
 
@@ -138,7 +148,7 @@ pub mod fs_api {
         path: String,
         content: String,
     ) -> Result<(), IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
+        let safe_path = create_safe_path(id, plugin_type, path)?;
         fs::write(safe_path.to_path_buf(), content).map_err(IpcError::Io)
     }
 
@@ -149,7 +159,7 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<(), IpcError> {
-        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)?;
+        let safe_path = create_safe_path(id, plugin_type, path)?;
         fs::remove_file(safe_path.to_path_buf()).map_err(IpcError::Io)
     }
 }
