@@ -1,7 +1,7 @@
 /**
  * @fileOverview 日志模块
  */
-import { invoke } from "@tauri-apps/api/core";
+import {invoke} from "@tauri-apps/api/core";
 
 enum LoggerType {
     trace = "log_trace",
@@ -18,6 +18,7 @@ declare const __LOG_LEVEL_INFO__: boolean;
 declare const __LOG_LEVEL_WARN__: boolean;
 declare const __LOG_LEVEL_ERROR__: boolean;
 declare const __IS_DEV__: boolean;
+
 /**
  * 深度序列化对象，处理特殊情况
  */
@@ -102,7 +103,7 @@ class Logger {
     trace(...args: any[]) {
         if (__LOG_LEVEL_TRACE__) {
             const message = this.formatLogMessage(...args);
-            invoke(LoggerType.trace, { content: message }).then();
+            invoke(LoggerType.trace, {content: message}).then();
             if (__IS_DEV__) {
                 console.debug(
                     "%c[TRACE]",
@@ -116,7 +117,7 @@ class Logger {
     debug(...args: any[]) {
         if (__LOG_LEVEL_DEBUG__) {
             const message = this.formatLogMessage(...args);
-            invoke(LoggerType.debug, { content: message }).then();
+            invoke(LoggerType.debug, {content: message}).then();
             if (__IS_DEV__) {
                 console.debug(
                     "%c[DEBUG]",
@@ -130,11 +131,10 @@ class Logger {
     info(...args: any[]) {
         if (__LOG_LEVEL_INFO__) {
             const message = this.formatLogMessage(...args);
-            invoke(LoggerType.info, { content: message }).then();
+            invoke(LoggerType.info, {content: message}).then();
             if (__IS_DEV__) {
                 console.info(
-                    "%c[INFO]",
-                    "color: #fff",
+                    "[INFO]",
                     message
                 );
             }
@@ -144,7 +144,7 @@ class Logger {
     warn(...args: any[]) {
         if (__LOG_LEVEL_WARN__) {
             const message = this.formatLogMessage(...args);
-            invoke(LoggerType.warn, { content: message }).then();
+            invoke(LoggerType.warn, {content: message}).then();
             if (__IS_DEV__) {
                 console.warn(
                     "[WARN]",
@@ -157,7 +157,7 @@ class Logger {
     error(...args: any[]) {
         if (__LOG_LEVEL_ERROR__) {
             const message = this.formatLogMessage(...args);
-            invoke(LoggerType.error, { content: message }).then();
+            invoke(LoggerType.error, {content: message}).then();
             if (__IS_DEV__) {
                 console.error(
                     "[ERROR]",
