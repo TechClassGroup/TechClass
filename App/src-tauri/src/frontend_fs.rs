@@ -1,6 +1,10 @@
 //! 前端的文件系统
 
-use std::path::PathBuf;
+use std::{
+    io,
+    path::{Path, PathBuf},
+    sync::Arc,
+};
 
 use crate::{
     contestants::PATH_BASIC,
@@ -30,61 +34,41 @@ pub fn get_path(id: &str, plugin_type: PluginType) -> Result<PathBuf, std::io::E
 #[derive(Debug, Clone)]
 pub struct SafePathBuf {
     /// 基础路径（从 get_path 获得的路径）
-    base_path: PathBuf,
+    base: Arc<PathBuf>,
     /// 相对于基础路径的路径
-    relative_path: PathBuf,
+    relative: PathBuf,
 }
 
 impl SafePathBuf {
     /// 创建一个新的安全路径
-    pub fn new(id: String, plugin_type: PluginType) -> Result<Self, IpcError> {
-        let base_path = get_path(&id, plugin_type)?;
-        let base_path = base_path.canonicalize().map_err(IpcError::Io)?; // 确保目录规范
-
-        Ok(Self {
-            base_path,
-            relative_path: PathBuf::new(),
+    pub fn build(base: PathBuf) -> std::io::Result<Self> {
+        Ok(SafePathBuf {
+            base: Arc::new(base.canonicalize()?),
+            relative: PathBuf::new(),
         })
     }
+    pub fn join<P: AsRef<Path>>(&self, path: P) -> std::io::Result<Self> {
+        let relative = self.relative.join(path).canonicalize()?;
+        let joined_path = self.base.join(&relative).canonicalize()?;
+        let is_safe = joined_path.starts_with(self.base.as_path());
 
-    /// 获取完整路径
-    pub fn to_path_buf(&self) -> PathBuf {
-        self.base_path.join(&self.relative_path)
-    }
-
-    /// 获取相对路径
-    pub fn relative_path(&self) -> &PathBuf {
-        &self.relative_path
-    }
-
-    /// 获取基础路径
-    pub fn base_path(&self) -> &PathBuf {
-        &self.base_path
-    }
-
-    /// 添加路径组件
-    pub fn join<P: AsRef<std::path::Path>>(&self, path: P) -> Result<Self, IpcError> {
-        let new_path = self.to_path_buf().join(path);
-
-        // 标准化路径
-        let canonical_path = new_path.canonicalize().map_err(IpcError::Io)?;
-        let canonical_base = self.base_path.canonicalize().map_err(IpcError::Io)?;
-
-        // 确保新路径仍在基础路径下
-        if !canonical_path.starts_with(&canonical_base) {
-            return Err(IpcError::PathTraversal);
+        if is_safe {
+            Ok(Self {
+                base: Arc::clone(&self.base),
+                relative,
+            })
+        } else {
+            Err(io::Error::new(
+                io::ErrorKind::PermissionDenied,
+                "Path traversal detected",
+            ))
         }
+    }
+}
 
-        // 计算新的相对路径
-        let relative_path = canonical_path
-            .strip_prefix(&canonical_base)
-            .map_err(|_| IpcError::PathTraversal)?
-            .to_path_buf();
-
-        Ok(Self {
-            base_path: self.base_path.clone(),
-            relative_path,
-        })
+impl Into<PathBuf> for SafePathBuf {
+    fn into(self) -> PathBuf {
+        self.base.join(self.relative)
     }
 }
 
@@ -99,7 +83,20 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<SafePathBuf, IpcError> {
-        SafePathBuf::new(id, PluginType::from_str(&plugin_type)?)?.join(path)
+        let plugin_type = PluginType::from_str(&plugin_type)?;
+        let base = get_path(&id, plugin_type)?;
+        let mut safe_path = SafePathBuf::build(base)?;
+
+        if !path.is_empty() {
+            safe_path = match safe_path.join(path) {
+                Ok(path) => path,
+                Err(e) if e.kind() == io::ErrorKind::PermissionDenied => {
+                    return Err(IpcError::PathPermissionDenied(e.to_string()))
+                }
+                Err(e) => return Err(IpcError::Io(e))
+            };
+        };
+        Ok(safe_path)
     }
 
     /// 检查路径状态
@@ -109,23 +106,12 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<FsItemInfo, IpcError> {
-        let safe_path = create_safe_path(id, plugin_type, path)?;
-        let path = safe_path.to_path_buf();
-
-        if !path.exists() {
-            return Ok(FsItemInfo {
-                exists: false,
-                is_file: false,
-                is_dir: false,
-            });
-        }
-
-        let metadata = fs::metadata(path).map_err(IpcError::Io)?;
+        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
 
         Ok(FsItemInfo {
-            exists: true,
-            is_file: metadata.is_file(),
-            is_dir: metadata.is_dir(),
+            exists: safe_path.exists(),
+            is_file: safe_path.is_file(),
+            is_dir: safe_path.is_dir(),
         })
     }
 
@@ -136,11 +122,14 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<String, IpcError> {
-        let safe_path = create_safe_path(id, plugin_type, path)?;
-        fs::read_to_string(safe_path.to_path_buf()).map_err(IpcError::Io)
+        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        if !safe_path.is_file() {
+            return Err(IpcError::NotFile);
+        }
+        fs::read_to_string(safe_path).map_err(IpcError::Io)
     }
 
-    /// 写入文件内容
+    /// 写入文件内容 (带自动创建父目录)
     #[tauri::command]
     pub async fn write_file(
         id: String,
@@ -148,8 +137,11 @@ pub mod fs_api {
         path: String,
         content: String,
     ) -> Result<(), IpcError> {
-        let safe_path = create_safe_path(id, plugin_type, path)?;
-        fs::write(safe_path.to_path_buf(), content).map_err(IpcError::Io)
+        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        if let Some(parent) = safe_path.parent() {
+            fs::create_dir_all(parent).map_err(IpcError::Io)?;
+        }
+        fs::write(safe_path, content).map_err(IpcError::Io)
     }
 
     /// 删除文件
@@ -159,7 +151,27 @@ pub mod fs_api {
         plugin_type: String,
         path: String,
     ) -> Result<(), IpcError> {
-        let safe_path = create_safe_path(id, plugin_type, path)?;
-        fs::remove_file(safe_path.to_path_buf()).map_err(IpcError::Io)
+        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        if !safe_path.is_file() {
+            return Err(IpcError::NotFile);
+        }
+        fs::remove_file(safe_path).map_err(IpcError::Io)
+    }
+
+    /// 创建目录 (递归)
+    #[tauri::command]
+    pub async fn create_dir(id: String, plugin_type: String, path: String) -> Result<(), IpcError> {
+        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        fs::create_dir_all(safe_path).map_err(IpcError::Io)
+    }
+
+    /// 删除目录 (递归)
+    #[tauri::command]
+    pub async fn remove_dir(id: String, plugin_type: String, path: String) -> Result<(), IpcError> {
+        let safe_path: PathBuf = create_safe_path(id, plugin_type, path)?.into();
+        if !safe_path.is_dir() {
+            return Err(IpcError::NotDir);
+        }
+        fs::remove_dir_all(safe_path).map_err(IpcError::Io)
     }
 }

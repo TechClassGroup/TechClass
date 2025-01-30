@@ -2,11 +2,20 @@
  * @fileOverview 前后端分享的类型定义
  */
 
-export enum IPCErrorKind {
-    Io = "io",
-    Json = "json",
-    InvalidPluginType = "invalidPluginType",
+export enum IpcErrorKind {
+    Io = "Io",
+    Json = "Json",
+    InvalidPluginType = "InvalidPluginType",
+    PathTraversal = "PathTraversal",
+    NotFile = "NotFile",
+    NotDir = "NotDir",
 }
+
+export interface IpcError {
+    kind: IpcErrorKind;
+    message: string;
+}
+
 
 export enum PluginType {
     Official = "official",

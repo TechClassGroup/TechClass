@@ -14,7 +14,7 @@ impl PluginType {
         match s {
             "official" => Ok(Self::Official),
             "custom" => Ok(Self::Custom),
-            _ => Err(IpcError::InvalidPluginType),
+            _ => Err(IpcError::InvalidPluginType(s.to_string())),
         }
     }
 }
