@@ -3,9 +3,9 @@
 use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::path::PathBuf;
-
 use crate::error::IpcError;
-use crate::frontend_fs::{get_path, PluginType};
+use crate::frontend_fs::get_path;
+use crate::shared::PluginType;
 
 use log::warn;
 use serde_json::Value;

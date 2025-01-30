@@ -1,8 +1,9 @@
 pub mod contestants;
 pub mod error;
-pub mod logs;
-pub mod storage;
 pub mod frontend_fs;
+pub mod logs;
+pub mod shared;
+pub mod storage;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()

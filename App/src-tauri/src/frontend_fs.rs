@@ -2,23 +2,12 @@
 
 use std::path::PathBuf;
 
-use crate::{contestants::PATH_BASIC, error::IpcError};
+use crate::{
+    contestants::PATH_BASIC,
+    error::IpcError,
+    shared::{FsItemInfo, PluginType},
+};
 use lazy_static::lazy_static;
-
-/// 插件类型
-pub enum PluginType {
-    Official,
-    Custom,
-}
-impl PluginType {
-    pub fn from_str(s: &str) -> Result<Self, IpcError> {
-        match s {
-            "official" => Ok(Self::Official),
-            "custom" => Ok(Self::Custom),
-            _ => Err(IpcError::InvalidPluginType),
-        }
-    }
-}
 
 lazy_static! {
     pub static ref PATH_CONFIG: PathBuf = PATH_BASIC.join("config");
@@ -51,7 +40,6 @@ impl SafePathBuf {
     pub fn new(id: String, plugin_type: PluginType, path: PathBuf) -> Result<Self, IpcError> {
         let base_path = get_path(&id, plugin_type)?;
 
-    
         let canonical_path = path.canonicalize().map_err(IpcError::Io)?;
         let canonical_base = base_path.canonicalize().map_err(IpcError::Io)?;
 
@@ -108,5 +96,71 @@ impl SafePathBuf {
             base_path: self.base_path.clone(),
             relative_path,
         })
+    }
+}
+
+pub mod fs_api {
+    use super::*;
+    use std::fs;
+
+    /// 检查路径状态
+    #[tauri::command]
+    pub async fn exists(
+        id: String,
+        plugin_type: String,
+        path: String,
+    ) -> Result<FsItemInfo, IpcError> {
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        let path = safe_path.to_path_buf();
+
+        if !path.exists() {
+            return Ok(FsItemInfo {
+                exists: false,
+                is_file: false,
+                is_dir: false,
+            });
+        }
+
+        let metadata = fs::metadata(path).map_err(IpcError::Io)?;
+
+        Ok(FsItemInfo {
+            exists: true,
+            is_file: metadata.is_file(),
+            is_dir: metadata.is_dir(),
+        })
+    }
+
+    /// 读取文件内容
+    #[tauri::command]
+    pub async fn read_file(
+        id: String,
+        plugin_type: String,
+        path: String,
+    ) -> Result<String, IpcError> {
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        fs::read_to_string(safe_path.to_path_buf()).map_err(IpcError::Io)
+    }
+
+    /// 写入文件内容
+    #[tauri::command]
+    pub async fn write_file(
+        id: String,
+        plugin_type: String,
+        path: String,
+        content: String,
+    ) -> Result<(), IpcError> {
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        fs::write(safe_path.to_path_buf(), content).map_err(IpcError::Io)
+    }
+
+    /// 删除文件
+    #[tauri::command]
+    pub async fn remove_file(
+        id: String,
+        plugin_type: String,
+        path: String,
+    ) -> Result<(), IpcError> {
+        let safe_path = SafePathBuf::new(id, PluginType::from_str(&plugin_type)?, path.into())?;
+        fs::remove_file(safe_path.to_path_buf()).map_err(IpcError::Io)
     }
 }
