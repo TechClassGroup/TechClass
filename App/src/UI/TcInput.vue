@@ -71,6 +71,28 @@ const props = withDefaults(defineProps<Props>(), {
 const model = defineModel<string>();
 const textareaRef = ref<HTMLTextAreaElement>();
 
+// 处理time类型的显示值
+const displayValue = computed(() => {
+  if (props.type === "time" && model.value) {
+    const parts = model.value.split(":");
+    if (parts.length === 2) {
+      return `${parts[0]}:${parts[1]}:00`;
+    }
+  }
+  return model.value;
+});
+
+// 添加对time类型的特殊处理
+const timeInputProps = computed(() => {
+  if (props.type === "time") {
+    return {
+      step: 1,
+      pattern: "[0-9]{2}:[0-9]{2}:[0-9]{2}",
+    };
+  }
+  return {};
+});
+
 const sizeClasses = computed(() => ({
     "py-1 px-2 text-sm": props.size === "small",
     "px-4 py-2": props.size === "default",
@@ -116,7 +138,14 @@ const updateTextareaHeight = async () => {
 
 // 监听值变化以更新高度
 const handleInput = (e: Event) => {
-  model.value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
+  let value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
+
+  // 对time类型的输入进行特殊处理
+  if (props.type === "time" && value.length === 5) {
+    value = value + ":00";
+  }
+
+  model.value = value;
     if (props.type === "textarea" && props.autosize) {
         updateTextareaHeight();
     }
@@ -143,11 +172,12 @@ const handleInput = (e: Event) => {
         />
         <input
             v-else
-            :value="model"
+            :value="displayValue"
             @input="handleInput"
             :type="type"
             :disabled="disabled"
             :placeholder="placeholder"
+            v-bind="timeInputProps"
             class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full"
             :class="inputClasses"
         />
