@@ -48,20 +48,35 @@ function updateTime(field: "startTime" | "endTime", timeStr: string) {
     if (!currentLayout.value) return;
 
     // 验证时间格式
-    const [hours, minutes] = timeStr.split(":").map(Number);
+  const parts = timeStr.split(":");
+  if (parts.length < 2) return;
+
+  const [hours, minutes, seconds = "00"] = parts;
+  const parsedHours = parseInt(hours);
+  const parsedMinutes = parseInt(minutes);
+  const parsedSeconds = parseInt(seconds);
+
     if (
-        isNaN(hours) ||
-        isNaN(minutes) ||
-        hours < 0 ||
-        hours > 23 ||
-        minutes < 0 ||
-        minutes > 59
+        isNaN(parsedHours) ||
+        isNaN(parsedMinutes) ||
+        isNaN(parsedSeconds) ||
+        parsedHours < 0 ||
+        parsedHours > 23 ||
+        parsedMinutes < 0 ||
+        parsedMinutes > 59 ||
+        parsedSeconds < 0 ||
+        parsedSeconds > 59
     ) {
         // 如果时间无效，恢复到当前值
         return;
     }
 
-    const newTime = DateTime.now().set({ hour: hours, minute: minutes });
+  // 确保使用完整的时间格式
+  const timeValue = `${hours.padStart(2, "0")}:${minutes.padStart(
+      2,
+      "0"
+  )}:${seconds.padStart(2, "0")}`;
+  const newTime = DateTime.fromFormat(timeValue, "HH:mm:ss");
 
     if (field === "startTime") {
         currentLayout.value.startTime = newTime;
@@ -110,7 +125,7 @@ function updateSubject(subjectId: string) {
 }
 
 function formatTimeForInput(time: DateTime): string {
-    return time.toFormat("HH:mm");
+  return time.toFormat("HH:mm:ss");
 }
 
 function updateHide(hide: boolean) {
@@ -157,9 +172,9 @@ function updateHide(hide: boolean) {
                             @update:model-value="
                                 (value) => updateTime('startTime', value)
                             "
-                            min="00:00"
-                            max="23:59"
-                            step="60"
+                            max="23:59:59"
+                            min="00:00:00"
+                            step="1"
                         />
                     </div>
                     <div>
@@ -175,9 +190,9 @@ function updateHide(hide: boolean) {
                             @update:model-value="
                                 (value) => updateTime('endTime', value)
                             "
-                            min="00:00"
-                            max="23:59"
-                            step="60"
+                            max="23:59:59"
+                            min="00:00:00"
+                            step="1"
                         />
                     </div>
                 </div>

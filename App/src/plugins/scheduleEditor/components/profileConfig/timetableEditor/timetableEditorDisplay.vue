@@ -107,7 +107,7 @@ function deleteTimetable(id: string | number) {
                             </div>
                             <div class="text-xs text-gray-500 pl-0.5">
                                 {{ Object.keys(timetable.layouts).length }}
-                                个课程
+                              个时间段
                             </div>
                         </div>
                     </div>

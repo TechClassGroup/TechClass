@@ -29,7 +29,7 @@ const currentLayouts = computed(() => {
 });
 
 function formatTime(time: DateTime): string {
-    return time.toFormat("HH:mm");
+  return time.toFormat("HH:mm:ss");
 }
 
 function calculateDuration(start: DateTime, end: DateTime): string {
@@ -55,10 +55,18 @@ function addLayout() {
 
     const newId = generateUniqueId();
     const now = DateTime.now();
+  const startTime = now.set({
+    hour: 8,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  });
+  const endTime = now.set({hour: 8, minute: 45, second: 0, millisecond: 0});
+
     currentLayouts.value[newId] = {
         type: "lesson",
-        startTime: now.set({ hour: 8, minute: 0 }),
-        endTime: now.set({ hour: 8, minute: 45 }),
+      startTime: startTime,
+      endTime: endTime,
         subjectId: "",
         hide: false,
     };
@@ -69,8 +77,11 @@ function copyLayout(id: string | number) {
     if (!selectedTimetableId.value || !currentLayouts.value[id]) return;
 
     const newId = generateUniqueId();
+  const original = currentLayouts.value[id];
     currentLayouts.value[newId] = {
-        ...currentLayouts.value[id],
+      ...original,
+      startTime: original.startTime.set({millisecond: 0}),
+      endTime: original.endTime.set({millisecond: 0}),
     };
     selectedLayoutId.value = newId;
 }
@@ -118,7 +129,7 @@ function deleteLayout(id: string | number) {
 
         <!-- 课程列表 -->
         <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
-            <div class="flex flex-col gap-2 p-2  rounded-lg h-full">
+          <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
                 <TransitionGroup
                     class="flex flex-col gap-2"
                     name="list"
