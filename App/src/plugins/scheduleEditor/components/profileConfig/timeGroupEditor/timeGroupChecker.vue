@@ -30,8 +30,22 @@ const granularityMap = {
     year: "年",
 } as const;
 
+// 添加dayCycleGranularity的映射
+const dayCycleGranularityMap = {
+  week: "周",
+  month: "月",
+  year: "年",
+  custom: "自定义",
+} as const;
+
 function getGranularityName(granularity: keyof typeof granularityMap) {
     return granularityMap[granularity] || "未知";
+}
+
+function getDayCycleGranularityName(
+    dayCycleGranularity: keyof typeof dayCycleGranularityMap
+) {
+  return dayCycleGranularityMap[dayCycleGranularity] || "未知";
 }
 
 function updateName(name: string) {
@@ -42,12 +56,59 @@ function updateName(name: string) {
 function updateGranularity(granularity: "day" | "week" | "month" | "year") {
     if (!currentTimeGroup.value) return;
     currentTimeGroup.value.granularity = granularity;
+  // 如果切换到day，默认设置dayCycleGranularity为week
+  if (granularity === "day") {
+    if (!currentTimeGroup.value.dayCycleGranularity) {
+      currentTimeGroup.value.dayCycleGranularity = "week";
+    }
+    // 根据dayCycleGranularity设置对应的cycle
+    if (currentTimeGroup.value.dayCycleGranularity !== "custom") {
+      let newCycle: number;
+      switch (currentTimeGroup.value.dayCycleGranularity) {
+        case "week":
+          newCycle = 7;
+          break;
+        case "month":
+          newCycle = 31;
+          break;
+        case "year":
+          newCycle = 366;
+          break;
+      }
+      updateCycle(newCycle);
+    }
+  }
+}
+
+function updateDayCycleGranularity(
+    value: "week" | "month" | "year" | "custom"
+) {
+  if (!currentTimeGroup.value) return;
+  currentTimeGroup.value.dayCycleGranularity = value;
+
+  // 如果不是custom，根据类型设置对应的cycle
+  if (value !== "custom") {
+    let newCycle: number;
+    switch (value) {
+      case "week":
+        newCycle = 7;
+        break;
+      case "month":
+        newCycle = 31;
+        break;
+      case "year":
+        newCycle = 366;
+        break;
+    }
+    // 使用updateCycle来更新cycle和layout
+    updateCycle(newCycle);
+  }
 }
 
 function updateCycle(cycle: number) {
     if (!currentTimeGroup.value) return;
-    // 确保周期至少为1
-    const newCycle = Math.max(1, cycle);
+  // 确保周期至少为1，并且是正整数
+  const newCycle = Math.max(1, Math.floor(Math.abs(cycle)));
     currentTimeGroup.value.cycle = newCycle;
 
     // 调整布局数组长度以匹配新的周期
@@ -89,6 +150,24 @@ const formattedStartTime = computed(() => {
         return DateTime.now().toFormat("yyyy-MM-dd");
     return currentTimeGroup.value.startTime.toFormat("yyyy-MM-dd");
 });
+
+// 计算是否显示cycle输入框
+const showCycleInput = computed(() => {
+  if (!currentTimeGroup.value) return false;
+  return (
+      currentTimeGroup.value.granularity !== "day" ||
+      currentTimeGroup.value.dayCycleGranularity === "custom"
+  );
+});
+
+// 添加显示开始时间设置的计算属性
+const showStartTimeSettings = computed(() => {
+  if (!currentTimeGroup.value) return false;
+  return (
+      currentTimeGroup.value.granularity !== "day" ||
+      currentTimeGroup.value.dayCycleGranularity === "custom"
+  );
+});
 </script>
 
 <template>
@@ -113,7 +192,7 @@ const formattedStartTime = computed(() => {
                 >
                 <select
                     :value="currentTimeGroup.granularity"
-                    @change="(e) => updateGranularity(e.target.value as 'day' | 'week' | 'month' | 'year')"
+                    @change="(e: Event) => updateGranularity((e.target as HTMLSelectElement).value as 'day' | 'week' | 'month' | 'year')"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
                 >
                     <option
@@ -126,8 +205,28 @@ const formattedStartTime = computed(() => {
                 </select>
             </div>
 
-            <!-- 周期设置 -->
-            <div>
+          <!-- 天的预设周期 -->
+          <div v-if="currentTimeGroup.granularity === 'day'">
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+            >天的预设周期</label
+            >
+            <select
+                :value="currentTimeGroup.dayCycleGranularity"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                @change="(e: Event) => updateDayCycleGranularity((e.target as HTMLSelectElement).value as 'week' | 'month' | 'year' | 'custom')"
+            >
+              <option
+                  v-for="(name, value) in dayCycleGranularityMap"
+                  :key="value"
+                  :value="value"
+              >
+                {{ name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- 周期设置 -->
+          <div v-if="showCycleInput">
                 <label class="block text-sm font-medium text-gray-700 mb-1"
                     >周期</label
                 >
@@ -135,17 +234,33 @@ const formattedStartTime = computed(() => {
                     type="number"
                     :model-value="String(currentTimeGroup.cycle)"
                     min="1"
-                    @update:model-value="(value) => updateCycle(Number(value))"
+                    max="1000"
+                    step="1"
+                    @input="(e: Event) => {
+                        const input = e.target as HTMLInputElement;
+                        const value = input.value.replace(/\D/g, '');
+                        const num = Number(value);
+                        if (num < 1) {
+                            input.value = '1';
+                        } else if (num > 1000) {
+                            input.value = '1000';
+                        } else {
+                            input.value = String(num);
+                        }
+                    }"
+                    @update:model-value="
+                        (value) => updateCycle(Math.min(1000, Number(value)))
+                    "
                 />
                 <p class="mt-1 text-sm text-gray-500">
                     设置时间组包含的{{
                         getGranularityName(currentTimeGroup.granularity)
-                    }}数
+                  }}数（最大1000）
                 </p>
             </div>
 
             <!-- 开始时间设置 -->
-            <div class="space-y-3">
+          <div v-if="showStartTimeSettings" class="space-y-3">
                 <div class="flex items-center justify-between">
                     <label class="text-sm font-medium text-gray-700"
                         >开始时间</label

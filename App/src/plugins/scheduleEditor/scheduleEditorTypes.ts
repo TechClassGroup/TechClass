@@ -1,7 +1,7 @@
 /**
  * @fileOverview 课程表编辑器的类型定义
  */
-import { DateTime } from "luxon";
+import {DateTime} from "luxon";
 
 /**
  * 课程信息接口
@@ -131,9 +131,17 @@ interface TimeGroup {
      */
     granularity: "day" | "week" | "month" | "year";
     /**
-     * 时间组的周期 比如以天为粒度，周期为2，那么就要给这两天分配对应的课表/时间组
+     * 天的预设周期  必须在粒度为day的时候才有意义
+     * 当为week的时候，就需要分配周一——周日
+     * 当为month的时候，就需要分配1-31
+     * 当为year的时候，就需要分配1-366
+     * 当为custom的时候，就直接读取Cycle (其他时候cycle隐藏)
      */
-    cycle: number;
+    dayCycleGranularity: "week" | "month" | "year" | "custom";
+    /**
+     * 自定义时间组的周期 如果dayCycleGranularity为custom，那么这个值就是自定义的周期
+     */
+    cycle: number; 
     /**
      * 开始时间
      * 为null时，表示继承父级时间组的开始时间

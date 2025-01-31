@@ -36,7 +36,8 @@ function addTimeGroup() {
     timeGroups.value[newId] = {
         name: "新时间组",
         granularity: "day",
-        cycle: 1,
+      dayCycleGranularity: "week",
+      cycle: 7,
         startTime: DateTime.now().startOf("day"),
         layout: [
             {
@@ -51,9 +52,11 @@ function addTimeGroup() {
 function copyTimeGroup(id: string) {
     if (timeGroups.value[id]) {
         const newId = generateUniqueId();
+      const sourceTimeGroup = timeGroups.value[id];
         timeGroups.value[newId] = {
-            ...timeGroups.value[id],
-            name: `${timeGroups.value[id].name} (副本)`,
+          ...sourceTimeGroup,
+          name: `${sourceTimeGroup.name} (副本)`,
+          dayCycleGranularity: sourceTimeGroup.dayCycleGranularity || "week",
         };
         selectedTimeGroupId.value = newId;
     }
@@ -74,10 +77,16 @@ function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
         `共 ${timeGroup.cycle} ${getGranularityName(timeGroup.granularity)}`,
     ];
 
+  // 只在非day粒度或custom预设时显示开始时间信息
+  if (
+      timeGroup.granularity !== "day" ||
+      timeGroup.dayCycleGranularity === "custom"
+  ) {
     if (timeGroup.startTime) {
-        parts.push(`${timeGroup.startTime.toFormat("yyyy-MM-dd")}`);
+      parts.push(`${timeGroup.startTime.toFormat("yyyy-MM-dd")}`);
     } else {
-        parts.push("继承开始时间");
+      parts.push("继承开始时间");
+    }
     }
 
     return parts.join(" / ");
@@ -112,7 +121,7 @@ function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
 
         <!-- 时间组列表 -->
         <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
-            <div class="flex flex-col gap-2 p-2  rounded-lg h-full">
+          <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
                 <TransitionGroup
                     class="flex flex-col gap-2"
                     name="list"

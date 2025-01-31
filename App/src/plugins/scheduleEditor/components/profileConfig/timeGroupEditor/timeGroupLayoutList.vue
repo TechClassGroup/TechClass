@@ -50,8 +50,37 @@ function getLayoutTypeName(type: string) {
     return type === "curriculum" ? "课表" : "时间组";
 }
 
+const weekDayNames = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+
 function getCycleName(index: number) {
     if (!currentTimeGroup.value) return "";
+
+  // 如果是天粒度，根据预设类型显示
+  if (currentTimeGroup.value.granularity === "day") {
+    switch (currentTimeGroup.value.dayCycleGranularity) {
+      case "week":
+        return weekDayNames[index];
+      case "month":
+        return `${index + 1}号`;
+      case "year": {
+        // 计算月份和日期
+        let days = index + 1;
+        const monthDays = [
+          31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
+        ];
+        let month = 0;
+
+        while (days > monthDays[month]) {
+          days -= monthDays[month];
+          month++;
+        }
+
+        return `${month + 1}月${days}号`;
+      }
+      case "custom":
+        return `第 ${index + 1} 天`;
+    }
+  }
 
     const granularityName = getGranularityName(
         currentTimeGroup.value.granularity
