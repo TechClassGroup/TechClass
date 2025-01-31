@@ -28,6 +28,18 @@ const currentLayouts = computed(() => {
   return timetables.value[selectedTimetableId.value].layouts;
 });
 
+const sortedLayouts = computed(() => {
+  const layouts = {...currentLayouts.value};
+  return Object.entries(layouts)
+      .sort(([, a], [, b]) => {
+        return a.startTime.toMillis() - b.startTime.toMillis();
+      })
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {} as typeof layouts);
+});
+
 function formatTime(time: DateTime): string {
   return time.toFormat("HH:mm:ss");
 }
@@ -136,7 +148,7 @@ function deleteLayout(id: string | number) {
             tag="div"
         >
           <div
-              v-for="(layout, id) in currentLayouts"
+              v-for="(layout, id) in sortedLayouts"
               :key="id"
               :class="[
                             selectedLayoutId === id
