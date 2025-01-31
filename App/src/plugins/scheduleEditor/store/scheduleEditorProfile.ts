@@ -1,4 +1,6 @@
-// 创建响应式状态
+/**
+ * @fileOverview 档案的store
+ */
 import {ScheduleEditorStore} from "../scheduleEditorTypes";
 import logger from "../../../modules/logger";
 import {PluginFs} from "../../../modules/pluginUtils";
@@ -11,9 +13,6 @@ export const scheduleEditorProfile = ref<ScheduleEditorStore>(
     {} as ScheduleEditorStore
 );
 
-/**
- * @fileOverview 档案的store
- */
 
 let fileSystem: PluginFs | null = null;
 const scheduleEditorStoreProfileName: string = "scheduleEditor.profile.json";
