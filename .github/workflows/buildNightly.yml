@@ -37,5 +37,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TechClass-Nightly
-          path: App/src-tauri/target/release/bundle/nsis/*
+          path: App/src-tauri/target/release/bundle/*
           retention-days: 30
