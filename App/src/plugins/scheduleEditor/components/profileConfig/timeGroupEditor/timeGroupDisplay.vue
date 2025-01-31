@@ -39,8 +39,8 @@ function addTimeGroup() {
     timeGroups.value[newId] = {
         name: "新时间组",
         granularity: "day",
-      dayCycleGranularity: "week",
-      cycle: 7,
+      dayCycleGranularity: "custom",
+      cycle: 1,
         startTime: DateTime.now().startOf("day"),
         layout: [
             {
