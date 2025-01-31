@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@iarna/toml": "^2.2.5",
+    "@rsbuild/plugin-image-compress": "^1.1.0",
     "@tauri-apps/cli": "^2",
     "@types/luxon": "^3.4.2",
     "@types/markdown-it": "^14.1.2",

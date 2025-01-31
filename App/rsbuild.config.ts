@@ -4,6 +4,7 @@ import {pluginHtmlMinifierTerser} from "rsbuild-plugin-html-minifier-terser";
 import path from "path";
 import * as fs from "fs";
 import * as toml from "@iarna/toml";
+import {pluginImageCompress} from "@rsbuild/plugin-image-compress";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -45,7 +46,10 @@ function getLogLevelFlags() {
 }
 
 export default defineConfig({
-    plugins: [pluginVue(), pluginHtmlMinifierTerser()],
+    plugins: [
+        pluginVue(),
+        pluginHtmlMinifierTerser(),
+        pluginImageCompress(["pngLossless", "jpeg", "svg", "ico", 'avif'])],
     html: {
         template: "index.html",
     },
