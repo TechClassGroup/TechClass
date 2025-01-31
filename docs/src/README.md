@@ -54,12 +54,12 @@ highlights:
       - title: 选项卡
         icon: table-columns
         details: 使用选项卡对相似内容进行分组
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/content/courseTabs.html
+        link: https://theme-hope.vuejs.press/zh/guide/markdown/content/profileTabs.html
 
       - title: 代码组
         icon: code
         details: 使用选项卡对相似代码进行分组
-        link: https://theme-hope.vuejs.press/zh/guide/markdown/code/code-courseTabs.html
+        link: https://theme-hope.vuejs.press/zh/guide/markdown/code/code-profileTabs.html
 
       - title: 自定义对齐
         icon: align-center

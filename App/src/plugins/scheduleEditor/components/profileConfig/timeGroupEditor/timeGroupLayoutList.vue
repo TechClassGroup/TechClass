@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {timeGroupObject} from "../../scheduleEditorTypes";
+import {timeGroupObject} from "../../../scheduleEditorTypes";
 
-import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
+import {scheduleEditorProfile} from "../../../store/scheduleEditorProfile";
 
 const selectedTimeGroupId = defineModel<string>("selectedTimeGroupId", {
     required: true,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import TcInput from "../../../../UI/TcInput.vue";
-import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
+import TcInput from "../../../../../UI/TcInput.vue";
+import {scheduleEditorProfile} from "../../../store/scheduleEditorProfile";
 
 const selectedCurriculumId = defineModel<string>("selectedCurriculumId", {
     required: true,

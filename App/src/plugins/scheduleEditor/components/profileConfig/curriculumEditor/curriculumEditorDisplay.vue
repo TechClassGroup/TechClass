@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {DateTime} from "luxon";
-import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
+import {scheduleEditorProfile} from "../../../store/scheduleEditorProfile";
 
 const selectedCurriculumId = defineModel<string>("selectedCurriculumId", {
     required: true,

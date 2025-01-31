@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import {ref} from "vue";
-import {SubjectObject} from "../../scheduleEditorTypes";
+import {SubjectObject} from "../../../scheduleEditorTypes";
 import SubjectEditorDisplay from "./subjectEditorDisplay.vue";
 import SubjectEditorChecker from "./subjectEditorChecker.vue";
 import {v4 as uuidv4} from "uuid";
-import TcButton from "../../../../UI/TcButton.vue";
-import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
+import TcButton from "../../../../../UI/TcButton.vue";
+import {scheduleEditorProfile} from "../../../store/scheduleEditorProfile";
 
 const subjects = scheduleEditorProfile.value.subjects;
 

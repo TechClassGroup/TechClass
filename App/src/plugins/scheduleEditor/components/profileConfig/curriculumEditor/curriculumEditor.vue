@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from "vue";
 import CurriculumEditorList from "./curriculumEditorList.vue";
 import CurriculumEditorDisplay from "./curriculumEditorDisplay.vue";
 import CurriculumEditorChecker from "./curriculumEditorChecker.vue";

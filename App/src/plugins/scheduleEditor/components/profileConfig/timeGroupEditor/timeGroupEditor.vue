@@ -3,7 +3,7 @@ import {ref} from "vue";
 import TimeGroupDisplay from "./timeGroupDisplay.vue";
 import TimeGroupLayoutList from "./timeGroupLayoutList.vue";
 import TimeGroupChecker from "./timeGroupChecker.vue";
-import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
+import {scheduleEditorProfile} from "../../../store/scheduleEditorProfile";
 
 const selectedTimeGroupId = ref<string>("");
 const selectedLayoutIndex = ref<number>(-1);

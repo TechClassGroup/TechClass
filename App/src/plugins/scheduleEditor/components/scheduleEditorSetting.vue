@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import SubjectEditor from "./subjectEditor/subjectEditor.vue";
-import TimetableEditor from "./timetableEditor/timetableEditor.vue";
-import CurriculumEditor from "./curriculumEditor/curriculumEditor.vue";
+import SubjectEditor from "./profileConfig/subjectEditor/subjectEditor.vue";
+import TimetableEditor from "./profileConfig/timetableEditor/timetableEditor.vue";
+import CurriculumEditor from "./profileConfig/curriculumEditor/curriculumEditor.vue";
 import TcButton from "../../../UI/TcButton.vue";
-import TimeGroupEditor from "./timeGroupEditor/timeGroupEditor.vue";
+import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
 
-const courseTabs = {
+const profileTabs = {
   subject: {
     label: "课程编辑",
     component: SubjectEditor,
@@ -36,7 +36,7 @@ const today_tabs = {
   },
 } as const;
 const store = scheduleEditorStore;
-type courseTabKey = keyof typeof courseTabs;
+type profileTabKey = keyof typeof profileTabs;
 type todayTabKey = keyof typeof today_tabs;
 
 // 配置类型切换
@@ -91,9 +91,9 @@ if (store.configType === "course") {
           class="flex gap-1 bg-gray-50 px-1 py-1 rounded-t-lg border-x border-t border-gray-200"
       >
         <tc-button
-            v-for="(tab, key) in courseTabs"
+            v-for="(tab, key) in profileTabs"
             :key="key"
-            :variant="store.currentTab as courseTabKey === key ? 'filled' : 'text'"
+            :variant="store.currentTab as profileTabKey === key ? 'filled' : 'text'"
             size="small"
             @click="store.currentTab = key"
         >
@@ -122,7 +122,7 @@ if (store.configType === "course") {
     <template v-if="store.configType as ConfigType === 'course'">
       <div class="flex-1 min-h-0">
         <component
-            :is="courseTabs[store.currentTab as courseTabKey].component"
+            :is="profileTabs[store.currentTab as profileTabKey].component"
             class="h-full"
         />
       </div>

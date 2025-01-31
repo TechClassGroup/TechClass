@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { timeGroupObject } from "../../scheduleEditorTypes";
-import TcInput from "../../../../UI/TcInput.vue";
-import TcSwitch from "../../../../UI/TcSwitch.vue";
-import { DateTime } from "luxon";
+import {computed} from "vue";
+import {timeGroupObject} from "../../../scheduleEditorTypes";
+import TcInput from "../../../../../UI/TcInput.vue";
+import TcSwitch from "../../../../../UI/TcSwitch.vue";
+import {DateTime} from "luxon";
 
 const selectedTimeGroupId = defineModel<string>("selectedTimeGroupId", {
     required: true,

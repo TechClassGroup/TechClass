@@ -44,7 +44,7 @@ VuePress 会使用 [markdown-it](https://github.com/markdown-it/markdown-it) 来
 
 #### 选项卡
 
-::: courseTabs#fruit
+::: profileTabs#fruit
 
 @tab apple
 
@@ -262,7 +262,7 @@ end
 
 #### 代码块
 
-::: code-courseTabs
+::: code-profileTabs
 
 @tab pnpm
 

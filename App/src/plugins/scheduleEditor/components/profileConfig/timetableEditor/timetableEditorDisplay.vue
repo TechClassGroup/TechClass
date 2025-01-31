@@ -1,86 +1,53 @@
 <script setup lang="ts">
-import { timeGroupObject } from "../../scheduleEditorTypes";
-import { v4 as uuidv4 } from "uuid";
-import TcButton from "../../../../UI/TcButton.vue";
-import { DateTime } from "luxon";
+import {TimetableObject} from "../../../scheduleEditorTypes";
+import {v4 as uuidv4} from "uuid";
+import TcButton from "../../../../../UI/TcButton.vue";
 
-const selectedTimeGroupId = defineModel<string>("selectedTimeGroupId", {
+const selectedTimetableId = defineModel<string | number>(
+    "selectedTimetableId",
+    {
+        required: true,
+    }
+);
+const timetables = defineModel<TimetableObject>("timetables", {
     required: true,
 });
-const timeGroups = defineModel<timeGroupObject>("timeGroups", {
-    required: true,
-});
-
-// 添加粒度映射
-const granularityMap = {
-    day: "天",
-    week: "周",
-    month: "月",
-    year: "年",
-} as const;
-
-function getGranularityName(granularity: keyof typeof granularityMap) {
-    return granularityMap[granularity] || "未知";
-}
 
 function generateUniqueId(): string {
     let newId = uuidv4();
-    while (newId in timeGroups.value) {
+    while (newId in timetables.value) {
         newId = uuidv4();
     }
     return newId;
 }
 
-function addTimeGroup() {
+function addTimetable() {
     const newId = generateUniqueId();
-    timeGroups.value[newId] = {
-        name: "新时间组",
-        granularity: "day",
-        cycle: 1,
-        startTime: DateTime.now().startOf("day"),
-        layout: [
-            {
-                type: "curriculum",
-                id: "",
-            },
-        ],
+    timetables.value[newId] = {
+        name: "新时间表",
+        layouts: {},
     };
-    selectedTimeGroupId.value = newId;
+    selectedTimetableId.value = newId;
 }
 
-function copyTimeGroup(id: string) {
-    if (timeGroups.value[id]) {
+function copyTimetable(id: string | number) {
+    if (timetables.value[id]) {
         const newId = generateUniqueId();
-        timeGroups.value[newId] = {
-            ...timeGroups.value[id],
-            name: `${timeGroups.value[id].name} (副本)`,
+        timetables.value[newId] = {
+            ...timetables.value[id],
+            name: `${timetables.value[id].name} (副本)`,
         };
-        selectedTimeGroupId.value = newId;
+        selectedTimetableId.value = newId;
     }
 }
 
-function deleteTimeGroup(id: string) {
-    if (timeGroups.value[id]) {
-        delete timeGroups.value[id];
-        if (selectedTimeGroupId.value === id) {
-            selectedTimeGroupId.value = "";
+function deleteTimetable(id: string | number) {
+    if (timetables.value[id]) {
+        delete timetables.value[id];
+        if (selectedTimetableId.value === id) {
+            selectedTimetableId.value = "";
         }
     }
-}
-
-function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
-    const parts = [
-        getGranularityName(timeGroup.granularity),
-        `共 ${timeGroup.cycle} ${getGranularityName(timeGroup.granularity)}`,
-    ];
-
-    if (timeGroup.startTime) {
-        parts.push(`${timeGroup.startTime.toFormat("yyyy-MM-dd")}`);
-    } else {
-        parts.push("继承开始时间");
-    }
-
-    return parts.join(" / ");
 }
 </script>
 
@@ -88,29 +55,29 @@ function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
     <div class="flex flex-col h-full">
         <!-- 操作按钮 -->
         <div class="p-2 flex gap-2 border-b border-gray-200">
-            <TcButton class="flex-1" variant="filled" @click="addTimeGroup">
+            <TcButton class="flex-1" variant="filled" @click="addTimetable">
                 添加
             </TcButton>
             <TcButton
                 class="flex-1"
                 variant="tonal"
-                :disabled="!selectedTimeGroupId"
-                @click="copyTimeGroup(selectedTimeGroupId)"
+                :disabled="!selectedTimetableId"
+                @click="copyTimetable(selectedTimetableId)"
             >
                 复制
             </TcButton>
             <TcButton
                 class="flex-1"
                 variant="tonal"
-                :disabled="!selectedTimeGroupId"
+                :disabled="!selectedTimetableId"
                 color="error"
-                @click="deleteTimeGroup(selectedTimeGroupId)"
+                @click="deleteTimetable(selectedTimetableId)"
             >
                 删除
             </TcButton>
         </div>
 
-        <!-- 时间组列表 -->
+        <!-- 时间表列表 -->
         <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
             <div class="flex flex-col gap-2 p-2  rounded-lg h-full">
                 <TransitionGroup
@@ -119,27 +86,28 @@ function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
                     tag="div"
                 >
                     <div
-                        v-for="(timeGroup, id) in timeGroups"
+                        v-for="(timetable, id) in timetables"
                         :key="id"
                         :class="[
-                            selectedTimeGroupId === id
+                            selectedTimetableId === id
                                 ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
                                 : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
                         ]"
                         class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
-                        @click="selectedTimeGroupId = id as string"
+                        @click="selectedTimetableId = id"
                     >
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center">
                                 <div class="flex items-center gap-2">
                                     <span
                                         class="font-medium break-all whitespace-normal"
-                                        >{{ timeGroup.name }}</span
+                                        >{{ timetable.name }}</span
                                     >
                                 </div>
                             </div>
                             <div class="text-xs text-gray-500 pl-0.5">
-                                {{ getTimeGroupInfo(timeGroup) }}
+                                {{ Object.keys(timetable.layouts).length }}
+                                个课程
                             </div>
                         </div>
                     </div>

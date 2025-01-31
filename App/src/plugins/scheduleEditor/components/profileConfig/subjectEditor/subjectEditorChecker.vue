@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {SubjectObject} from "../../scheduleEditorTypes";
-import TcInput from "../../../../UI/TcInput.vue";
+import {SubjectObject} from "../../../scheduleEditorTypes";
+import TcInput from "../../../../../UI/TcInput.vue";
 
 const props = defineProps<{
   subject?: SubjectObject[string];
