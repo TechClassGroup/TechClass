@@ -6,8 +6,8 @@ import TcSwitch from "../../../../../UI/TcSwitch.vue";
 import {DateTime} from "luxon";
 
 // 类型定义
-type Granularity = "day" | "week" | "month" | "year";
-type DayCycleGranularity = "week" | "month" | "year" | "custom";
+type Granularity = "day" | "week" | "month";
+type DayCycleGranularity = "week" | "month" | "custom";
 
 // Props 定义
 const selectedTimeGroupId = defineModel<string>("selectedTimeGroupId", {
@@ -22,13 +22,11 @@ const GRANULARITY_MAP = {
     day: "天",
     week: "周",
     month: "月",
-    year: "年",
 } as const;
 
 const DAY_CYCLE_GRANULARITY_MAP = {
   week: "周",
   month: "月",
-  year: "年",
   custom: "自定义",
 } as const;
 
@@ -60,7 +58,7 @@ const useTimeGroup = () => {
         }
 
         if (currentTimeGroup.value.dayCycleGranularity !== "custom") {
-          const cycleMap = {week: 7, month: 31, year: 366};
+          const cycleMap = {week: 7, month: 31};
           updateTimeGroup.cycle(
               cycleMap[currentTimeGroup.value.dayCycleGranularity]
           );
@@ -73,7 +71,7 @@ const useTimeGroup = () => {
       currentTimeGroup.value.dayCycleGranularity = value;
 
       if (value !== "custom") {
-        const cycleMap = {week: 7, month: 31, year: 366};
+        const cycleMap = {week: 7, month: 31};
         updateTimeGroup.cycle(cycleMap[value]);
       }
     },
@@ -222,18 +220,15 @@ const computedProps = useComputedProperties(currentTimeGroup);
                 <TcInput
                     type="number"
                     :model-value="String(currentTimeGroup.cycle)"
-                    min="1"
-                    max="1000"
                     step="1"
                     @input="(e: Event) => {
                         const input = e.target as HTMLInputElement;
                         const value = input.value.replace(/\D/g, '');
-                        const num = Number(value);
-                        input.value = String(Math.max(1, Math.min(1000, num)));
+                        const num = Number(value) || 1;
+                        const limitedNum = Math.max(1, Math.min(1000, num));
+                        input.value = String(limitedNum);
+                        updateTimeGroup.cycle(limitedNum);
                     }"
-                    @update:model-value="
-                        (value) => updateTimeGroup.cycle(Number(value))
-                    "
                 />
                 <p class="mt-1 text-sm text-gray-500">
                     设置时间组包含的{{

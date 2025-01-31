@@ -137,7 +137,7 @@ interface TimeGroup {
      * 当为year的时候，就需要分配1-366
      * 当为custom的时候，就直接读取Cycle (其他时候cycle隐藏)
      */
-    dayCycleGranularity: "week" | "month" | "year" | "custom";
+    dayCycleGranularity: "week" | "month" | "custom";
     /**
      * 自定义时间组的周期 如果dayCycleGranularity为custom，那么这个值就是自定义的周期
      */

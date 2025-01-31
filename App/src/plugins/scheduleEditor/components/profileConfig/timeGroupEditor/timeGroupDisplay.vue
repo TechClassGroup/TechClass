@@ -11,15 +11,18 @@ const timeGroups = defineModel<timeGroupObject>("timeGroups", {
     required: true,
 });
 
+// 类型定义
+type Granularity = "day" | "week" | "month";
+type DayCycleGranularity = "week" | "month" | "custom";
+
 // 添加粒度映射
 const granularityMap = {
     day: "天",
     week: "周",
     month: "月",
-    year: "年",
 } as const;
 
-function getGranularityName(granularity: keyof typeof granularityMap) {
+function getGranularityName(granularity: Granularity) {
     return granularityMap[granularity] || "未知";
 }
 
@@ -72,10 +75,24 @@ function deleteTimeGroup(id: string) {
 }
 
 function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
-    const parts = [
-        getGranularityName(timeGroup.granularity),
-        `共 ${timeGroup.cycle} ${getGranularityName(timeGroup.granularity)}`,
-    ];
+  const parts: string[] = [];
+
+  if (timeGroup.granularity === "day") {
+    // 天粒度时，显示预设类型
+    const presetMap: Record<DayCycleGranularity, string> = {
+      week: "按周循环",
+      month: "按月循环",
+      custom: `自定义 ${timeGroup.cycle} 天循环`,
+    };
+    parts.push(presetMap[timeGroup.dayCycleGranularity]);
+  } else {
+    // 其他粒度时，显示总数
+    parts.push(
+        `共 ${timeGroup.cycle} ${getGranularityName(
+            timeGroup.granularity as Granularity
+        )}`
+    );
+  }
 
   // 只在非day粒度或custom预设时显示开始时间信息
   if (

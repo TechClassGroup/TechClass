@@ -62,21 +62,6 @@ function getCycleName(index: number) {
         return weekDayNames[index];
       case "month":
         return `${index + 1}号`;
-      case "year": {
-        // 计算月份和日期
-        let days = index + 1;
-        const monthDays = [
-          31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
-        ];
-        let month = 0;
-
-        while (days > monthDays[month]) {
-          days -= monthDays[month];
-          month++;
-        }
-
-        return `${month + 1}月${days}号`;
-      }
       case "custom":
         return `第 ${index + 1} 天`;
     }
