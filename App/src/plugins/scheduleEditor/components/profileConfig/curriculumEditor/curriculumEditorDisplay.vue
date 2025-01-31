@@ -28,6 +28,19 @@ const currentTimetable = computed(() => {
     return timetables.value[currentCurriculum.value.timetableId];
 });
 
+const sortedLayouts = computed(() => {
+  if (!currentTimetable.value?.layouts) return {};
+
+  return Object.entries(currentTimetable.value.layouts)
+      .sort(([, a], [, b]) => {
+        return a.startTime.toMillis() - b.startTime.toMillis();
+      })
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {} as typeof currentTimetable.value.layouts);
+});
+
 function formatTime(time: DateTime): string {
     return time.toFormat("HH:mm");
 }
@@ -58,6 +71,7 @@ function updateSubject(timeId: string, subjectId: string) {
         existingClass.subjectId = subjectId;
     } else {
         currentCurriculum.value.classes = [
+          ...currentCurriculum.value.classes,
             {
                 timeId,
                 subjectId,
@@ -106,7 +120,7 @@ function getClassSubjectId(timeId: string): string {
             <div class="flex-1 overflow-y-auto scrollbar-stable">
                 <div class="divide-y divide-gray-100">
                     <div
-                        v-for="(layout, id) in currentTimetable.layouts"
+                        v-for="(layout, id) in sortedLayouts"
                         :key="id"
                         class="p-4 hover:bg-gray-50"
                     >
