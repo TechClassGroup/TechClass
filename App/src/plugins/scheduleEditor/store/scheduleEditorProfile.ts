@@ -15,7 +15,7 @@ export const scheduleEditorProfile = ref<ScheduleEditorStore>(
 
 
 let fileSystem: PluginFs | null = null;
-const scheduleEditorStoreProfileName: string = "scheduleEditor.profile.json";
+const scheduleEditorStoreProfileName: string = "profiles/scheduleEditor.profile.json";
 let profileWatcher: null | ReturnType<typeof watch> = null;
 
 
