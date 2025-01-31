@@ -9,11 +9,11 @@ importers:
   App:
     dependencies:
       '@rsbuild/core':
-        specifier: ^1.1.8
-        version: 1.2.2
+        specifier: ^1.2.3
+        version: 1.2.3
       '@rsbuild/plugin-vue':
         specifier: ^1.0.5
-        version: 1.0.5(@rsbuild/core@1.2.2)(vue@3.5.13(typescript@5.7.3))
+        version: 1.0.5(@rsbuild/core@1.2.3)(vue@3.5.13(typescript@5.7.3))
       '@tauri-apps/api':
         specifier: ^2
         version: 2.2.0
@@ -50,7 +50,7 @@ importers:
         version: 2.2.5
       '@rsbuild/plugin-image-compress':
         specifier: ^1.1.0
-        version: 1.1.0(@rsbuild/core@1.2.2)
+        version: 1.1.0(@rsbuild/core@1.2.3)
       '@tauri-apps/cli':
         specifier: ^2
         version: 2.2.5
@@ -68,7 +68,7 @@ importers:
         version: 8.5.1
       rsbuild-plugin-html-minifier-terser:
         specifier: ^1.1.1
-        version: 1.1.1(@rsbuild/core@1.2.2)
+        version: 1.1.1(@rsbuild/core@1.2.3)
       tailwindcss:
         specifier: ^3.4.15
         version: 3.4.17
@@ -922,8 +922,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rsbuild/core@1.2.2':
-    resolution: {integrity: sha512-PQ1ax5Z6yMvbgsBXa8bcNUiz+NVVf2PdrXj5A/xfqnnviZRjV/jCxQFWjw8ajAbJcmLxBcWYJnj4npz6g+FAAA==}
+  '@rsbuild/core@1.2.3':
+    resolution: {integrity: sha512-lUCt8gQe9E2PI3srcEJ1Na3GQYmsYuvAqK0f/k00HM0pEjrbOFC9Xq2kR85UoXHFqlTCIw/fLLDe91PKRCbKAw==}
     engines: {node: '>=16.7.0'}
     hasBin: true
 
@@ -3876,7 +3876,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.32.0':
     optional: true
 
-  '@rsbuild/core@1.2.2':
+  '@rsbuild/core@1.2.3':
     dependencies:
       '@rspack/core': 1.2.2(@swc/helpers@0.5.15)
       '@rspack/lite-tapable': 1.0.1
@@ -3885,16 +3885,16 @@ snapshots:
     transitivePeerDependencies:
       - '@rspack/tracing'
 
-  '@rsbuild/plugin-image-compress@1.1.0(@rsbuild/core@1.2.2)':
+  '@rsbuild/plugin-image-compress@1.1.0(@rsbuild/core@1.2.3)':
     dependencies:
       '@napi-rs/image': 1.9.2
       svgo: 3.3.2
     optionalDependencies:
-      '@rsbuild/core': 1.2.2
+      '@rsbuild/core': 1.2.3
 
-  '@rsbuild/plugin-vue@1.0.5(@rsbuild/core@1.2.2)(vue@3.5.13(typescript@5.7.3))':
+  '@rsbuild/plugin-vue@1.0.5(@rsbuild/core@1.2.3)(vue@3.5.13(typescript@5.7.3))':
     dependencies:
-      '@rsbuild/core': 1.2.2
+      '@rsbuild/core': 1.2.3
       vue-loader: 17.4.2(vue@3.5.13(typescript@5.7.3))(webpack@5.97.1)
       webpack: 5.97.1
     transitivePeerDependencies:
@@ -5798,12 +5798,12 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.32.0
       fsevents: 2.3.3
 
-  rsbuild-plugin-html-minifier-terser@1.1.1(@rsbuild/core@1.2.2):
+  rsbuild-plugin-html-minifier-terser@1.1.1(@rsbuild/core@1.2.3):
     dependencies:
       '@types/html-minifier-terser': 7.0.2
       html-minifier-terser: 7.2.0
     optionalDependencies:
-      '@rsbuild/core': 1.2.2
+      '@rsbuild/core': 1.2.3
 
   run-parallel@1.2.0:
     dependencies:

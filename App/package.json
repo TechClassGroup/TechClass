@@ -12,7 +12,7 @@
     "tauri-build": "tauri build"
   },
   "dependencies": {
-    "@rsbuild/core": "^1.1.8",
+    "@rsbuild/core": "^1.2.3",
     "@rsbuild/plugin-vue": "^1.0.5",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "^2",
