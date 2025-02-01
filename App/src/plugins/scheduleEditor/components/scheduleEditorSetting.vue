@@ -28,7 +28,7 @@ const profileTabs = {
 } as const;
 const today_tabs = {
   select: {
-    label: "选择启用对象",
+    label: "选择启用课表",
     component: timeGroupSelector,
   },
 } as const;
