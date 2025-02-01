@@ -27,17 +27,6 @@ export const scheduleEditor: IPlugin = {
             return {
                 currentTab: "subject",
                 configType: "course",
-                selectedGroup: {
-                    // "curriculum" | "timeGroup" | null
-                    type: null,
-                    id: "",
-                },
-                tempSelectedGroup: {
-                    // "curriculum" | "timeGroup" | null
-                    type: null,
-                    id: "",
-                    enable: false,
-                },
             };
         },
         storageConfig: {

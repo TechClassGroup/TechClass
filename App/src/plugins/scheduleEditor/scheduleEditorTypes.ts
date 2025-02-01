@@ -141,7 +141,7 @@ interface TimeGroup {
     /**
      * 自定义时间组的周期 如果dayCycleGranularity为custom，那么这个值就是自定义的周期
      */
-    cycle: number; 
+    cycle: number;
     /**
      * 开始时间
      * 为null时，表示继承父级时间组的开始时间
@@ -186,9 +186,37 @@ export type CurriculumObject = {
 export type timeGroupObject = {
     [key: string]: TimeGroup;
 };
+/**
+ * 启用设置
+ */
+export type enableConfig = {
+    /**
+     * 当前启用的对象
+     */
+    selected: {
+        type: "curriculum" | "timegroup";
+        id: string;
+    }
+    /**
+     * 临时覆盖的对象 允许有持续时间 (endTime之前)
+     */
+    tempSelected: {
+        enable: boolean;
+        type: "curriculum" | "timegroup";
+        id: string;
+        enableTime: DateTime;
+        endTime: DateTime;
+    }
+    /**
+     * 调休支持
+     */
+    compensatoryLeave: boolean;
+}
+
 export type ScheduleEditorStore = {
     subjects: SubjectObject;
     timetables: TimetableObject;
     curriculums: CurriculumObject;
     timeGroups: timeGroupObject;
+    enableConfig: enableConfig;
 };

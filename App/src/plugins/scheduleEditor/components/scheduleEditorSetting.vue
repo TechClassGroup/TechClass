@@ -6,7 +6,7 @@ import TcButton from "../../../UI/TcButton.vue";
 import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
-import timeGroupSelector from "./todayConfig/timeGroupSelector.vue";
+import todayStatus from "./todayConfig/todayStatus.vue";
 
 const profileTabs = {
   subject: {
@@ -27,10 +27,10 @@ const profileTabs = {
   },
 } as const;
 const today_tabs = {
-  select: {
-    label: "选择启用课表",
-    component: timeGroupSelector,
-  },
+  status: {
+    label: "查看状态",
+    component: todayStatus
+  }
 } as const;
 const store = scheduleEditorStore;
 
@@ -48,7 +48,7 @@ watch(
       if (newType === "course") {
         store.currentTab = "subject";
       } else {
-        store.currentTab = "select";
+        store.currentTab = "status";
       }
     }
 );
@@ -57,7 +57,7 @@ watch(
 if (store.configType === "course") {
   store.currentTab = "subject";
 } else {
-  store.currentTab = "select";
+  store.currentTab = "status";
 }
 </script>
 
