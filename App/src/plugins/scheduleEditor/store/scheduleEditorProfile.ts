@@ -105,4 +105,5 @@ export function init(fs: PluginFs) {
 
 export function clear() {
     saveProfile();
+    profileWatcher?.stop();
 }
