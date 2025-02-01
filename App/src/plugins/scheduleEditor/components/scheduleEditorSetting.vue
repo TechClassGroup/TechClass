@@ -6,6 +6,7 @@ import TcButton from "../../../UI/TcButton.vue";
 import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
+import timeGroupSelector from "./todayConfig/timeGroupSelector.vue";
 
 const profileTabs = {
   subject: {
@@ -26,16 +27,14 @@ const profileTabs = {
   },
 } as const;
 const today_tabs = {
-  basic: {
-    label: "基础设置",
-    component: SubjectEditor,
-  },
-  advanced: {
-    label: "高级设置",
-    component: TimetableEditor,
+  select: {
+    label: "选择启用对象",
+    component: timeGroupSelector,
   },
 } as const;
 const store = scheduleEditorStore;
+
+
 type profileTabKey = keyof typeof profileTabs;
 type todayTabKey = keyof typeof today_tabs;
 
@@ -49,7 +48,7 @@ watch(
       if (newType === "course") {
         store.currentTab = "subject";
       } else {
-        store.currentTab = "basic";
+        store.currentTab = "select";
       }
     }
 );
@@ -58,7 +57,7 @@ watch(
 if (store.configType === "course") {
   store.currentTab = "subject";
 } else {
-  store.currentTab = "basic";
+  store.currentTab = "select";
 }
 </script>
 
