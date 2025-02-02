@@ -4,6 +4,7 @@ import TimetableEditor from "./profileConfig/timetableEditor/timetableEditor.vue
 import CurriculumEditor from "./profileConfig/curriculumEditor/curriculumEditor.vue";
 import TcButton from "../../../UI/TcButton.vue";
 import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue";
+import enableSelector from "./todayConfig/enableSelector.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
 import todayStatus from "./todayConfig/todayStatus.vue";
@@ -30,6 +31,10 @@ const today_tabs = {
   status: {
     label: "查看状态",
     component: todayStatus
+  },
+  enable: {
+    label: "启用设置",
+    component: enableSelector
   }
 } as const;
 const store = scheduleEditorStore;

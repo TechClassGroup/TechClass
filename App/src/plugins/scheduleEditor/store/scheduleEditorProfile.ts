@@ -36,7 +36,7 @@ function createScheduleEditorProfile(): ScheduleEditorStore {
                 startTime: DateTime.local(),
                 endTime: DateTime.local(),
             },
-        }
+        },
     };
 }
 
@@ -93,8 +93,22 @@ export function init(fs: PluginFs) {
             try {
                 const profile = JSON.parse(data);
                 // 处理 DateTime 的反序列化
-                scheduleEditorProfile.value = deserializeDateTime(profile);
-                console.log(scheduleEditorProfile.value);
+                const deserializedProfile = deserializeDateTime(profile);
+
+                // 检查并确保所有顶层key存在
+                const defaultProfile = createScheduleEditorProfile();
+                const requiredKeys = Object.keys(defaultProfile);
+
+                requiredKeys.forEach((key) => {
+                    if (!deserializedProfile[key]) {
+                        deserializedProfile[key] = defaultProfile[key];
+                        logger.warn(
+                            `[scheduleEditor] 档案数据缺少 ${key}，已自动创建`
+                        );
+                    }
+                });
+
+                scheduleEditorProfile.value = deserializedProfile;
                 logger.trace("[scheduleEditor] 档案数据加载成功");
             } catch (error) {
                 logger.error("[scheduleEditor] 解析档案数据失败", error);
