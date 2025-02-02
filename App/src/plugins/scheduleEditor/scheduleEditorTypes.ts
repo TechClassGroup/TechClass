@@ -204,13 +204,9 @@ export type enableConfig = {
         enable: boolean;
         type: "curriculum" | "timegroup";
         id: string;
-        enableTime: DateTime;
+        startTime: DateTime;
         endTime: DateTime;
     }
-    /**
-     * 调休支持
-     */
-    compensatoryLeave: boolean;
 }
 
 export type ScheduleEditorStore = {

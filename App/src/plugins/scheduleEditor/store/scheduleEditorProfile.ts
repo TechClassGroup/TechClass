@@ -24,6 +24,19 @@ function createScheduleEditorProfile(): ScheduleEditorStore {
         timetables: {},
         curriculums: {},
         timeGroups: {},
+        enableConfig: {
+            selected: {
+                type: "timegroup",
+                id: "",
+            },
+            tempSelected: {
+                enable: false,
+                type: "curriculum",
+                id: "",
+                startTime: DateTime.local(),
+                endTime: DateTime.local(),
+            },
+        }
     };
 }
 
