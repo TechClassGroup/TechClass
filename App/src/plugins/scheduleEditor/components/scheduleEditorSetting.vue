@@ -8,6 +8,8 @@ import enableSelector from "./todayConfig/enableSelector.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
 import todayStatus from "./todayConfig/todayStatus.vue";
+import tempSelector from "./todayConfig/tempSelector.vue";
+import logger from "../../../modules/logger";
 
 const profileTabs = {
   subject: {
@@ -30,15 +32,18 @@ const profileTabs = {
 const today_tabs = {
   status: {
     label: "查看状态",
-    component: todayStatus
+    component: todayStatus,
   },
   enable: {
     label: "启用设置",
-    component: enableSelector
-  }
+    component: enableSelector,
+  },
+  tempEnable: {
+    label: "临时启用",
+    component: tempSelector,
+  },
 } as const;
-const store = scheduleEditorStore;
-
+const store = scheduleEditorStore!;
 
 type profileTabKey = keyof typeof profileTabs;
 type todayTabKey = keyof typeof today_tabs;
@@ -48,8 +53,9 @@ type ConfigType = "course" | "today";
 
 // 监听configType变化，重置currentTab
 watch(
-    () => store.configType,
+    () => store?.configType,
     (newType) => {
+      if (!store) return;
       if (newType === "course") {
         store.currentTab = "subject";
       } else {
@@ -59,10 +65,14 @@ watch(
 );
 
 // 初始化currentTab
-if (store.configType === "course") {
-  store.currentTab = "subject";
+if (!store) {
+  logger.error("[scheduleEditor] store未初始化");
 } else {
-  store.currentTab = "status";
+  if (store.configType === "course") {
+    store.currentTab = "subject";
+  } else {
+    store.currentTab = "status";
+  }
 }
 </script>
 

@@ -81,7 +81,17 @@ function deserializeDateTime(profile: any) {
             timeGroup.startTime = DateTime.fromISO(timeGroup.startTime);
         }
     });
-
+    // 处理 enableConfig 中的 DateTime
+    if (profile.enableConfig.tempSelected.startTime) {
+        profile.enableConfig.tempSelected.startTime = DateTime.fromISO(
+            profile.enableConfig.tempSelected.startTime
+        );
+    }
+    if (profile.enableConfig.tempSelected.endTime) {
+        profile.enableConfig.tempSelected.endTime = DateTime.fromISO(
+            profile.enableConfig.tempSelected.endTime
+        );
+    }
     return profile;
 }
 
@@ -92,21 +102,20 @@ export function init(fs: PluginFs) {
         .then((data) => {
             try {
                 const profile = JSON.parse(data);
-                // 处理 DateTime 的反序列化
-                const deserializedProfile = deserializeDateTime(profile);
 
                 // 检查并确保所有顶层key存在
                 const defaultProfile = createScheduleEditorProfile();
                 const requiredKeys = Object.keys(defaultProfile);
 
                 requiredKeys.forEach((key) => {
-                    if (!deserializedProfile[key]) {
-                        deserializedProfile[key] = defaultProfile[key];
+                    if (!profile[key]) {
+                        profile[key] = defaultProfile[key];
                         logger.warn(
                             `[scheduleEditor] 档案数据缺少 ${key}，已自动创建`
                         );
                     }
-                });
+                }); // 处理 DateTime 的反序列化
+                const deserializedProfile = deserializeDateTime(profile);
 
                 scheduleEditorProfile.value = deserializedProfile;
                 logger.trace("[scheduleEditor] 档案数据加载成功");
