@@ -13,20 +13,21 @@ interface SelectableItem {
 // 计算可选择的课程表和时间组
 const selectableItems = computed<SelectableItem[]>(() => {
   const items: SelectableItem[] = [];
-  // 添加课程表
-  Object.entries(store.curriculums).forEach(([id, curriculum]) => {
-    items.push({
-      type: "curriculum",
-      id,
-      name: curriculum.name,
-    });
-  });
+
   // 添加时间组
   Object.entries(store.timeGroups).forEach(([id, timeGroup]) => {
     items.push({
       type: "timegroup",
       id,
       name: timeGroup.name,
+    });
+  });
+  // 添加课程表
+  Object.entries(store.curriculums).forEach(([id, curriculum]) => {
+    items.push({
+      type: "curriculum",
+      id,
+      name: curriculum.name,
     });
   });
   return items;
@@ -41,12 +42,105 @@ const selectedItem = computed({
 });
 
 // 获取当前选中项目的名称
+const itemNames = computed(() => {
+  const names: Record<string, string> = {};
+  Object.entries(store.curriculums).forEach(([id, curriculum]) => {
+    names[`curriculum-${id}`] = curriculum.name;
+  });
+  Object.entries(store.timeGroups).forEach(([id, timeGroup]) => {
+    names[`timegroup-${id}`] = timeGroup.name;
+  });
+  return names;
+});
+
 const getItemName = (type: "curriculum" | "timegroup", id: string) => {
-  if (type === "curriculum") {
-    return store.curriculums[id]?.name || "未知课程表";
-  } else {
-    return store.timeGroups[id]?.name || "未知时间组";
-  }
+  const key = `${type}-${id}`;
+  return (
+      itemNames.value[key] ||
+      (type === "curriculum" ? "未知课程表" : "未知时间组")
+  );
+};
+
+// 判断是否需要显示开始时间
+const shouldShowStartTime = computed(() => {
+  if (selectedItem.value.type !== "timegroup") return false;
+  const timeGroup = store.timeGroups[selectedItem.value.id];
+  if (!timeGroup) return false;
+
+  return (
+      timeGroup.granularity !== "day" ||
+      (timeGroup.granularity === "day" &&
+          timeGroup.dayCycleGranularity === "custom")
+  );
+});
+
+// 获取开始时间显示文本
+const startTimeTexts = computed(() => {
+  const texts: Record<string, string> = {};
+  Object.entries(store.timeGroups).forEach(([id, timeGroup]) => {
+    if (!timeGroup.startTime) {
+      texts[id] = "继承开始时间";
+    } else {
+      texts[id] = timeGroup.startTime.toFormat("yyyy-MM-dd");
+    }
+  });
+  return texts;
+});
+
+const getStartTimeText = (id: string) =>
+    startTimeTexts.value[id] || "继承开始时间";
+
+// 判断时间组是否可选
+const selectableTimeGroups = computed(() => {
+  const selectable: Record<string, boolean> = {};
+  Object.entries(store.timeGroups).forEach(([id, timeGroup]) => {
+    if (
+        timeGroup.granularity !== "day" ||
+        timeGroup.dayCycleGranularity === "custom"
+    ) {
+      selectable[id] = timeGroup.startTime !== null;
+    } else {
+      selectable[id] = true;
+    }
+  });
+  return selectable;
+});
+
+const isTimeGroupSelectable = (id: string) =>
+    selectableTimeGroups.value[id] ?? false;
+
+// 获取项目的详细信息
+const itemInfos = computed(() => {
+  const infos: Record<string, string> = {};
+
+  Object.entries(store.curriculums).forEach(([id, curriculum]) => {
+    infos[`curriculum-${id}`] = `共 ${curriculum.classes.length} 节课程`;
+  });
+
+  Object.entries(store.timeGroups).forEach(([id, timeGroup]) => {
+    const parts: string[] = [];
+    parts.push(`共 ${timeGroup.cycle} 项`);
+
+    if (
+        timeGroup.granularity !== "day" ||
+        timeGroup.dayCycleGranularity === "custom"
+    ) {
+      if (timeGroup.startTime) {
+        parts.push(timeGroup.startTime.toFormat("yyyy-MM-dd"));
+      } else {
+        parts.push("无法选择继承开始时间的组");
+      }
+    }
+
+    infos[`timegroup-${id}`] = parts.join(" / ");
+  });
+
+  return infos;
+});
+
+const getItemInfo = (item: SelectableItem) => {
+  const key = `${item.type}-${item.id}`;
+  return itemInfos.value[key] || "";
 };
 </script>
 
@@ -72,10 +166,20 @@ const getItemName = (type: "curriculum" | "timegroup", id: string) => {
                                 selectedItem.id === item.id
                                     ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
                                     : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                item.type === 'timegroup' &&
+                                !isTimeGroupSelectable(item.id)
+                                    ? 'opacity-50 cursor-not-allowed hover:translate-x-0 hover:bg-transparent'
+                                    : 'cursor-pointer',
                             ]"
-                class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
+                class="px-4 py-3 rounded-lg transition-all duration-200 select-none"
                 @click="
-                                selectedItem = { type: item.type, id: item.id }
+                                item.type === 'curriculum' ||
+                                isTimeGroupSelectable(item.id)
+                                    ? (selectedItem = {
+                                          type: item.type,
+                                          id: item.id,
+                                      })
+                                    : null
                             "
             >
               <div class="flex flex-col gap-1">
@@ -98,6 +202,9 @@ const getItemName = (type: "curriculum" | "timegroup", id: string) => {
                     }}
                                     </span>
                 </div>
+                <div class="text-xs text-gray-500 pl-0.5">
+                  {{ getItemInfo(item) }}
+                </div>
               </div>
             </div>
           </TransitionGroup>
@@ -114,12 +221,40 @@ const getItemName = (type: "curriculum" | "timegroup", id: string) => {
           class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden p-4"
       >
         <div v-if="selectedItem.id" class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div class="text-gray-600">名称</div>
-            <div>
-              {{
-                getItemName(selectedItem.type, selectedItem.id)
-              }}
+          <!-- 基本信息 -->
+          <div class="space-y-4">
+            <h3 class="font-medium text-gray-700 border-b pb-2">
+              基本信息
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="text-gray-600">名称</div>
+              <div>
+                {{
+                  getItemName(
+                      selectedItem.type,
+                      selectedItem.id
+                  )
+                }}
+              </div>
+              <div class="text-gray-600">类型</div>
+              <div>
+                {{
+                  selectedItem.type === "curriculum"
+                      ? "课程表"
+                      : "时间组"
+                }}
+              </div>
+              <template
+                  v-if="
+                                    selectedItem.type === 'timegroup' &&
+                                    shouldShowStartTime
+                                "
+              >
+                <div class="text-gray-600">开始时间</div>
+                <div>
+                  {{ getStartTimeText(selectedItem.id) }}
+                </div>
+              </template>
             </div>
           </div>
         </div>
