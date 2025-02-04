@@ -35,25 +35,61 @@ const selectableItems = computed<SelectableItem[]>(() => {
   return items;
 });
 
+// 判断时间组是否可选
+const selectableTimeGroups = computed(() => {
+  const selectable: Record<string, boolean> = {};
+  Object.entries(store.timeGroups).forEach(([id, timeGroup]) => {
+    if (
+        timeGroup.granularity !== "day" ||
+        timeGroup.dayCycleGranularity === "custom"
+    ) {
+      selectable[id] = timeGroup.startTime !== null;
+    } else {
+      selectable[id] = true;
+    }
+  });
+  return selectable;
+});
+
+const isTimeGroupSelectable = (id: string) =>
+    selectableTimeGroups.value[id] ?? false;
+
 // 临时启用状态
 const tempEnabled = computed({
   get: () => store.enableConfig.tempSelected.enable,
   set: (value: boolean) => {
+    handleTempEnabledChange(value);
+  },
+});
+
+// 处理临时启用状态变更
+const handleTempEnabledChange = (value: boolean) => {
     store.enableConfig.tempSelected.enable = value;
-    if (value && !store.enableConfig.tempSelected.id) {
-      // 如果启用但没有选择项目，设置默认值
+  if (value) {
+    const now = DateTime.now();
+    // 检查时间是否已过期或未设置
+    if (
+        !store.enableConfig.tempSelected.endTime ||
+        store.enableConfig.tempSelected.endTime <= now ||
+        !store.enableConfig.tempSelected.startTime ||
+        store.enableConfig.tempSelected.startTime >=
+        store.enableConfig.tempSelected.endTime
+    ) {
+      // 重置时间范围
+      store.enableConfig.tempSelected.startTime = now;
+      store.enableConfig.tempSelected.endTime = now.plus({days: 1});
+    }
+
+    // 如果没有选择项目，设置默认值
+    if (!store.enableConfig.tempSelected.id) {
       const firstItem = selectableItems.value[0];
       if (firstItem) {
         store.enableConfig.tempSelected.type = firstItem.type;
         store.enableConfig.tempSelected.id = firstItem.id;
       }
-      // 设置默认时间范围
-      const now = DateTime.now();
-      store.enableConfig.tempSelected.startTime = now;
-      store.enableConfig.tempSelected.endTime = now.plus({days: 1});
     }
-  },
-});
+  }
+};
 
 // 当前选中的项目
 const selectedItem = computed({
@@ -68,28 +104,38 @@ const selectedItem = computed({
 });
 
 // 开始时间
-const startTime = computed({
-  get: () => store.enableConfig.tempSelected.startTime,
-  set: (value: DateTime) => {
+const startTime = computed(() => store.enableConfig.tempSelected.startTime);
+
+// 处理开始时间变更
+const handleStartTimeChange = (value: DateTime) => {
+  const now = DateTime.now();
+  // 如果设置的时间早于当前时间，使用当前时间
+  if (value < now) {
+    value = now;
+  }
     store.enableConfig.tempSelected.startTime = value;
     // 确保结束时间不早于开始时间
-    if (store.enableConfig.tempSelected.endTime < value) {
-      store.enableConfig.tempSelected.endTime = value;
+  if (store.enableConfig.tempSelected.endTime <= value) {
+    store.enableConfig.tempSelected.endTime = value.plus({hours: 1});
     }
-  },
-});
+};
 
 // 结束时间
-const endTime = computed({
-  get: () => store.enableConfig.tempSelected.endTime,
-  set: (value: DateTime) => {
+const endTime = computed(() => store.enableConfig.tempSelected.endTime);
+
+// 处理结束时间变更
+const handleEndTimeChange = (value: DateTime) => {
+  const now = DateTime.now();
+  // 如果设置的时间早于当前时间，使用当前时间
+  if (value < now) {
+    value = now;
+  }
     // 确保结束时间不早于开始时间
-    if (value < store.enableConfig.tempSelected.startTime) {
-      value = store.enableConfig.tempSelected.startTime;
+  if (value <= store.enableConfig.tempSelected.startTime) {
+    value = store.enableConfig.tempSelected.startTime.plus({hours: 1});
     }
     store.enableConfig.tempSelected.endTime = value;
-  },
-});
+};
 
 // 获取当前选中项目的名称
 const itemNames = computed(() => {
@@ -130,7 +176,7 @@ const itemInfos = computed(() => {
       if (timeGroup.startTime) {
         parts.push(timeGroup.startTime.toFormat("yyyy-MM-dd"));
       } else {
-        parts.push("继承开始时间");
+        parts.push("无法选择继承开始时间的组");
       }
     }
 
@@ -149,7 +195,12 @@ const getItemInfo = (item: SelectableItem) => {
 onMounted(() => {
   if (store.enableConfig.tempSelected.enable) {
     const now = DateTime.now();
-    if (now > store.enableConfig.tempSelected.endTime) {
+    // 如果结束时间早于当前时间，或开始时间大于等于结束时间，则禁用临时启用
+    if (
+        now > store.enableConfig.tempSelected.endTime ||
+        store.enableConfig.tempSelected.startTime >=
+        store.enableConfig.tempSelected.endTime
+    ) {
       store.enableConfig.tempSelected.enable = false;
     }
   }
@@ -159,11 +210,21 @@ onMounted(() => {
 <template>
   <div class="flex gap-4 h-[100%]">
     <!-- 左侧选择列表 -->
-    <div class="w-2/5 flex flex-col">
+    <div class="w-2/5 flex flex-col relative">
+      <!-- 遮罩层 -->
+      <Transition name="mask">
+        <div
+            v-if="!tempEnabled"
+            class="absolute inset-0 bg-gray-500/20 z-10 cursor-pointer rounded-lg transition-all duration-300"
+            @click="tempEnabled = true"
+        />
+      </Transition>
       <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">临时启用</h2>
       </div>
-      <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+      <div
+          class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50 rounded-lg"
+      >
         <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
           <TransitionGroup
               class="flex flex-col gap-2"
@@ -178,11 +239,20 @@ onMounted(() => {
                                 selectedItem.id === item.id
                                     ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
                                     : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
-                                'cursor-pointer',
+                                item.type === 'timegroup' &&
+                                !isTimeGroupSelectable(item.id)
+                                    ? 'opacity-50 cursor-not-allowed hover:translate-x-0 hover:bg-transparent'
+                                    : 'cursor-pointer',
                             ]"
                 class="px-4 py-3 rounded-lg transition-all duration-200 select-none"
                 @click="
-                                selectedItem = { type: item.type, id: item.id }
+                                item.type === 'curriculum' ||
+                                isTimeGroupSelectable(item.id)
+                                    ? (selectedItem = {
+                                          type: item.type,
+                                          id: item.id,
+                                      })
+                                    : null
                             "
             >
               <div class="flex flex-col gap-1">
@@ -216,8 +286,16 @@ onMounted(() => {
     </div>
 
     <!-- 右侧信息展示 -->
-    <div class="w-3/5 flex flex-col">
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm relative">
+    <div class="w-3/5 flex flex-col relative">
+      <!-- 遮罩层 -->
+      <Transition name="mask">
+        <div
+            v-if="!tempEnabled"
+            class="absolute inset-0 bg-gray-500/20 z-10 cursor-pointer rounded-lg transition-all duration-300"
+            @click="tempEnabled = true"
+        />
+      </Transition>
+      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">详细信息</h2>
       </div>
       <div
@@ -233,6 +311,49 @@ onMounted(() => {
 
         <div v-if="selectedItem.id" class="space-y-6">
           <!-- 基本信息 -->
+
+          <!-- 时间设置 -->
+          <div class="space-y-4">
+            <h3 class="font-medium text-gray-700 border-b pb-2">
+              时间设置
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="text-gray-600">启用覆盖时间</div>
+              <input
+                  :value="
+                                    startTime.toFormat('yyyy-MM-dd\'T\'HH:mm')
+                                "
+                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  type="datetime-local"
+                  @input="
+                                    handleStartTimeChange(
+                                        DateTime.fromFormat(
+                                            ($event.target as HTMLInputElement)
+                                                .value,
+                                            'yyyy-MM-dd\'T\'HH:mm'
+                                        )
+                                    )
+                                "
+              />
+              <div class="text-gray-600">结束覆盖时间</div>
+              <input
+                  :value="
+                                    endTime.toFormat('yyyy-MM-dd\'T\'HH:mm')
+                                "
+                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  type="datetime-local"
+                  @input="
+                                    handleEndTimeChange(
+                                        DateTime.fromFormat(
+                                            ($event.target as HTMLInputElement)
+                                                .value,
+                                            'yyyy-MM-dd\'T\'HH:mm'
+                                        )
+                                    )
+                                "
+              />
+            </div>
+          </div>
           <div class="space-y-4">
             <h3 class="font-medium text-gray-700 border-b pb-2">
               基本信息
@@ -255,45 +376,6 @@ onMounted(() => {
                       : "时间组"
                 }}
               </div>
-            </div>
-          </div>
-
-          <!-- 时间设置 -->
-          <div class="space-y-4">
-            <h3 class="font-medium text-gray-700 border-b pb-2">
-              时间设置
-            </h3>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="text-gray-600">开始时间</div>
-              <input
-                  :value="
-                                    startTime.toFormat('yyyy-MM-dd\'T\'HH:mm')
-                                "
-                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
-                  type="datetime-local"
-                  @input="
-                                    startTime = DateTime.fromFormat(
-                                        ($event.target as HTMLInputElement)
-                                            .value,
-                                        'yyyy-MM-dd\'T\'HH:mm'
-                                    )
-                                "
-              />
-              <div class="text-gray-600">结束时间</div>
-              <input
-                  :value="
-                                    endTime.toFormat('yyyy-MM-dd\'T\'HH:mm')
-                                "
-                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
-                  type="datetime-local"
-                  @input="
-                                    endTime = DateTime.fromFormat(
-                                        ($event.target as HTMLInputElement)
-                                            .value,
-                                        'yyyy-MM-dd\'T\'HH:mm'
-                                    )
-                                "
-              />
             </div>
           </div>
         </div>
@@ -327,5 +409,21 @@ onMounted(() => {
 
 .list-leave-active {
   position: absolute;
+}
+
+/* 遮罩层动画 */
+.mask-enter-active,
+.mask-leave-active {
+  transition: all 0.3s ease;
+}
+
+.mask-enter-from,
+.mask-leave-to {
+  opacity: 0;
+}
+
+.mask-enter-to,
+.mask-leave-from {
+  opacity: 1;
 }
 </style>

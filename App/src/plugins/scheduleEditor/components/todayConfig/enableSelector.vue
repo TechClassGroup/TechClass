@@ -151,7 +151,9 @@ const getItemInfo = (item: SelectableItem) => {
       <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">当前启用</h2>
       </div>
-      <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+      <div
+          class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50 rounded-lg"
+      >
         <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
           <TransitionGroup
               class="flex flex-col gap-2"
