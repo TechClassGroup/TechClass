@@ -88,7 +88,7 @@ if (!store) {
             :variant="store.configType as ConfigType === 'today' ? 'filled' : 'text'"
             @click="store.configType = 'today'"
         >
-          今日设置
+          启用配置
         </tc-button>
         <tc-button
             size="medium"
