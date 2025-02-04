@@ -4,10 +4,10 @@ import TimetableEditor from "./profileConfig/timetableEditor/timetableEditor.vue
 import CurriculumEditor from "./profileConfig/curriculumEditor/curriculumEditor.vue";
 import TcButton from "../../../UI/TcButton.vue";
 import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue";
-import enableSelector from "./todayConfig/enableSelector.vue";
+import enableSelector from "./enableConfig/enableSelector.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
-import tempSelector from "./todayConfig/tempSelector.vue";
+import tempSelector from "./enableConfig/tempSelector.vue";
 import logger from "../../../modules/logger";
 
 const profileTabs = {
