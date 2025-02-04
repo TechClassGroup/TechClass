@@ -7,7 +7,6 @@ import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue
 import enableSelector from "./todayConfig/enableSelector.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
-import todayStatus from "./todayConfig/todayStatus.vue";
 import tempSelector from "./todayConfig/tempSelector.vue";
 import logger from "../../../modules/logger";
 
@@ -30,10 +29,7 @@ const profileTabs = {
   },
 } as const;
 const today_tabs = {
-  status: {
-    label: "查看状态",
-    component: todayStatus,
-  },
+
   enable: {
     label: "启用设置",
     component: enableSelector,
@@ -59,7 +55,7 @@ watch(
       if (newType === "course") {
         store.currentTab = "subject";
       } else {
-        store.currentTab = "status";
+        store.currentTab = "enable";
       }
     }
 );
@@ -71,7 +67,7 @@ if (!store) {
   if (store.configType === "course") {
     store.currentTab = "subject";
   } else {
-    store.currentTab = "status";
+    store.currentTab = "enable";
   }
 }
 </script>
