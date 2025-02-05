@@ -2,6 +2,8 @@
  * @fileOverview 一些工具函数
  */
 
+import Logger from "./logger";
+
 /**
  * 创建一个具有重试机制的保存函数
  * @param saveAction 需要执行的保存操作函数，返回Promise
@@ -58,4 +60,33 @@ export function createRetrySaveFunction<T>(
 
         attemptSave();
     };
+}
+
+export class createLogger {
+    private readonly prefix: string;
+
+    constructor(prefix: string) {
+        this.prefix = prefix;
+
+    }
+
+    trace(...args: any[]) {
+        Logger.trace(this.prefix, ...args);
+    }
+
+    debug(...args: any[]) {
+        Logger.debug(this.prefix, ...args);
+    }
+
+    info(...args: any[]) {
+        Logger.info(this.prefix, ...args);
+    }
+
+    warn(...args: any[]) {
+        Logger.warn(this.prefix, ...args);
+    }
+
+    error(...args: any[]) {
+        Logger.error(this.prefix, ...args);
+    }
 }
