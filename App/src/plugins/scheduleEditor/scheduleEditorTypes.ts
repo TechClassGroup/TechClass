@@ -93,7 +93,7 @@ type ClassType = {
 /**
  * 课程表接口
  */
-interface Curriculum {
+export interface Curriculum {
     /** 课程表名称 */
     name: string;
     /** 关联的时间表ID */
@@ -121,7 +121,7 @@ type TimeGroupLayout = {
     };
 };
 
-interface TimeGroup {
+export interface TimeGroup {
     /**
      * 时间组的名称
      */
