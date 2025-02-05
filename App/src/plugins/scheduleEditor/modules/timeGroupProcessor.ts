@@ -3,164 +3,103 @@
  * 用于处理时间组的层级关系和课表查找
  */
 import {DateTime} from "luxon";
-import {Curriculum, ScheduleEditorProfileStore, TimeGroup,} from "../scheduleEditorTypes";
+import {Curriculum, ScheduleEditorProfileStore, TimeGroup, TimeGroupLayout,} from "../scheduleEditorTypes";
 import {scheduleEditorLogger} from "./utils";
 
-export interface TimeGroupTarget {
-    type: "timegroup" | "curriculum";
-    id: string;
-}
 
 export interface CurriculumResult {
     curriculum: Curriculum | undefined;
     followTimeGroups: TimeGroup[];
 }
 
-/**
- * 处理时间组目标
- * 根据目标类型，要么继续处理下一个时间组，要么返回最终的课表
- * @param target 时间组目标（可能是时间组或课表）
- * @param profile 课表编辑器配置
- * @param followTimeGroups 跟踪的时间组列表
- * @param targetDate 目标日期
- * @returns 找到的课表或undefined
- */
-function handleTimeGroupTarget(
-    target: TimeGroupTarget,
-    profile: ScheduleEditorProfileStore,
-    followTimeGroups: TimeGroup[],
-    targetDate: DateTime
-): Curriculum | undefined {
-    scheduleEditorLogger.trace("[handleTimeGroupTarget] 处理目标", target);
+class TimeGroupProcessor {
+    private readonly granularityHandlers = {
+        week: (date: DateTime) => date.weekday - 1,
+        month: (date: DateTime) => date.day - 1,
+    };
 
-    if (target.type === "timegroup") {
-        const nextTimeGroup = profile.timeGroups[target.id];
-        return processTimeGroup(
-            targetDate,
-            nextTimeGroup,
-            profile,
-            followTimeGroups
-        );
-    } else {
-        return profile.curriculums[target.id];
+    constructor(
+        private readonly profile: ScheduleEditorProfileStore,
+        private readonly followTimeGroups: TimeGroup[] = [],
+        private startTime: DateTime | null = null
+    ) {
     }
-}
 
-/**
- * 处理周粒度的时间组
- * 根据目标日期的星期几，从时间组布局中获取对应的目标
- * @param targetDate 目标日期
- * @param timeGroup 当前处理的时间组
- * @param profile 课表编辑器配置
- * @param followTimeGroups 跟踪的时间组列表
- * @returns 找到的课表或undefined
- */
-function handleWeekGranularity(
-    targetDate: DateTime,
-    timeGroup: TimeGroup,
-    profile: ScheduleEditorProfileStore,
-    followTimeGroups: TimeGroup[]
-): Curriculum | undefined {
-    const weekDay = targetDate.weekday;
-    const target = timeGroup.layout[weekDay - 1] as TimeGroupTarget;
+    process(
+        targetDate: DateTime,
+        timeGroup: TimeGroup
+    ): Curriculum | undefined {
+        if (!timeGroup) {
+            scheduleEditorLogger.warn("[TimeGroupProcessor] 未知时间组");
+            return undefined;
+        }
 
-    if (!target) {
-        scheduleEditorLogger.warn("[handleWeekGranularity] 找不到目标", {
-            timeGroup: timeGroup.layout,
-            weekDay,
+        this.followTimeGroups.push(timeGroup);
+
+        scheduleEditorLogger.debug("[TimeGroupProcessor] 处理时间组", {
+            granularity: timeGroup.granularity,
+            dayCycleGranularity: timeGroup.dayCycleGranularity,
         });
-        return undefined;
+
+        let target: TimeGroupLayout | undefined;
+
+        if (
+            timeGroup.granularity === "day" && timeGroup.dayCycleGranularity !== "custom"
+        ) {
+            target = this.processDayCycleTimeGroup(targetDate, timeGroup);
+
+        } else {
+            target = this.processCustomTimeGroup(timeGroup);
+        }
+
+        if (!target) {
+            scheduleEditorLogger.warn("[TimeGroupProcessor] 未找到目标", {timeGroup});
+            return undefined;
+        }
+
+        if (target.type === "timegroup") {
+            const nextTimeGroup = this.profile.timeGroups[target.id];
+            return this.process(targetDate, nextTimeGroup);
+        }
+        return this.profile.curriculums[target.id];
     }
 
-    return handleTimeGroupTarget(target, profile, followTimeGroups, targetDate);
-}
-
-/**
- * 处理月粒度的时间组
- * 根据目标日期的日期，从时间组布局中获取对应的目标
- * @param targetDate 目标日期
- * @param timeGroup 当前处理的时间组
- * @param profile 课表编辑器配置
- * @param followTimeGroups 跟踪的时间组列表
- * @returns 找到的课表或undefined
- */
-function handleMonthGranularity(
-    targetDate: DateTime,
-    timeGroup: TimeGroup,
-    profile: ScheduleEditorProfileStore,
-    followTimeGroups: TimeGroup[]
-): Curriculum | undefined {
-    const monthDay = targetDate.day;
-    const target = timeGroup.layout[monthDay - 1] as TimeGroupTarget;
-
-    if (!target) {
-        scheduleEditorLogger.warn("[handleMonthGranularity] 找不到目标", {
-            timeGroup: timeGroup.layout,
-            monthDay,
-        });
-        return undefined;
-    }
-
-    return handleTimeGroupTarget(target, profile, followTimeGroups, targetDate);
-}
-
-/**
- * 处理时间组
- * 核心处理逻辑，根据时间组的粒度类型选择对应的处理方法
- * @param targetDate 目标日期
- * @param timeGroup 要处理的时间组
- * @param profile 课表编辑器配置
- * @param followTimeGroups 跟踪的时间组列表
- * @returns 找到的课表或undefined
- */
-function processTimeGroup(
-    targetDate: DateTime,
-    timeGroup: TimeGroup,
-    profile: ScheduleEditorProfileStore,
-    followTimeGroups: TimeGroup[]
-): Curriculum | undefined {
-    if (!timeGroup) {
-        scheduleEditorLogger.warn("[processTimeGroup] 未知时间组");
-        return undefined;
-    }
-
-    followTimeGroups.push(timeGroup); // 添加到跟踪列表 给其他插件用
-
-    scheduleEditorLogger.debug("[processTimeGroup] 处理时间组", {
-        granularity: timeGroup.granularity,
-        dayCycleGranularity: timeGroup.dayCycleGranularity,
-    });
-
-    if (timeGroup.dayCycleGranularity === "custom") {
+    private processCustomTimeGroup(
+        timeGroup: TimeGroup
+    ): TimeGroupLayout | undefined {
+        if (timeGroup.startTime && this.startTime === null) {
+            this.startTime = timeGroup.startTime; // 记录开始时间 实现顶层覆盖底层
+        }
         return undefined; // 暂时返回undefined，后续实现自定义逻辑
     }
 
-    const granularityHandlers = {
-        week: () =>
-            handleWeekGranularity(
-                targetDate,
-                timeGroup,
-                profile,
-                followTimeGroups
-            ),
-        month: () =>
-            handleMonthGranularity(
-                targetDate,
-                timeGroup,
-                profile,
-                followTimeGroups
-            ),
-    };
+    private processDayCycleTimeGroup(
+        targetDate: DateTime,
+        timeGroup: TimeGroup
+    ): TimeGroupLayout | undefined {
+        const handler = this.granularityHandlers[timeGroup.dayCycleGranularity];
+        if (!handler) {
+            scheduleEditorLogger.warn(
+                "[TimeGroupProcessor] 未知的时间组日期粒度",
+                {timeGroup}
+            );
+            return undefined;
+        }
 
-    const handler = granularityHandlers[timeGroup.dayCycleGranularity];
-    if (!handler) {
-        scheduleEditorLogger.warn("[processTimeGroup] 未知的时间组日期粒度", {
-            timeGroup: timeGroup,
-        });
-        return undefined;
+        const index = handler(targetDate);
+        const target = timeGroup.layout[index];
+
+        if (!target) {
+            scheduleEditorLogger.warn("[TimeGroupProcessor] 找不到目标", {
+                timeGroup,
+                index,
+            });
+            return undefined;
+        }
+
+        scheduleEditorLogger.trace("[TimeGroupProcessor] 处理目标", target);
+        return target;
     }
-
-    return handler();
 }
 
 /**
@@ -183,12 +122,8 @@ export function processTimeGroupWithResult(
     });
 
     const followTimeGroups: TimeGroup[] = [];
-    const curriculum = processTimeGroup(
-        targetDate,
-        timeGroup,
-        profile,
-        followTimeGroups
-    );
+    const processor = new TimeGroupProcessor(profile, followTimeGroups);
+    const curriculum = processor.process(targetDate, timeGroup);
 
     return {
         curriculum,

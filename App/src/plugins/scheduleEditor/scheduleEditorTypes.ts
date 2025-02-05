@@ -110,7 +110,7 @@ export interface Curriculum {
     };
 }
 
-type TimeGroupLayout = {
+export interface TimeGroupLayout {
     /**
      * layout的类型 可以选择是另一个timeGroup或者是一个课表
      */
@@ -119,7 +119,7 @@ type TimeGroupLayout = {
     attach?: {
         [key: string]: any;
     };
-};
+}
 
 export interface TimeGroup {
     /**
