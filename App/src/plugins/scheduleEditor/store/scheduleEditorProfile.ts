@@ -115,9 +115,7 @@ export function init(fs: PluginFs) {
                         );
                     }
                 }); // 处理 DateTime 的反序列化
-                const deserializedProfile = deserializeDateTime(profile);
-
-                scheduleEditorProfile.value = deserializedProfile;
+                scheduleEditorProfile.value = deserializeDateTime(profile);
                 logger.trace("[scheduleEditor] 档案数据加载成功");
             } catch (error) {
                 logger.error("[scheduleEditor] 解析档案数据失败", error);
