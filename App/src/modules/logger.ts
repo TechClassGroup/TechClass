@@ -82,7 +82,9 @@ function serializeForLog(value: any, seen = new WeakSet()): any {
 }
 
 /**
- * 日志模块 提供了五个级别的日志输出 输出到rust终端 前端没有
+ * 日志模块 提供了五个级别的日志输出
+ * 根据编译时常量控制级别
+ *
  */
 class Logger {
     private formatLogMessage(...args: any[]): string {
