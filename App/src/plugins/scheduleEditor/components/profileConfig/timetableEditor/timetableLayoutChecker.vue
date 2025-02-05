@@ -130,7 +130,7 @@ function formatTimeForInput(time: DateTime): string {
 
 function updateHide(hide: boolean) {
     if (!currentLayout.value) return;
-    currentLayout.value.hide = hide;
+  currentLayout.value.noDisplayedSeparately = hide;
 }
 </script>
 
@@ -243,7 +243,7 @@ function updateHide(hide: boolean) {
                         >合并显示</label
                     >
                     <TcSwitch
-                        :model-value="currentLayout.hide"
+                        :model-value="currentLayout.noDisplayedSeparately"
                         @update:model-value="updateHide"
                     />
                 </div>
@@ -266,7 +266,7 @@ function updateHide(hide: boolean) {
                         >合并显示</label
                     >
                     <TcSwitch
-                        :model-value="currentLayout.hide"
+                        :model-value="currentLayout.noDisplayedSeparately"
                         @update:model-value="updateHide"
                     />
                 </div>

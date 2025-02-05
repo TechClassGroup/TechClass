@@ -52,7 +52,7 @@ interface BaseLayout {
      * 是否单独显示
      * 为true时，只有时间适合时，才会显示在一个独立的位置，而不是和课程一起显示
      */
-    hide: boolean;
+    noDisplayedSeparately: boolean;
     /** 附加信息 */
     attach?: {
         [key: string]: any;
@@ -196,7 +196,7 @@ export type enableConfig = {
     selected: {
         type: "curriculum" | "timegroup";
         id: string;
-    }
+    };
     /**
      * 临时覆盖的对象 允许有持续时间 (endTime之前)
      */
@@ -206,8 +206,8 @@ export type enableConfig = {
         id: string;
         startTime: DateTime;
         endTime: DateTime;
-    }
-}
+    };
+};
 
 export type ScheduleEditorStore = {
     subjects: SubjectObject;
@@ -216,3 +216,4 @@ export type ScheduleEditorStore = {
     timeGroups: timeGroupObject;
     enableConfig: enableConfig;
 };
+
