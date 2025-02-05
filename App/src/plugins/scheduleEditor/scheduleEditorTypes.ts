@@ -217,3 +217,23 @@ export type ScheduleEditorStore = {
     enableConfig: enableConfig;
 };
 
+interface todaySchedule {
+    name: string;
+    shortName: string;
+    teacherName: string;
+    noDisplayedSeparately: boolean;
+    startTime: DateTime;
+    endTime: DateTime;
+
+    attach?: {
+        [key: string]: any;
+    };
+}
+
+export interface todayConfig {
+    generateDate: DateTime;
+    schedule: todaySchedule[];
+    attach?: {
+        [key: string]: any;
+    };
+}
