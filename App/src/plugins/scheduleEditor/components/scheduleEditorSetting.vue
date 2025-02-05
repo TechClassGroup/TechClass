@@ -28,7 +28,7 @@ const profileTabs = {
     component: TimeGroupEditor,
   },
 } as const;
-const today_tabs = {
+const enableTabs = {
 
   enable: {
     label: "启用设置",
@@ -42,10 +42,10 @@ const today_tabs = {
 const store = scheduleEditorStore!;
 
 type profileTabKey = keyof typeof profileTabs;
-type todayTabKey = keyof typeof today_tabs;
+type enableTabKey = keyof typeof enableTabs;
 
 // 配置类型切换
-type ConfigType = "course" | "today";
+type ConfigType = "course" | "enable";
 
 // 监听configType变化，重置currentTab
 watch(
@@ -81,8 +81,8 @@ if (!store) {
       >
         <tc-button
             size="medium"
-            :variant="store.configType as ConfigType === 'today' ? 'filled' : 'text'"
-            @click="store.configType = 'today'"
+            :variant="store.configType as ConfigType === 'enable' ? 'filled' : 'text'"
+            @click="store.configType = 'enable'"
         >
           启用配置
         </tc-button>
@@ -113,14 +113,14 @@ if (!store) {
 
       <!-- 二级导航：今日设置相关tabs -->
       <div
-          v-if="store.configType as ConfigType === 'today'"
+          v-if="store.configType as ConfigType === 'enable'"
           class="flex gap-1 bg-gray-50 px-1 py-1 rounded-t-lg border-x border-t border-gray-200"
       >
         <tc-button
-            v-for="(tab, key) in today_tabs"
+            v-for="(tab, key) in enableTabs"
             :key="key"
             size="small"
-            :variant="store.currentTab as todayTabKey === key ? 'filled' : 'text'"
+            :variant="store.currentTab as enableTabKey === key ? 'filled' : 'text'"
             @click="store.currentTab = key"
         >
           {{ tab.label }}
@@ -142,7 +142,7 @@ if (!store) {
     <template v-else>
       <div class="flex-1 min-h-0">
         <component
-            :is="today_tabs[store.currentTab as todayTabKey].component"
+            :is="enableTabs[store.currentTab as enableTabKey].component"
             class="h-full"
         />
       </div>
