@@ -49,7 +49,7 @@ class TimeGroupProcessor {
             target = this.processDayCycleTimeGroup(targetDate, timeGroup);
 
         } else {
-            target = this.processCustomTimeGroup(timeGroup);
+            target = this.processCustomTimeGroup(timeGroup, targetDate);
         }
 
         if (!target) {
@@ -65,12 +65,29 @@ class TimeGroupProcessor {
     }
 
     private processCustomTimeGroup(
-        timeGroup: TimeGroup
+        timeGroup: TimeGroup,
+        targetDate: DateTime
     ): TimeGroupLayout | undefined {
-        if (timeGroup.startTime && this.startTime === null) {
-            this.startTime = timeGroup.startTime; // 记录开始时间 实现顶层覆盖底层
+        // 判断是否继承时间
+        // 如果是null -> 继承他的父组件的时间
+        // 如果是DateTime -> 使用他作为开始时间，并且如果他有子timeGroup，那么他的子timeGroup也会继承这个时间
+        if (timeGroup.startTime) {
+            this.startTime = timeGroup.startTime;
+            scheduleEditorLogger.trace("[TimeGroupProcessor] 非继承时间，已重新设置为", this.startTime)
+        } else {
+            scheduleEditorLogger.trace("[TimeGroupProcessor] 继承时间，使用上次设置", this.startTime)
         }
-        return undefined; // 暂时返回undefined，后续实现自定义逻辑
+        if (!this.startTime) {
+            scheduleEditorLogger.warn("[TimeGroupProcessor] 未找到开始时间")
+            return undefined;
+        }
+        if (this.startTime < targetDate) {
+            // 在开始时间之前 还没办法生成
+            scheduleEditorLogger.warn("[TimeGroupProcessor] 开始时间在目标日期之前，无法生成")
+            return undefined;
+        }
+        
+      
     }
 
     private processDayCycleTimeGroup(
