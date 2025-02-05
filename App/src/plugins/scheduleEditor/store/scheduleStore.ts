@@ -1,4 +1,4 @@
-import {ScheduleEditorStore} from "../scheduleEditorTypes";
+import {ScheduleEditorProfileStore} from "../scheduleEditorTypes";
 import {PluginStore} from "../../../types/plugins";
 import {PluginFs} from "../../../modules/pluginUtils";
 import {clear, init, scheduleEditorProfile} from "./scheduleEditorProfile";
@@ -14,7 +14,7 @@ export function initializeStore(store: PluginStore, fs: PluginFs) {
 }
 
 export function clearStore() {
-    scheduleEditorProfile.value = {} as ScheduleEditorStore;
+    scheduleEditorProfile.value = {} as ScheduleEditorProfileStore;
     scheduleEditorStore = null;
     clear();
 }

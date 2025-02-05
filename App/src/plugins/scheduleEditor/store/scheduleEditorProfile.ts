@@ -1,7 +1,7 @@
 /**
  * @fileOverview 档案的store
  */
-import {ScheduleEditorStore} from "../scheduleEditorTypes";
+import {ScheduleEditorProfileStore} from "../scheduleEditorTypes";
 import logger from "../../../modules/logger";
 import {PluginFs} from "../../../modules/pluginUtils";
 import {DateTime} from "luxon";
@@ -9,8 +9,8 @@ import {ref, watch} from "vue";
 import {throttle} from "lodash";
 import {createRetrySaveFunction} from "../../../modules/utils";
 
-export const scheduleEditorProfile = ref<ScheduleEditorStore>(
-    {} as ScheduleEditorStore
+export const scheduleEditorProfile = ref<ScheduleEditorProfileStore>(
+    {} as ScheduleEditorProfileStore
 );
 
 let fileSystem: PluginFs | null = null;
@@ -18,7 +18,7 @@ const scheduleEditorStoreProfileName: string =
     "profiles/scheduleEditor.profile.json";
 let profileWatcher: null | ReturnType<typeof watch> = null;
 
-function createScheduleEditorProfile(): ScheduleEditorStore {
+function createScheduleEditorProfile(): ScheduleEditorProfileStore {
     return {
         subjects: {},
         timetables: {},

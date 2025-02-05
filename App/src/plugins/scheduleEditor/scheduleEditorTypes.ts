@@ -209,7 +209,7 @@ export type enableConfig = {
     };
 };
 
-export type ScheduleEditorStore = {
+export type ScheduleEditorProfileStore = {
     subjects: SubjectObject;
     timetables: TimetableObject;
     curriculums: CurriculumObject;

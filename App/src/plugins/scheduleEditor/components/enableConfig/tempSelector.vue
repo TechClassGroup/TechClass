@@ -72,12 +72,12 @@ const handleTempEnabledChange = (value: boolean) => {
         !store.enableConfig.tempSelected.endTime ||
         store.enableConfig.tempSelected.endTime <= now ||
         !store.enableConfig.tempSelected.startTime ||
-        store.enableConfig.tempSelected.startTime >=
+        store.enableConfig.tempSelected.startTime >
         store.enableConfig.tempSelected.endTime
     ) {
       // 重置时间范围
       store.enableConfig.tempSelected.startTime = now;
-      store.enableConfig.tempSelected.endTime = now.plus({days: 1});
+      store.enableConfig.tempSelected.endTime = now;
     }
 
     // 如果没有选择项目，设置默认值
@@ -108,15 +108,14 @@ const startTime = computed(() => store.enableConfig.tempSelected.startTime);
 
 // 处理开始时间变更
 const handleStartTimeChange = (value: DateTime) => {
-  const now = DateTime.now();
-  // 如果设置的时间早于当前时间，使用当前时间
-  if (value < now) {
-    value = now;
-  }
+  // 设置时间为当天的开始
+  value = value.startOf("day");
     store.enableConfig.tempSelected.startTime = value;
     // 确保结束时间不早于开始时间
   if (store.enableConfig.tempSelected.endTime <= value) {
-    store.enableConfig.tempSelected.endTime = value.plus({hours: 1});
+    store.enableConfig.tempSelected.endTime = value
+        .plus({days: 1})
+        .startOf("day");
     }
 };
 
@@ -125,14 +124,11 @@ const endTime = computed(() => store.enableConfig.tempSelected.endTime);
 
 // 处理结束时间变更
 const handleEndTimeChange = (value: DateTime) => {
-  const now = DateTime.now();
-  // 如果设置的时间早于当前时间，使用当前时间
-  if (value < now) {
-    value = now;
-  }
+  // 设置时间为当天的开始
+  value = value.startOf("day");
     // 确保结束时间不早于开始时间
-  if (value <= store.enableConfig.tempSelected.startTime) {
-    value = store.enableConfig.tempSelected.startTime.plus({hours: 1});
+  if (value < store.enableConfig.tempSelected.startTime) {
+    value = store.enableConfig.tempSelected.startTime;
     }
     store.enableConfig.tempSelected.endTime = value;
 };
@@ -195,10 +191,10 @@ const getItemInfo = (item: SelectableItem) => {
 onMounted(() => {
   if (store.enableConfig.tempSelected.enable) {
     const now = DateTime.now();
-    // 如果结束时间早于当前时间，或开始时间大于等于结束时间，则禁用临时启用
+    // 如果结束时间早于当前时间，或开始时间大于结束时间，则禁用临时启用
     if (
         now > store.enableConfig.tempSelected.endTime ||
-        store.enableConfig.tempSelected.startTime >=
+        store.enableConfig.tempSelected.startTime >
         store.enableConfig.tempSelected.endTime
     ) {
       store.enableConfig.tempSelected.enable = false;
@@ -320,34 +316,30 @@ onMounted(() => {
             <div class="grid grid-cols-2 gap-4">
               <div class="text-gray-600">启用覆盖时间</div>
               <input
-                  :value="
-                                    startTime.toFormat('yyyy-MM-dd\'T\'HH:mm')
-                                "
+                  :value="startTime.toFormat('yyyy-MM-dd')"
                   class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
-                  type="datetime-local"
+                  type="date"
                   @input="
                                     handleStartTimeChange(
                                         DateTime.fromFormat(
                                             ($event.target as HTMLInputElement)
                                                 .value,
-                                            'yyyy-MM-dd\'T\'HH:mm'
+                                            'yyyy-MM-dd'
                                         )
                                     )
                                 "
               />
               <div class="text-gray-600">结束覆盖时间</div>
               <input
-                  :value="
-                                    endTime.toFormat('yyyy-MM-dd\'T\'HH:mm')
-                                "
+                  :value="endTime.toFormat('yyyy-MM-dd')"
                   class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
-                  type="datetime-local"
+                  type="date"
                   @input="
                                     handleEndTimeChange(
                                         DateTime.fromFormat(
                                             ($event.target as HTMLInputElement)
                                                 .value,
-                                            'yyyy-MM-dd\'T\'HH:mm'
+                                            'yyyy-MM-dd'
                                         )
                                     )
                                 "
