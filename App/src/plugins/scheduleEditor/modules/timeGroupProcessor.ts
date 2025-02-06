@@ -6,9 +6,15 @@ import {DateTime} from "luxon";
 import {Curriculum, ScheduleEditorProfileStore, TimeGroup, TimeGroupLayout,} from "../scheduleEditorTypes";
 import {scheduleEditorLogger} from "./utils";
 
+export interface TimeGroupInfo {
+    id: string;
+    timeGroup: TimeGroup;
+}
+
 export interface CurriculumResult {
     curriculum: Curriculum | undefined;
-    followTimeGroups: TimeGroup[];
+    followTimeGroups: TimeGroupInfo[];
+    isLoop: boolean;
 }
 
 class TimeGroupProcessor {
@@ -16,24 +22,44 @@ class TimeGroupProcessor {
         week: (date: DateTime) => date.weekday - 1,
         month: (date: DateTime) => date.day - 1,
     };
-
+    /**
+     * 是否是循环引用
+     */
+    public isLoop = false;
     constructor(
         private readonly profile: ScheduleEditorProfileStore,
-        private readonly followTimeGroups: TimeGroup[] = [],
+        private readonly followTimeGroups: TimeGroupInfo[] = [],
         private startTime: DateTime | null = null
     ) {
     }
 
     process(
         targetDate: DateTime,
-        timeGroup: TimeGroup
+        timeGroup: TimeGroup,
+        timeGroupId: string
     ): Curriculum | undefined {
         if (!timeGroup) {
             scheduleEditorLogger.warn("[TimeGroupProcessor] 未知时间组");
             return undefined;
         }
 
-        this.followTimeGroups.push(timeGroup);
+        if (this.followTimeGroups.some((info) => info.id === timeGroupId)) {
+            scheduleEditorLogger.error("[TimeGroupProcessor] 检测到循环引用", {
+                timeGroupId,
+                followTimeGroups: this.followTimeGroups,
+            });
+            this.isLoop = true;
+            this.followTimeGroups.push({
+                id: timeGroupId,
+                timeGroup: timeGroup,
+            }); // 保证循环引用被记录
+            return undefined;
+        }
+
+        this.followTimeGroups.push({
+            id: timeGroupId,
+            timeGroup: timeGroup,
+        });
 
         scheduleEditorLogger.debug("[TimeGroupProcessor] 处理时间组", {
             granularity: timeGroup.granularity,
@@ -60,7 +86,7 @@ class TimeGroupProcessor {
 
         if (target.type === "timegroup") {
             const nextTimeGroup = this.profile.timeGroups[target.id];
-            return this.process(targetDate, nextTimeGroup);
+            return this.process(targetDate, nextTimeGroup, target.id);
         }
         return this.profile.curriculums[target.id];
     }
@@ -247,12 +273,14 @@ class TimeGroupProcessor {
  * @param targetDate 目标日期
  * @param timeGroup 要处理的时间组
  * @param profile 课表编辑器配置
+ * @param timeGroupId 时间组ID
  * @returns 包含课表和途径时间组的结果
  */
 export function processTimeGroupWithResult(
     targetDate: DateTime,
     timeGroup: TimeGroup,
-    profile: ScheduleEditorProfileStore
+    profile: ScheduleEditorProfileStore,
+    timeGroupId: string
 ): CurriculumResult {
     scheduleEditorLogger.debug("[processTimeGroupWithResult] 开始处理时间组", {
         date: targetDate,
@@ -260,12 +288,13 @@ export function processTimeGroupWithResult(
         dayCycleGranularity: timeGroup.dayCycleGranularity,
     });
 
-    const followTimeGroups: TimeGroup[] = [];
+    const followTimeGroups: TimeGroupInfo[] = [];
     const processor = new TimeGroupProcessor(profile, followTimeGroups);
-    const curriculum = processor.process(targetDate, timeGroup);
+    const curriculum = processor.process(targetDate, timeGroup, timeGroupId);
 
     return {
         curriculum,
         followTimeGroups,
+        isLoop: processor.isLoop,
     };
 }

@@ -4,13 +4,13 @@
 import {ScheduleEditorProfileStore, todayConfig,} from "../scheduleEditorTypes";
 import {DateTime} from "luxon";
 
-import {processTimeGroupWithResult} from "./timeGroupProcessor";
+import {CurriculumResult, processTimeGroupWithResult} from "./timeGroupProcessor";
 import {scheduleEditorLogger} from "./utils";
 
 function findTodayCurriculum(
     targetDate: DateTime,
     profile: ScheduleEditorProfileStore
-) {
+): CurriculumResult {
     scheduleEditorLogger.debug("[findTodayCurriculum] 开始查找今日课程", {
         date: targetDate.toISO(),
     });
@@ -60,13 +60,15 @@ function findTodayCurriculum(
         return processTimeGroupWithResult(
             targetDate,
             profile.timeGroups[id],
-            profile
+            profile,
+            id
         );
     } else {
         scheduleEditorLogger.debug("[findTodayCurriculum] 返回课表", {curriculumId: id});
         return {
             curriculum: profile.curriculums[id],
             followTimeGroups: [],
+            isLoop: false,
         };
     }
 }
