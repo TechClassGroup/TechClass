@@ -104,7 +104,14 @@ class TimeGroupProcessor {
             // 比如开始时间是2024，targetDate是2024，那么year就是1
             // 2025 -> 2
             // 2026 -> 3
-            const year = targetDate.year - this.startTime.year + 1;
+            const startTimeYearStart = this.startTime.startOf("year");
+            const targetDateYearStart = targetDate.startOf("year");
+
+            const diffYears = targetDateYearStart.diff(startTimeYearStart, [
+                "years",
+            ]).years;
+            const totalYears = Math.floor(diffYears) + 1;
+
             const cycle = timeGroup.cycle;
             // 根据年份和周期判断layout index
             // 比如开始时间2024，周期3，那么可以知道:
@@ -112,55 +119,60 @@ class TimeGroupProcessor {
             // 2025 -> 2 -> index 1
             // 2026 -> 3 -> index 2
             // 2027 -> 1 -> index 0
-            const index = (year - 1) % cycle;
+            const index = (totalYears - 1) % cycle;
             scheduleEditorLogger.debug(
-                `[TimeGroupProcessor] 年份: ${year} targetDate: ${targetDate.year}`,
-                `开始时间: ${this.startTime}, 周期: ${cycle}, index: ${index}`
+                `[TimeGroupProcessor] 年份: ${totalYears}`,
+                `开始时间: ${startTimeYearStart.toISO()}, 目标时间: ${targetDateYearStart.toISO()}`,
+                `周期: ${cycle}, index: ${index}`
             );
             target = timeGroup.layout[index];
         } else if (timeGroup.granularity === "month") {
             // 判断这是开始时间后的第几个月
-            // 比如开始时间是2024-01，targetDate是2024-01，那么month就是1
-            // 2024-02 -> 2
-            // 2024-03 -> 3
-            // 2024-04 -> 4
-            // 使用diff计算总月数，可以正确处理跨年的情况
-            const monthDiff = targetDate.diff(this.startTime, [
+            // 比如开始时间是2024-01-31，targetDate是2024-01-31，那么month就是1
+            // 2024-02-01 -> 2
+            // 2024-03-01 -> 3
+            // 2024-04-01 -> 4
+            const startTimeMonthStart = this.startTime.startOf("month");
+            const targetDateMonthStart = targetDate.startOf("month");
+
+            const diffMonths = targetDateMonthStart.diff(startTimeMonthStart, [
                 "months",
             ]).months;
-            const totalMonths = Math.floor(monthDiff) + 1;
+            const totalMonths = Math.floor(diffMonths) + 1;
+
             const cycle = timeGroup.cycle;
             // 根据月份和周期判断layout index
-            // 比如开始时间2024-01，周期3，那么可以知道:
-            // 2024-01 -> 1 -> index 0
-            // 2024-02 -> 2 -> index 1
-            // 2024-03 -> 3 -> index 2
-            // 2024-04 -> 4 -> index 0
+            // 比如开始时间2024-01-31，周期3，那么可以知道:
+            // 2024-01-31 -> 1 -> index 0
+            // 2024-02-01 -> 2 -> index 1
+            // 2024-03-01 -> 3 -> index 2
+            // 2024-04-01 -> 4 -> index 0
             const index = (totalMonths - 1) % cycle;
             scheduleEditorLogger.debug(
-                `[TimeGroupProcessor] 月份: ${totalMonths} targetDate: ${targetDate.month}`,
-                `开始时间: ${this.startTime}, 周期: ${cycle}, index: ${index}`
+                `[TimeGroupProcessor] 月份: ${totalMonths}`,
+                `开始时间: ${startTimeMonthStart.toISO()}, 目标时间: ${targetDateMonthStart.toISO()}`,
+                `周期: ${cycle}, index: ${index}`
             );
             target = timeGroup.layout[index];
         } else if (timeGroup.granularity === "week") {
-            // 判断这是开始时间后的第几周
-            // 比如开始时间是2024-W01，targetDate是2024-W01，那么week就是1
-            // 2024-W02 -> 2
-            // 2024-W03 -> 3
-            // 使用diff计算总周数，可以正确处理跨年的情况
-            const weekDiff = targetDate.diff(this.startTime, ["weeks"]).weeks;
-            const totalWeeks = Math.floor(weekDiff) + 1;
+            // 将日期调整到当周的起始日（周一）
+            const startTimeWeekStart = this.startTime.startOf("week");
+            const targetDateWeekStart = targetDate.startOf("week");
+
+            // 计算从开始时间到目标时间的完整周数
+            // 使用 diff 计算天数差，然后除以7得到完整周数
+            const diffDays = targetDateWeekStart.diff(startTimeWeekStart, [
+                "days",
+            ]).days;
+            const totalWeeks = Math.floor(diffDays / 7) + 1;
+
             const cycle = timeGroup.cycle;
-            // 根据周数和周期判断layout index
-            // 比如开始时间2024-W01，周期3，那么可以知道:
-            // 2024-W01 -> 1 -> index 0
-            // 2024-W02 -> 2 -> index 1
-            // 2024-W03 -> 3 -> index 2
-            // 2024-W04 -> 4 -> index 0
             const index = (totalWeeks - 1) % cycle;
+
             scheduleEditorLogger.debug(
-                `[TimeGroupProcessor] 周数: ${totalWeeks} targetDate: ${targetDate.weekNumber}`,
-                `开始时间: ${this.startTime}, 周期: ${cycle}, index: ${index}`
+                `[TimeGroupProcessor] 周数: ${totalWeeks}`,
+                `开始周: ${startTimeWeekStart.toISO()}, 目标周: ${targetDateWeekStart.toISO()}`,
+                `周期: ${cycle}, index: ${index}`
             );
             target = timeGroup.layout[index];
         } else if (timeGroup.granularity === "day") {
@@ -168,9 +180,8 @@ class TimeGroupProcessor {
             // 比如开始时间是2024-01-01，targetDate是2024-01-01，那么day就是1
             // 2024-01-02 -> 2
             // 2024-01-03 -> 3
-            // 使用diff计算总天数，可以正确处理跨年和跨月的情况
-            const dayDiff = targetDate.diff(this.startTime, ["days"]).days;
-            const totalDays = Math.floor(dayDiff) + 1;
+            const diffDays = targetDate.diff(this.startTime, ["days"]).days;
+            const totalDays = Math.floor(diffDays) + 1;
             const cycle = timeGroup.cycle;
             // 根据天数和周期判断layout index
             // 比如开始时间2024-01-01，周期3，那么可以知道:
