@@ -134,6 +134,6 @@ export function generateTodayConfig(
     return {
         isLoop: false,
         value: result,
-        followTimeGroups: [],
+        followTimeGroups: curriculum.followTimeGroups,
     };
 }
