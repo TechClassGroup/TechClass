@@ -96,15 +96,82 @@ function generateSchedule(
     const result: todayConfig = {
         generateDate: DateTime.now(),
         schedule: [],
-
-    }
+    };
     if (!curriculum.curriculum) {
-        return result
+        scheduleEditorLogger.warn(
+            "[generateSchedule] 未找到课程表" + curriculum
+        );
+        return result;
     }
 
+    const curriculumData = curriculum.curriculum;
+    const timetable = profile.timetables[curriculumData.timetableId];
+    const classes = curriculumData.classes;
 
-    return result
+    if (!timetable) {
+        scheduleEditorLogger.warn(
+            "[generateSchedule] 未找到时间表" + curriculumData.timetableId
+        );
+        return result;
+    }
+    Object.entries(timetable.layouts).forEach(([layoutId, layout]) => {
+        let name: string = "";
+        let shortName: string = "";
+        let teacherName: string = "";
+        if (layout.type === "break") {
+            name = layout.breakName;
+        } else {
+            // 判断classes里面timeId为layoutId的subjectId是否为空
+            const currentClass = classes.find(
+                (item) => item.timeId === layoutId
+            );
+            if (!currentClass) {
+                scheduleEditorLogger.warn(
+                    "[generateSchedule] 未找到课程" + layoutId
+                );
+                return
+            }
+            if (currentClass.subjectId && currentClass.subjectId !== "") {
+                // 有指定的情况
+                const subject = profile.subjects[currentClass.subjectId];
+                if (!subject) {
+                    scheduleEditorLogger.warn(
+                        "[generateSchedule] 未找到课程" +
+                        currentClass.subjectId
+                    );
+                    return;
+                }
+                name = subject.name;
+                shortName = subject.shortName;
+                teacherName = subject.teacherName;
 
+            } else {
+                // 没有指定的情况
+                const subject = profile.subjects[layout.subjectId];
+                if (!subject) {
+                    scheduleEditorLogger.warn(
+                        "[generateSchedule] 未找到课程" +
+                        currentClass.subjectId)
+                    return;
+                }
+                name = subject.name;
+                shortName = subject.shortName;
+                teacherName = subject.teacherName;
+
+            }
+        }
+
+        result.schedule.push({
+            name: name,
+            shortName: shortName,
+            teacherName: teacherName,
+            startTime: layout.startTime,
+            endTime: layout.endTime,
+            noDisplayedSeparately: layout.noDisplayedSeparately,
+        });
+    });
+
+    return result;
 }
 
 interface todayConfigResult {
