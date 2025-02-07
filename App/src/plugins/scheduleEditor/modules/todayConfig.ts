@@ -182,7 +182,7 @@ interface todayConfigResult {
     followTimeGroups: TimeGroupInfo[];
 }
 
-export function generateTodayConfig(
+export function generateTodayConfigByDate(
     date: DateTime,
     profile: ScheduleEditorProfileStore
 ): todayConfigResult {
