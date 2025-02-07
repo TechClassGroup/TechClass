@@ -107,11 +107,7 @@ class Logger {
             const message = this.formatLogMessage(...args);
             invoke(LoggerType.trace, {content: message}).then();
             if (__IS_DEV__) {
-                console.debug(
-                    "%c[TRACE]",
-                    "color: #888",
-                    message
-                );
+                console.debug("%c[TRACE]", "color: #888", ...args);
             }
         }
     }
@@ -121,11 +117,7 @@ class Logger {
             const message = this.formatLogMessage(...args);
             invoke(LoggerType.debug, {content: message}).then();
             if (__IS_DEV__) {
-                console.debug(
-                    "%c[DEBUG]",
-                    "color: #0088ff",
-                    message
-                );
+                console.debug("%c[DEBUG]", "color: #0088ff", ...args);
             }
         }
     }
@@ -135,10 +127,7 @@ class Logger {
             const message = this.formatLogMessage(...args);
             invoke(LoggerType.info, {content: message}).then();
             if (__IS_DEV__) {
-                console.info(
-                    "[INFO]",
-                    message
-                );
+                console.info("[INFO]", ...args);
             }
         }
     }
@@ -148,10 +137,7 @@ class Logger {
             const message = this.formatLogMessage(...args);
             invoke(LoggerType.warn, {content: message}).then();
             if (__IS_DEV__) {
-                console.warn(
-                    "[WARN]",
-                    message
-                );
+                console.warn("[WARN]", ...args);
             }
         }
     }
@@ -161,10 +147,7 @@ class Logger {
             const message = this.formatLogMessage(...args);
             invoke(LoggerType.error, {content: message}).then();
             if (__IS_DEV__) {
-                console.error(
-                    "[ERROR]",
-                    message
-                );
+                console.error("[ERROR]", ...args);
             }
         }
     }
