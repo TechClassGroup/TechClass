@@ -95,7 +95,7 @@ function deserializeDateTime(profile: any) {
     return profile;
 }
 
-export function init(fs: PluginFs) {
+export function initProfile(fs: PluginFs) {
     fileSystem = fs;
     scheduleEditorProfile.value = createScheduleEditorProfile();
     fs.readFile(scheduleEditorStoreProfileName)
@@ -137,7 +137,7 @@ export function init(fs: PluginFs) {
     );
 }
 
-export function clear() {
+export function clearProfile() {
     saveProfile();
     profileWatcher?.stop();
 }
