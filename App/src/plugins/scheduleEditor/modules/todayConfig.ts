@@ -4,7 +4,7 @@
 import {ScheduleEditorProfileStore, todayConfig,} from "../scheduleEditorTypes";
 import {DateTime} from "luxon";
 
-import {CurriculumResult, processTimeGroupWithResult} from "./timeGroupProcessor";
+import {CurriculumResult, processTimeGroupWithResult, TimeGroupInfo,} from "./timeGroupProcessor";
 import {scheduleEditorLogger} from "./utils";
 
 function findTodayCurriculum(
@@ -24,7 +24,9 @@ function findTodayCurriculum(
             !profile.enableConfig.tempSelected.startTime ||
             !profile.enableConfig.tempSelected.endTime
         ) {
-            scheduleEditorLogger.warn("[findTodayCurriculum] 临时配置时间范围未设置");
+            scheduleEditorLogger.warn(
+                "[findTodayCurriculum] 临时配置时间范围未设置"
+            );
             return false;
         }
         // 判断是否在时间范围内
@@ -34,11 +36,14 @@ function findTodayCurriculum(
             profile.enableConfig.tempSelected.endTime.startOf("day") >=
             targetDate;
 
-        scheduleEditorLogger.trace("[findTodayCurriculum] 临时配置时间范围检查", {
-            inRange,
-            startTime: profile.enableConfig.tempSelected.startTime.toISO(),
-            endTime: profile.enableConfig.tempSelected.endTime.toISO(),
-        });
+        scheduleEditorLogger.trace(
+            "[findTodayCurriculum] 临时配置时间范围检查",
+            {
+                inRange,
+                startTime: profile.enableConfig.tempSelected.startTime.toISO(),
+                endTime: profile.enableConfig.tempSelected.endTime.toISO(),
+            }
+        );
         return inRange;
     })();
 
@@ -47,16 +52,24 @@ function findTodayCurriculum(
     if (isTemp) {
         type = profile.enableConfig.tempSelected.type;
         id = profile.enableConfig.tempSelected.id;
-        scheduleEditorLogger.debug("[scheduleEditor] 使用临时配置", {type, id});
+        scheduleEditorLogger.debug("[scheduleEditor] 使用临时配置", {
+            type,
+            id,
+        });
     } else {
         type = profile.enableConfig.selected.type;
         id = profile.enableConfig.selected.id;
-        scheduleEditorLogger.debug("[scheduleEditor] 使用默认配置", {type, id});
+        scheduleEditorLogger.debug("[scheduleEditor] 使用默认配置", {
+            type,
+            id,
+        });
     }
 
     // 根据ID查找
     if (type == "timegroup") {
-        scheduleEditorLogger.debug("[findTodayCurriculum] 处理时间组", {groupId: id});
+        scheduleEditorLogger.debug("[findTodayCurriculum] 处理时间组", {
+            groupId: id,
+        });
         return processTimeGroupWithResult(
             targetDate,
             profile.timeGroups[id],
@@ -64,7 +77,9 @@ function findTodayCurriculum(
             id
         );
     } else {
-        scheduleEditorLogger.debug("[findTodayCurriculum] 返回课表", {curriculumId: id});
+        scheduleEditorLogger.debug("[findTodayCurriculum] 返回课表", {
+            curriculumId: id,
+        });
         return {
             curriculum: profile.curriculums[id],
             followTimeGroups: [],
@@ -73,16 +88,52 @@ function findTodayCurriculum(
     }
 }
 
+function generateSchedule(
+    targetDate: DateTime,
+    profile: ScheduleEditorProfileStore,
+    curriculum: CurriculumResult
+): todayConfig {
+    const result: todayConfig = {
+        generateDate: DateTime.now(),
+        schedule: [],
+
+    }
+    if (!curriculum.curriculum) {
+        return result
+    }
+
+
+    return result
+
+}
+
+interface todayConfigResult {
+    isLoop: boolean;
+    // if isLoop == false
+    value: todayConfig | null;
+    // if isLoop == true
+    followTimeGroups: TimeGroupInfo[];
+}
+
 export function generateTodayConfig(
     date: DateTime,
     profile: ScheduleEditorProfileStore
-): todayConfig {
+): todayConfigResult {
     const targetDate = date.startOf("day");
-    const result = {
-        schedule: [],
-        generateDate: DateTime.now(),
-    };
-    findTodayCurriculum(targetDate, profile);
 
-    return result;
+    const curriculum = findTodayCurriculum(targetDate, profile);
+    // 循环的话，就没什么好处理的了 直接走
+    if (curriculum.isLoop) {
+        return {
+            isLoop: true,
+            value: null,
+            followTimeGroups: curriculum.followTimeGroups,
+        };
+    }
+    const result = generateSchedule(targetDate, profile, curriculum);
+    return {
+        isLoop: false,
+        value: result,
+        followTimeGroups: [],
+    };
 }
