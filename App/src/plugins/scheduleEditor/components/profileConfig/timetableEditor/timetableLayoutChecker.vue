@@ -99,7 +99,7 @@ function updateType(type: string) {
         Object.assign(currentLayout.value, {
             type: "lesson",
             subjectId: "",
-            hide: false,
+          noDisplayedSeparately: false,
         });
         // @ts-ignore
         delete currentLayout.value.breakName;
@@ -107,7 +107,7 @@ function updateType(type: string) {
         Object.assign(currentLayout.value, {
             type: "break",
             breakName: "课间",
-            hide: true,
+          noDisplayedSeparately: true,
         });
         // @ts-ignore
         delete currentLayout.value.subjectId;
@@ -128,9 +128,9 @@ function formatTimeForInput(time: DateTime): string {
   return time.toFormat("HH:mm:ss");
 }
 
-function updateHide(hide: boolean) {
+function updatenoDisplayedSeparately(noDisplayedSeparately: boolean) {
     if (!currentLayout.value) return;
-  currentLayout.value.noDisplayedSeparately = hide;
+  currentLayout.value.noDisplayedSeparately = noDisplayedSeparately;
 }
 </script>
 
@@ -244,7 +244,7 @@ function updateHide(hide: boolean) {
                     >
                     <TcSwitch
                         :model-value="currentLayout.noDisplayedSeparately"
-                        @update:model-value="updateHide"
+                        @update:model-value="updatenoDisplayedSeparately"
                     />
                 </div>
             </div>
@@ -267,7 +267,7 @@ function updateHide(hide: boolean) {
                     >
                     <TcSwitch
                         :model-value="currentLayout.noDisplayedSeparately"
-                        @update:model-value="updateHide"
+                        @update:model-value="updatenoDisplayedSeparately"
                     />
                 </div>
             </div>

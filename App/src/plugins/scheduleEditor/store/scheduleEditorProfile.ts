@@ -17,6 +17,7 @@ let fileSystem: PluginFs | null = null;
 const scheduleEditorStoreProfileName: string =
     "profiles/scheduleEditor.profile.json";
 let profileWatcher: null | ReturnType<typeof watch> = null;
+let initPromise: Promise<void> | null = null;
 
 function createScheduleEditorProfile(): ScheduleEditorProfileStore {
     return {
@@ -98,7 +99,9 @@ function deserializeDateTime(profile: any) {
 export function initProfile(fs: PluginFs) {
     fileSystem = fs;
     scheduleEditorProfile.value = createScheduleEditorProfile();
-    fs.readFile(scheduleEditorStoreProfileName)
+
+    initPromise = fs
+        .readFile(scheduleEditorStoreProfileName)
         .then((data) => {
             try {
                 const profile = JSON.parse(data);
@@ -120,13 +123,17 @@ export function initProfile(fs: PluginFs) {
             } catch (error) {
                 logger.error("[scheduleEditor] 解析档案数据失败", error);
                 // 如果解析失败，保持使用默认的配置文件
-                saveProfile();
+                return saveProfile();
             }
         })
         .catch((e) => {
             logger.error("[scheduleEditor] 读取档案数据失败", e);
-            saveProfile(); // 立刻保存一次全新的档案
+            return saveProfile(); // 立刻保存一次全新的档案
+        })
+        .finally(() => {
+            initPromise = null;
         });
+
     profileWatcher = watch(
         scheduleEditorProfile,
         () => {
@@ -135,10 +142,16 @@ export function initProfile(fs: PluginFs) {
         },
         {deep: true}
     );
+
+    return initPromise;
+}
+
+export function waitForInit(): Promise<void> {
+    return initPromise || Promise.resolve();
 }
 
 export function clearProfile() {
     saveProfile();
     profileWatcher?.stop();
-    scheduleEditorProfile.value = null;
+    scheduleEditorProfile.value = {} as ScheduleEditorProfileStore;
 }

@@ -80,7 +80,7 @@ function addLayout() {
     startTime: startTime,
     endTime: endTime,
     subjectId: "",
-    hide: false,
+    noDisplayedSeparately: false,
   };
   selectedLayoutId.value = newId;
 }
