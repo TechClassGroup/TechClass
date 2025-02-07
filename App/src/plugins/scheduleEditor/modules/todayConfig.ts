@@ -170,7 +170,7 @@ function generateSchedule(
             noDisplayedSeparately: layout.noDisplayedSeparately,
         });
     });
-
+    result.schedule.sort((a, b) => a.startTime > b.startTime ? 1 : -1);
     return result;
 }
 

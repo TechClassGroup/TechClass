@@ -22,7 +22,6 @@ export async function initTodayConfig() {
         scheduleEditorTodayConfig.value = response.value;
     }
     Logger.info(scheduleEditorTodayConfig.value);
-    Logger.info(scheduleEditorProfile.value);
 }
 
 export function clearTodayConfig() {
