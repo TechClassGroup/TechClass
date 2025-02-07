@@ -61,6 +61,10 @@ export default defineConfig({
     server: {
         port: 1422,
     },
+    dev: {
+        hmr: false,
+        liveReload: true,
+    },
     tools: {
         rspack: {
             watchOptions: {
