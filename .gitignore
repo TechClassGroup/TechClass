@@ -21,6 +21,7 @@ dist-ssr
 *.sw?
 .continuerules
 .cursorrules
+.copilotmd
 .vscode/
 tsconfig.tsbuildinfo
 
