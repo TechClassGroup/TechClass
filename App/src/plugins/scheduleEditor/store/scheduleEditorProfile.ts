@@ -140,4 +140,5 @@ export function initProfile(fs: PluginFs) {
 export function clearProfile() {
     saveProfile();
     profileWatcher?.stop();
+    scheduleEditorProfile.value = null;
 }
