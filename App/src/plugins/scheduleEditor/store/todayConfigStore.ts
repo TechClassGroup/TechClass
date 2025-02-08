@@ -10,18 +10,24 @@ import Logger from "../../../modules/logger";
 
 export const scheduleEditorTodayConfig = ref<todayConfig>({} as todayConfig);
 
-export async function initTodayConfig() {
+function generateTodayConfig() {
     const date = DateTime.now();
-    await waitForInit();
-
     const response = generateTodayConfigByDate(
         date,
         scheduleEditorProfile.value
     );
-    if (!response.isLoop && response.value) {
-        scheduleEditorTodayConfig.value = response.value;
+    if (response.isLoop) {
+        Logger.error("[generateTodayConfig] 出现了循环时间组", response.followTimeGroups);
+        return;
     }
-    Logger.info(scheduleEditorTodayConfig.value);
+    scheduleEditorTodayConfig.value = response.value;
+
+}
+
+export async function initTodayConfig() {
+    await waitForInit();
+    generateTodayConfig();
+
 }
 
 export function clearTodayConfig() {

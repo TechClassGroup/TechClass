@@ -205,3 +205,4 @@ export function generateTodayConfigByDate(
         followTimeGroups: curriculum.followTimeGroups,
     };
 }
+
