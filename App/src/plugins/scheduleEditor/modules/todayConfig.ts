@@ -98,8 +98,8 @@ function generateSchedule(
         schedule: [],
     };
     if (!curriculum.curriculum) {
-        scheduleEditorLogger.warn(
-            "[generateSchedule] 未找到课程表" + curriculum
+        scheduleEditorLogger.info(
+            "[generateSchedule] 今日无课程表", curriculum
         );
         return result;
     }
