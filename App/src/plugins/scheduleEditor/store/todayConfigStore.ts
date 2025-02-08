@@ -90,12 +90,15 @@ export async function initTodayConfig(fs: PluginFs) {
         });
         scheduleEditorTodayConfig.value = deserializeDateTime(todayConfig);
         Logger.trace("[scheduleEditor] 今日日程配置文件读取成功");
-        console.log(scheduleEditorTodayConfig.value);
     } catch (e) {
         needGenerate = true;
         Logger.error("[scheduleEditor] 今日日程配置文件读取失败", e);
     }
     await waitForInit();
+    // 非今日检查
+    if (!needGenerate && scheduleEditorTodayConfig.value.generateDate.startOf("day") !== DateTime.now().startOf("day")) {
+        needGenerate = true;
+    }
     if (needGenerate) {
         generateTodayConfig();
         saveTodayConfig();
