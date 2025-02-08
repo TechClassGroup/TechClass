@@ -101,7 +101,7 @@ function generateSchedule(
         scheduleEditorLogger.info(
             "[generateSchedule] 今日无课程表"
         );
-        scheduleEditorLogger.debug(curriculum);
+        scheduleEditorLogger.debug("课程表信息", curriculum);
         return result;
     }
 
