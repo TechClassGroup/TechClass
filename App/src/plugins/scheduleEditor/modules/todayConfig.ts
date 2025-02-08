@@ -99,7 +99,7 @@ function generateSchedule(
     };
     if (!curriculum.curriculum) {
         scheduleEditorLogger.info(
-            "[generateSchedule] 今日无课程表", curriculum
+            "[generateSchedule] 今日无课程表"
         );
         return result;
     }
