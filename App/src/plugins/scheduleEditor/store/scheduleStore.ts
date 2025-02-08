@@ -12,7 +12,7 @@ export let scheduleEditorStore: PluginStore | null = null;
 export function initializeStore(store: PluginStore, fs: PluginFs) {
     scheduleEditorStore = store;
     initProfile(fs).then() //这个函数实际上是同步的
-    initTodayConfig().then()
+    initTodayConfig(fs).then()
 }
 
 export function clearStore() {
