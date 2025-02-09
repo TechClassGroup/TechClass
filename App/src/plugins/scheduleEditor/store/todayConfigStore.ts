@@ -31,7 +31,8 @@ function generateTodayConfig() {
     scheduleEditorTodayConfig.value = response.value as todayConfig;
 }
 
-function deserializeDateTime(parsedTodayConfig: todayConfig): todayConfig {
+// 我不传any，你就报错，我传了any，你又说我不应该传any，我也是醉了
+function deserializeDateTime(parsedTodayConfig: any): todayConfig {
     // 处理datetime
     const schedule = parsedTodayConfig.schedule;
     // 这里不得不用any，不然IDE报错，超！
@@ -43,6 +44,12 @@ function deserializeDateTime(parsedTodayConfig: todayConfig): todayConfig {
             item.endTime = DateTime.fromISO(item.endTime);
         }
     });
+    // 处理 generateDate
+    if (parsedTodayConfig.generateDate) {
+        parsedTodayConfig.generateDate = DateTime.fromISO(
+            parsedTodayConfig.generateDate
+        );
+    }
     return parsedTodayConfig;
 }
 
@@ -78,7 +85,9 @@ export async function initTodayConfig(fs: PluginFs) {
     fileSystem = fs;
     let needGenerate = false;
     try {
-        const todayConfigResponse = await fs.readFile(scheduleEditorTodayConfigName);
+        const todayConfigResponse = await fs.readFile(
+            scheduleEditorTodayConfigName
+        );
         const todayConfig = JSON.parse(todayConfigResponse) as todayConfig;
         type requiredKeys = keyof todayConfig;
         const keys: requiredKeys[] = ["schedule", "generateDate"];
@@ -96,7 +105,11 @@ export async function initTodayConfig(fs: PluginFs) {
     }
     await waitForInit();
     // 非今日检查
-    if (!needGenerate && scheduleEditorTodayConfig.value.generateDate.startOf("day") !== DateTime.now().startOf("day")) {
+    if (
+        !needGenerate &&
+        scheduleEditorTodayConfig.value.generateDate.startOf("day") !==
+        DateTime.now().startOf("day")
+    ) {
         needGenerate = true;
     }
     if (needGenerate) {
