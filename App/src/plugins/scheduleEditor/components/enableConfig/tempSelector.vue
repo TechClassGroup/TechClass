@@ -193,9 +193,10 @@ onMounted(() => {
     const now = DateTime.now();
     // 如果结束时间早于当前时间，或开始时间大于结束时间，则禁用临时启用
     if (
-        now > store.enableConfig.tempSelected.endTime ||
-        store.enableConfig.tempSelected.startTime >
-        store.enableConfig.tempSelected.endTime
+        now.startOf("day") >
+        store.enableConfig.tempSelected.endTime.startOf("day") ||
+        store.enableConfig.tempSelected.startTime.startOf("day") >
+        store.enableConfig.tempSelected.endTime.startOf("day")
     ) {
       store.enableConfig.tempSelected.enable = false;
     }
@@ -260,8 +261,8 @@ onMounted(() => {
                       :class="[
                                             'text-xs px-1.5 py-0.5 rounded',
                                             item.type === 'curriculum'
-                                                ? 'bg-blue-100 text-blue-700'
-                                                : 'bg-green-100 text-green-700',
+                                                ? 'bg-blue-100 text-blue-800'
+                                                : 'bg-green-100 text-green-800',
                                         ]"
                   >
                                         {{

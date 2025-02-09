@@ -12,6 +12,9 @@ import {PluginFs} from "../../../modules/pluginUtils";
 import {createRetrySaveFunction} from "../../../modules/utils";
 
 export const scheduleEditorTodayConfig = ref<todayConfig>({} as todayConfig);
+// 是否循环引用？
+// 给展示用的
+export let isTodayConfigLoop = ref(false);
 
 function generateTodayConfig() {
     const date = DateTime.now();
@@ -25,10 +28,13 @@ function generateTodayConfig() {
             "[generateTodayConfig] 出现了循环时间组",
             response.followTimeGroups
         );
-        return;
+        isTodayConfigLoop.value = true;
+    } else {
+        logger.trace("[scheduleEditor] 生成今日日程配置成功");
+        isTodayConfigLoop.value = false;
     }
-    logger.trace("[scheduleEditor] 生成今日日程配置成功");
     scheduleEditorTodayConfig.value = response.value as todayConfig;
+
 }
 
 // 我不传any，你就报错，我传了any，你又说我不应该传any，我也是醉了
