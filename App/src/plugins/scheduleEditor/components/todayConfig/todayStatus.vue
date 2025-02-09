@@ -135,25 +135,30 @@ async function regenerateTodaySchedule() {
 </script>
 
 <template>
-  <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-6 h-[100%]">
     <!-- 左侧：状态和基本信息 -->
     <div class="flex-1 max-w-96 flex flex-col">
       <!-- 状态卡片 -->
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
-        <h2 class="text-lg font-medium px-2 text-center">
+      <div
+          class="bg-white rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
+      >
+        <h2 class="text-lg font-medium px-2 text-center text-gray-800">
           今日课表状态
         </h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden p-4"
+          class="flex-1 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
       >
         <!-- 状态显示 -->
         <div
             :class="statusInfo.bgColor"
-            class="flex items-center gap-3 p-4 rounded-lg mb-4"
+            class="flex items-center gap-4 p-5 rounded-xl mb-6 border transition-all duration-200"
         >
           <div class="flex-1">
-            <div :class="statusInfo.color" class="font-medium">
+            <div
+                :class="statusInfo.color"
+                class="text-lg font-semibold mb-1"
+            >
               {{ statusInfo.text }}
             </div>
             <div
@@ -172,10 +177,12 @@ async function regenerateTodaySchedule() {
         <!-- 基本信息 -->
         <div class="space-y-4">
           <div
-              class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200"
           >
-            <span class="text-gray-600">今日课程数量</span>
-            <span class="font-medium text-gray-900">{{
+                        <span class="text-gray-700 font-medium"
+                        >今日课程数量</span
+                        >
+            <span class="font-medium text-gray-900 text-lg">{{
                 scheduleCount
               }}</span>
           </div>
@@ -186,16 +193,20 @@ async function regenerateTodaySchedule() {
     <!-- 右侧：操作和生成状态 -->
     <div class="flex-1 flex flex-col">
       <!-- 操作卡片 -->
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
-        <h2 class="text-lg font-medium px-2 text-center">操作</h2>
+      <div
+          class="bg-white rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
+      >
+        <h2 class="text-lg font-medium px-2 text-center text-gray-800">
+          操作
+        </h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden p-4"
+          class="flex-1 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
       >
         <!-- 重新生成按钮 -->
-        <div class="mb-6">
+        <div class="mb-8">
           <TcButton
-              class="w-full"
+              class="w-full py-3 text-lg font-medium shadow-sm hover:shadow-md transition-shadow duration-200"
               variant="filled"
               @click="regenerateTodaySchedule"
           >
@@ -205,23 +216,27 @@ async function regenerateTodaySchedule() {
 
         <!-- 生成状态信息 -->
         <div class="space-y-4">
-          <div class="text-sm text-gray-500">即将生成：</div>
-          <div class="p-3 rounded-lg bg-gray-50 flex flex-col gap-2">
+          <div class="text-sm font-medium text-gray-700">
+            即将生成：
+          </div>
+          <div
+              class="p-5 rounded-xl bg-gray-50 flex flex-col gap-3 hover:bg-gray-100 transition-colors duration-200"
+          >
             <div class="flex items-center justify-between">
-              <span class="text-gray-600">生成日期</span>
+              <span class="text-gray-700">生成日期</span>
               <span class="font-medium text-gray-900">{{
                   currentDate.toFormat("yyyy-MM-dd")
                 }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-gray-600">使用配置</span>
+              <span class="text-gray-700">使用配置</span>
               <span
                   :class="
                                     currentConfig.isTemp
                                         ? 'bg-blue-100 text-blue-800'
                                         : 'bg-green-100 text-green-700'
                                 "
-                  class="text-xs px-2 py-0.5 rounded-full"
+                  class="text-xs px-3 py-1 rounded-full font-medium"
               >
                                 {{
                   currentConfig.isTemp
@@ -231,7 +246,7 @@ async function regenerateTodaySchedule() {
                             </span>
             </div>
             <div class="flex items-center justify-between">
-                            <span class="text-gray-600"
+                            <span class="text-gray-700"
                             >使用{{ currentConfig.type }}</span
                             >
               <span class="font-medium text-gray-900">{{
@@ -240,8 +255,8 @@ async function regenerateTodaySchedule() {
             </div>
             <template v-if="currentConfig.isTemp">
               <div class="flex items-center justify-between">
-                <span class="text-gray-600">临时配置时间</span>
-                <span class="text-sm text-gray-900">
+                <span class="text-gray-700">临时配置时间</span>
+                <span class="text-sm font-medium text-gray-900">
                                     {{
                     currentConfig.startTime?.toFormat(
                         "MM-dd"
@@ -260,7 +275,3 @@ async function regenerateTodaySchedule() {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* 自定义滚动条样式 */
-</style>
