@@ -9,6 +9,7 @@ import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
 import tempSelector from "./enableConfig/tempSelector.vue";
 import logger from "../../../modules/logger";
+import todayStatus from "./todayConfig/todayStatus.vue";
 
 const profileTabs = {
   subject: {
@@ -39,13 +40,19 @@ const enableTabs = {
     component: tempSelector,
   },
 } as const;
+const todayTabs = {
+  status: {
+    label: "课表状态",
+    component: todayStatus,
+  }
+} as const;
 const store = scheduleEditorStore!;
 
 type profileTabKey = keyof typeof profileTabs;
 type enableTabKey = keyof typeof enableTabs;
-
+type todayTabKey = keyof typeof todayTabs;
 // 配置类型切换
-type ConfigType = "course" | "enable";
+type ConfigType = "course" | "enable" | "todayConfig";
 
 // 监听configType变化，重置currentTab
 watch(
@@ -54,8 +61,10 @@ watch(
       if (!store) return;
       if (newType === "course") {
         store.currentTab = "subject";
-      } else {
+      } else if (newType === "enable") {
         store.currentTab = "enable";
+      } else {
+        store.currentTab = "status";
       }
     }
 );
@@ -66,8 +75,10 @@ if (!store) {
 } else {
   if (store.configType === "course") {
     store.currentTab = "subject";
-  } else {
+  } else if (store.configType === "enable") {
     store.currentTab = "enable";
+  } else {
+    store.currentTab = "status";
   }
 }
 </script>
@@ -79,6 +90,13 @@ if (!store) {
       <div
           class="flex gap-1 bg-white p-2 rounded-lg border border-gray-200 shadow-sm"
       >
+        <tc-button
+            :variant="store.configType as ConfigType === 'todayConfig' ? 'filled' : 'text'"
+            size="medium"
+            @click="store.configType = 'todayConfig'"
+        >
+          今日课表
+        </tc-button>
         <tc-button
             size="medium"
             :variant="store.configType as ConfigType === 'enable' ? 'filled' : 'text'"
@@ -111,7 +129,7 @@ if (!store) {
         </tc-button>
       </div>
 
-      <!-- 二级导航：今日设置相关tabs -->
+      <!-- 二级导航：启用设置相关tabs -->
       <div
           v-if="store.configType as ConfigType === 'enable'"
           class="flex gap-1 bg-gray-50 px-1 py-1 rounded-t-lg border-x border-t border-gray-200"
@@ -126,7 +144,22 @@ if (!store) {
           {{ tab.label }}
         </tc-button>
       </div>
+      <div
+          v-if="store.configType as ConfigType === 'todayConfig'"
+          class="flex gap-1 bg-gray-50 px-1 py-1 rounded-t-lg border-x border-t border-gray-200"
+      >
+        <tc-button
+            v-for="(tab, key) in todayTabs"
+            :key="key"
+            :variant="store.currentTab as todayTabKey === key ? 'filled' : 'text'"
+            size="small"
+            @click="store.currentTab = key"
+        >
+          {{ tab.label }}
+        </tc-button>
+      </div>
     </div>
+
 
     <!-- 课程配置相关内容 -->
     <template v-if="store.configType as ConfigType === 'course'">
@@ -139,10 +172,20 @@ if (!store) {
     </template>
 
     <!-- 今日设置相关内容 -->
-    <template v-else>
+    <template v-else-if="store.configType as ConfigType === 'enable'">
       <div class="flex-1 min-h-0">
         <component
             :is="enableTabs[store.currentTab as enableTabKey].component"
+            class="h-full"
+        />
+      </div>
+    </template>
+
+    <!-- 今日设置相关内容 -->
+    <template v-else-if="store.configType as ConfigType === 'todayConfig'">
+      <div class="flex-1 min-h-0">
+        <component
+            :is="todayTabs[store.currentTab as todayTabKey].component"
             class="h-full"
         />
       </div>
