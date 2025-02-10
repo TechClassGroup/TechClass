@@ -253,7 +253,7 @@ function handleSubjectSelect(subjectId: string) {
             <div class="space-y-2">
               <div class="flex items-center justify-between">
                 <label class="text-sm text-gray-600"
-                >单独显示</label
+                >合并显示</label
                 >
                 <TcSwitch
                     :model-value="
@@ -270,7 +270,7 @@ function handleSubjectSelect(subjectId: string) {
                 />
               </div>
               <div class="text-xs text-gray-500">
-                启用后，该课程将在单独的位置显示
+                启用后，该课程将在单独的位置和其他的课程合并显示
               </div>
             </div>
           </div>
