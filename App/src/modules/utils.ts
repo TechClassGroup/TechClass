@@ -3,6 +3,7 @@
  */
 
 import Logger from "./logger";
+import {DateTime} from "luxon";
 
 /**
  * 创建一个具有重试机制的保存函数
@@ -62,12 +63,14 @@ export function createRetrySaveFunction<T>(
     };
 }
 
+/**
+ * 创建一个带prefix的Logger
+ */
 export class createLogger {
     private readonly prefix: string;
 
     constructor(prefix: string) {
         this.prefix = prefix;
-
     }
 
     trace(...args: any[]) {
@@ -90,3 +93,24 @@ export class createLogger {
         Logger.error(this.prefix, ...args);
     }
 }
+
+/**
+ * 等待到指定时间
+ * @param time 目标时间
+ * @param interval_ms 检查间隔时间，默认1000ms
+ */
+export async function sleepUntil(
+    time: DateTime,
+    interval_ms: number = 1000
+): Promise<void> {
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            const now = DateTime.now();
+            if (now >= time) {
+                clearInterval(intervalId);
+                resolve();
+            }
+        }, interval_ms);
+    });
+}
+
