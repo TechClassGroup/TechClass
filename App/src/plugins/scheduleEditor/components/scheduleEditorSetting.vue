@@ -61,8 +61,8 @@ const tabsConfig: Record<ConfigType, TabsConfig> = {
     },
     editor: {
       label: "今日设置",
-      component: todayEditor
-    }
+      component: todayEditor,
+    },
   },
 };
 
@@ -82,8 +82,10 @@ watch(
       if (!store || !newType) return;
       // 只有当前tab不在新类型的tabs中时，才重置为默认值
       const newTypeTabs = tabsConfig[newType as ConfigType];
-      if (!store.currentTab || !(store.currentTab in newTypeTabs)) {
-        store.currentTab = defaultTabs[newType as ConfigType];
+      const currentTypeTab = store.currentTabs[newType as ConfigType];
+      if (!currentTypeTab || !(currentTypeTab in newTypeTabs)) {
+        store.currentTabs[newType as ConfigType] =
+            defaultTabs[newType as ConfigType];
       }
     }
 );
@@ -93,9 +95,11 @@ if (!store) {
   logger.error("[scheduleEditor] store未初始化");
 } else if (store.configType) {
   const currentTabs = tabsConfig[store.configType as ConfigType];
+  const currentTypeTab = store.currentTabs[store.configType as ConfigType];
   // 只有当前tab不存在时，才设置默认值
-  if (!store.currentTab || !(store.currentTab in currentTabs)) {
-    store.currentTab = defaultTabs[store.configType as ConfigType];
+  if (!currentTypeTab || !(currentTypeTab in currentTabs)) {
+    store.currentTabs[store.configType as ConfigType] =
+        defaultTabs[store.configType as ConfigType];
   }
 }
 </script>
@@ -132,9 +136,11 @@ if (!store) {
         <tc-button
             v-for="(tab, key) in tabsConfig[store.configType as ConfigType]"
             :key="key"
-            :variant="store.currentTab === key ? 'filled' : 'text'"
+            :variant="store.currentTabs[store.configType as ConfigType] === key ? 'filled' : 'text'"
             size="small"
-            @click="store.currentTab = key"
+            @click="
+                        store.currentTabs[store.configType as ConfigType] = key
+                    "
         >
           {{ tab.label }}
         </tc-button>
@@ -142,9 +148,12 @@ if (!store) {
     </div>
 
     <!-- 内容区域 -->
-    <div v-if="store.configType && store.currentTab" class="flex-1 min-h-0">
+    <div
+        v-if="store.configType && store.currentTabs[store.configType as ConfigType]"
+        class="flex-1 min-h-0"
+    >
       <component
-          :is="tabsConfig[store.configType as ConfigType][store.currentTab].component"
+          :is="tabsConfig[store.configType as ConfigType][store.currentTabs[store.configType as ConfigType]].component"
           class="h-full"
       />
     </div>

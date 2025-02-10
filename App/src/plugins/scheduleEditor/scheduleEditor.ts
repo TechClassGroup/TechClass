@@ -2,6 +2,17 @@ import {IPlugin, PluginStore} from "../../types/plugins";
 import scheduleEditorSetting from "./components/scheduleEditorSetting.vue";
 import {clearStore, initializeStore} from "./store/scheduleStore";
 
+type ConfigType = "course" | "enable" | "todayConfig";
+
+interface TabState {
+    currentTabs: {
+        course?: string;
+        enable?: string;
+        todayConfig?: string;
+    };
+    configType: ConfigType;
+}
+
 /**
  * @fileOverview 课表编辑器插件
  */
@@ -23,15 +34,19 @@ export const scheduleEditor: IPlugin = {
         },
     },
     storeConfig: {
-        state: () => {
+        state: (): TabState => {
             return {
-                currentTab: "subject",
+                currentTabs: {
+                    course: "subject",
+                    enable: "enable",
+                    todayConfig: "status",
+                },
                 configType: "course",
             };
         },
         storageConfig: {
             enabled: true,
-            keys: ["currentTab", "configType"],
+            keys: ["currentTabs", "configType"],
         },
     },
 };
