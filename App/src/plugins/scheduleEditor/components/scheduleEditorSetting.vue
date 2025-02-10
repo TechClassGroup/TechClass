@@ -10,6 +10,7 @@ import {watch} from "vue";
 import tempSelector from "./enableConfig/tempSelector.vue";
 import logger from "../../../modules/logger";
 import todayStatus from "./todayConfig/todayStatus.vue";
+import todayEditor from "./todayConfig/todayEditor.vue";
 
 interface TabConfig {
   label: string;
@@ -58,6 +59,10 @@ const tabsConfig: Record<ConfigType, TabsConfig> = {
       label: "课表状态",
       component: todayStatus,
     },
+    editor: {
+      label: "今日设置",
+      component: todayEditor
+    }
   },
 };
 

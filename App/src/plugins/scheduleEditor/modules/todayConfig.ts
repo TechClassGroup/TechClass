@@ -98,9 +98,7 @@ function generateSchedule(
         schedule: [],
     };
     if (!curriculum.curriculum) {
-        scheduleEditorLogger.info(
-            "[generateSchedule] 今日无课程表"
-        );
+        scheduleEditorLogger.info("[generateSchedule] 今日无课程表");
         scheduleEditorLogger.debug("课程表信息", curriculum);
         return result;
     }
@@ -130,35 +128,32 @@ function generateSchedule(
                 scheduleEditorLogger.warn(
                     "[generateSchedule] 未找到课程" + layoutId
                 );
-                return
+                return;
             }
             if (currentClass.subjectId && currentClass.subjectId !== "") {
                 // 有指定的情况
                 const subject = profile.subjects[currentClass.subjectId];
                 if (!subject) {
                     scheduleEditorLogger.warn(
-                        "[generateSchedule] 未找到课程" +
-                        currentClass.subjectId
+                        "[generateSchedule] 未找到课程" + currentClass.subjectId
                     );
                     return;
                 }
                 name = subject.name;
                 shortName = subject.shortName;
                 teacherName = subject.teacherName;
-
             } else {
                 // 没有指定的情况
                 const subject = profile.subjects[layout.subjectId];
                 if (!subject) {
                     scheduleEditorLogger.warn(
-                        "[generateSchedule] 未找到课程" +
-                        currentClass.subjectId)
+                        "[generateSchedule] 未找到课程" + currentClass.subjectId
+                    );
                     return;
                 }
                 name = subject.name;
                 shortName = subject.shortName;
                 teacherName = subject.teacherName;
-
             }
         }
 
@@ -166,12 +161,22 @@ function generateSchedule(
             name: name,
             shortName: shortName,
             teacherName: teacherName,
-            startTime: layout.startTime,
-            endTime: layout.endTime,
+            startTime: DateTime.now().set({
+                hour: layout.startTime.hour,
+                minute: layout.startTime.minute,
+                second: 0,
+                millisecond: 0,
+            }),
+            endTime: DateTime.now().set({
+                hour: layout.endTime.hour,
+                minute: layout.endTime.minute,
+                second: 0,
+                millisecond: 0,
+            }),
             noDisplayedSeparately: layout.noDisplayedSeparately,
         });
     });
-    result.schedule.sort((a, b) => a.startTime > b.startTime ? 1 : -1);
+    result.schedule.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
     return result;
 }
 
@@ -205,4 +210,3 @@ export function generateTodayConfigByDate(
         followTimeGroups: curriculum.followTimeGroups,
     };
 }
-
