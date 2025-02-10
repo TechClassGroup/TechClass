@@ -5,6 +5,7 @@ import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
 import TcInput from "../../../../UI/TcInput.vue";
 import TcSwitch from "../../../../UI/TcSwitch.vue";
 import TcButton from "../../../../UI/TcButton.vue";
+import {DateTime} from "luxon";
 
 const selectedScheduleIndex = ref<number>(-1);
 const showSubjectSelector = ref(false);
@@ -54,53 +55,143 @@ function handleSubjectSelect(subjectId: string) {
     }
   }
 }
+
+function generateUniqueId(): number {
+  // 找到当前最大的索引
+  const maxIndex =
+      scheduleEditorTodayConfig.value.schedule?.reduce(
+          (max, _item, index) => Math.max(max, index),
+          -1
+      ) ?? -1;
+  return maxIndex + 1;
+}
+
+function addSchedule() {
+  if (!scheduleEditorTodayConfig.value.schedule) {
+    scheduleEditorTodayConfig.value.schedule = [];
+  }
+
+  const now = DateTime.now();
+  const newSchedule = {
+    name: "新课程",
+    shortName: "新",
+    teacherName: "",
+    noDisplayedSeparately: false,
+    startTime: now.set({hour: 8, minute: 0, second: 0, millisecond: 0}),
+    endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
+  };
+
+  scheduleEditorTodayConfig.value.schedule.push(newSchedule);
+  selectedScheduleIndex.value =
+      scheduleEditorTodayConfig.value.schedule.length - 1;
+}
+
+function copySchedule(index: number) {
+  if (scheduleEditorTodayConfig.value.schedule?.[index]) {
+    const schedule = scheduleEditorTodayConfig.value.schedule[index];
+    const newSchedule = {
+      ...schedule,
+      name: `${schedule.name} (副本)`,
+    };
+    scheduleEditorTodayConfig.value.schedule.push(newSchedule);
+    selectedScheduleIndex.value =
+        scheduleEditorTodayConfig.value.schedule.length - 1;
+  }
+}
+
+function deleteSchedule(index: number) {
+  if (scheduleEditorTodayConfig.value.schedule?.[index]) {
+    scheduleEditorTodayConfig.value.schedule.splice(index, 1);
+    if (selectedScheduleIndex.value === index) {
+      selectedScheduleIndex.value = -1;
+    } else if (selectedScheduleIndex.value > index) {
+      selectedScheduleIndex.value--;
+    }
+  }
+}
 </script>
 
 <template>
   <div class="flex gap-4 h-[100%]">
     <!-- 左侧面板 -->
     <div class="flex-1 max-w-60 flex flex-col">
+      <!-- 标题 -->
       <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">课程列表</h2>
       </div>
-      <div class="flex-1 bg-white rounded-lg shadow-sm overflow-y-auto">
-        <div class="p-2 flex flex-col gap-2">
-          <TransitionGroup
-              class="flex flex-col gap-2"
-              name="list"
-              tag="div"
+
+      <!-- 列表卡片 -->
+      <div
+          class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col"
+      >
+        <!-- 操作按钮 -->
+        <div class="p-2 flex gap-2 border-b border-gray-200">
+          <TcButton
+              class="flex-1"
+              variant="filled"
+              @click="addSchedule"
           >
-            <button
-                v-for="(item, index) in sortedSchedule"
-                :key="index"
-                :class="[
-                                selectedScheduleIndex === index
-                                    ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
-                                    : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
-                            ]"
-                class="text-left px-4 py-3 rounded-lg transition-all duration-200 select-none"
-                @click="selectedScheduleIndex = index"
+            添加
+          </TcButton>
+          <TcButton
+              :disabled="selectedScheduleIndex < 0"
+              class="flex-1"
+              variant="tonal"
+              @click="copySchedule(selectedScheduleIndex)"
+          >
+            复制
+          </TcButton>
+          <TcButton
+              :disabled="selectedScheduleIndex < 0"
+              class="flex-1"
+              color="error"
+              variant="tonal"
+              @click="deleteSchedule(selectedScheduleIndex)"
+          >
+            删除
+          </TcButton>
+        </div>
+
+        <!-- 列表内容 -->
+        <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+          <div class="p-2 flex flex-col gap-2">
+            <TransitionGroup
+                class="flex flex-col gap-2"
+                name="list"
+                tag="div"
             >
-              <div class="flex flex-col gap-1">
-                <div class="flex items-center">
-                  <div class="flex items-center gap-2">
-                                        <span class="font-medium">{{
-                                            item.name
-                                          }}</span>
-                    <span
-                        v-if="item.shortName"
-                        class="text-sm opacity-60"
-                    >({{ item.shortName }})</span
-                    >
+              <button
+                  v-for="(item, index) in sortedSchedule"
+                  :key="index"
+                  :class="[
+                                    selectedScheduleIndex === index
+                                        ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
+                                        : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                ]"
+                  class="text-left px-4 py-3 rounded-lg transition-all duration-200 select-none"
+                  @click="selectedScheduleIndex = index"
+              >
+                <div class="flex flex-col gap-1">
+                  <div class="flex items-center">
+                    <div class="flex items-center gap-2">
+                                            <span class="font-medium">{{
+                                                item.name
+                                              }}</span>
+                      <span
+                          v-if="item.shortName"
+                          class="text-sm opacity-60"
+                      >({{ item.shortName }})</span
+                      >
+                    </div>
+                  </div>
+                  <div class="text-xs text-gray-500 pl-0.5">
+                    {{ item.startTime.toFormat("HH:mm") }} -
+                    {{ item.endTime.toFormat("HH:mm") }}
                   </div>
                 </div>
-                <div class="text-xs text-gray-500 pl-0.5">
-                  {{ item.startTime.toFormat("HH:mm") }} -
-                  {{ item.endTime.toFormat("HH:mm") }}
-                </div>
-              </div>
-            </button>
-          </TransitionGroup>
+              </button>
+            </TransitionGroup>
+          </div>
         </div>
       </div>
     </div>
