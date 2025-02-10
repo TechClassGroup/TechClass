@@ -98,13 +98,18 @@ export class createLogger {
  * 等待到指定时间
  * @param time 目标时间
  * @param interval_ms 检查间隔时间，默认1000ms
+ * @returns 返回一个Promise和取消函数
  */
-export async function sleepUntil(
+export function sleepUntil(
     time: DateTime,
     interval_ms: number = 1000
-): Promise<void> {
-    return new Promise((resolve) => {
-        const intervalId = setInterval(() => {
+): { promise: Promise<void>; cancel: () => void } {
+    let intervalId: number;
+    let resolve: (value: void | PromiseLike<void>) => void;
+
+    const promise = new Promise<void>((_resolve) => {
+        resolve = _resolve;
+        intervalId = window.setInterval(() => {
             const now = DateTime.now();
             if (now >= time) {
                 clearInterval(intervalId);
@@ -112,5 +117,13 @@ export async function sleepUntil(
             }
         }, interval_ms);
     });
-}
 
+    const cancel = () => {
+        if (intervalId) {
+            clearInterval(intervalId);
+            resolve();
+        }
+    };
+
+    return {promise, cancel};
+}

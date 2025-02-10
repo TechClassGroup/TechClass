@@ -9,7 +9,7 @@ import {scheduleEditorProfile, waitForInit} from "./scheduleEditorProfile";
 import Logger from "../../../modules/logger";
 import logger from "../../../modules/logger";
 import {PluginFs} from "../../../modules/pluginUtils";
-import {createRetrySaveFunction} from "../../../modules/utils";
+import {createRetrySaveFunction, sleepUntil} from "../../../modules/utils";
 
 export const scheduleEditorTodayConfig = ref<todayConfig>({} as todayConfig);
 // 是否循环引用？
@@ -31,10 +31,11 @@ function generateTodayConfig() {
         isTodayConfigLoop.value = true;
     } else {
         logger.trace("[scheduleEditor] 生成今日日程配置成功");
+        logger.debug("[scheduleEditor] 生成今日日程配置", response.value);
         isTodayConfigLoop.value = false;
     }
-    scheduleEditorTodayConfig.value = response.value as todayConfig;
 
+    scheduleEditorTodayConfig.value = response.value as todayConfig;
 }
 
 // 我不传any，你就报错，我传了any，你又说我不应该传any，我也是醉了
@@ -86,6 +87,39 @@ const saveTodayConfig = createRetrySaveFunction(
 let fileSystem: PluginFs | null = null;
 const scheduleEditorTodayConfigName = "scheduleEditor.todayConfig.json";
 let todayConfigWatcher: null | ReturnType<typeof watch> = null;
+let regenerateTimer: { cancel: () => void } | null = null;
+
+function setupRegenerateTimer() {
+    if (regenerateTimer) {
+        regenerateTimer.cancel();
+    }
+    // 计算下一个午夜时间点
+    const nextMidnight = DateTime.now().plus({days: 1}).startOf("day");
+    logger.trace(
+        "[scheduleEditor] 设置下一次课表生成时间",
+        nextMidnight.toISO()
+    );
+
+    // 如果现在已经过了午夜，立即生成
+    if (DateTime.now() > nextMidnight) {
+        logger.info("[scheduleEditor] 已过午夜时间点，立即生成今日课表");
+        generateTodayConfig();
+        saveTodayConfig();
+        setupRegenerateTimer();
+        return;
+    }
+
+    const {promise, cancel} = sleepUntil(nextMidnight);
+    regenerateTimer = {cancel};
+
+    promise.then(() => {
+        logger.info("[scheduleEditor] 到达午夜时间点，开始生成今日课表");
+        generateTodayConfig();
+        saveTodayConfig();
+        // 设置下一个定时器
+        setupRegenerateTimer();
+    });
+}
 
 export async function initTodayConfig(fs: PluginFs) {
     fileSystem = fs;
@@ -129,10 +163,17 @@ export async function initTodayConfig(fs: PluginFs) {
         },
         {deep: true}
     );
+    // 设置定时器
+    setupRegenerateTimer();
 }
 
 export function clearTodayConfig() {
     saveTodayConfig();
     todayConfigWatcher?.stop();
+    // 清理定时器
+    if (regenerateTimer) {
+        regenerateTimer.cancel();
+        regenerateTimer = null;
+    }
     scheduleEditorTodayConfig.value = {} as todayConfig;
 }
