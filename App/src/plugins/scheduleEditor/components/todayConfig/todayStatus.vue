@@ -1,12 +1,9 @@
 <script lang="ts" setup>
 import {computed, onMounted, onUnmounted, ref} from "vue";
-import {isTodayConfigLoop, scheduleEditorTodayConfig,} from "../../store/todayConfigStore";
+import {generateTodayConfig, isTodayConfigLoop, scheduleEditorTodayConfig,} from "../../store/todayConfigStore";
 import {DateTime} from "luxon";
-import type {todayConfig} from "../../scheduleEditorTypes";
 import TcButton from "../../../../UI/TcButton.vue";
 import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
-import {generateTodayConfigByDate} from "../../modules/todayConfig";
-import logger from "../../../../modules/logger";
 
 const currentDate = ref(DateTime.now());
 
@@ -68,7 +65,7 @@ const statusInfo = computed(() => {
 
 const scheduleCount = computed(() => {
   if (!scheduleEditorTodayConfig.value?.schedule) return 0;
-  return scheduleEditorTodayConfig.value.schedule.length;
+  return Object.keys(scheduleEditorTodayConfig.value.schedule).length;
 });
 
 // 获取当前使用的配置信息
@@ -96,7 +93,7 @@ const currentConfig = computed(() => {
       ? profile.enableConfig.tempSelected
       : profile.enableConfig.selected;
 
-  let name = "";
+  let name: string;
   if (config.type === "curriculum") {
     name = profile.curriculums[config.id]?.name || "未知课表";
   } else {
@@ -114,23 +111,7 @@ const currentConfig = computed(() => {
 
 // 重新生成今日课表
 async function regenerateTodaySchedule() {
-  const date = DateTime.now();
-  logger.trace("[scheduleEditor] 重新生成今日日程配置", date);
-  const response = generateTodayConfigByDate(
-      date,
-      scheduleEditorProfile.value
-  );
-  if (response.isLoop) {
-    logger.error(
-        "[regenerateTodaySchedule] 出现了循环时间组",
-        response.followTimeGroups
-    );
-    isTodayConfigLoop.value = true;
-  } else {
-    logger.trace("[scheduleEditor] 重新生成今日日程配置成功");
-    isTodayConfigLoop.value = false;
-  }
-  scheduleEditorTodayConfig.value = response.value as todayConfig;
+  generateTodayConfig();
 }
 </script>
 

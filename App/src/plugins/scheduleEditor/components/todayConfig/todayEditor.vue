@@ -6,46 +6,52 @@ import TcInput from "../../../../UI/TcInput.vue";
 import TcSwitch from "../../../../UI/TcSwitch.vue";
 import TcButton from "../../../../UI/TcButton.vue";
 import {DateTime} from "luxon";
+import {v4 as uuidv4} from "uuid";
+import type {todaySchedule} from "../../scheduleEditorTypes";
 
-const selectedScheduleIndex = ref<number>(-1);
+const selectedScheduleId = ref<string>("");
 const showSubjectSelector = ref(false);
 
 const sortedSchedule = computed(() => {
-  return [...(scheduleEditorTodayConfig.value.schedule || [])].sort(
-      (a, b) => a.startTime.toMillis() - b.startTime.toMillis()
+  if (!scheduleEditorTodayConfig.value.schedule) {
+    return [];
+  }
+  const scheduleEntries = Object.entries(
+      scheduleEditorTodayConfig.value.schedule
+  );
+  return scheduleEntries.sort(
+      ([_idA, a], [_idB, b]) =>
+          a.startTime.toMillis() - b.startTime.toMillis()
   );
 });
 
 const subjects = computed(() => scheduleEditorProfile.value.subjects);
 
 function handleUpdate(field: string, value: string | boolean) {
-  if (selectedScheduleIndex.value >= 0) {
+  if (
+      selectedScheduleId.value &&
+      scheduleEditorTodayConfig.value.schedule[selectedScheduleId.value]
+  ) {
     const schedule =
-        scheduleEditorTodayConfig.value.schedule[
-            selectedScheduleIndex.value
-            ];
-    if (schedule) {
-      if (field === "startTime" || field === "endTime") {
-        const [hours, minutes] = (value as string)
-            .split(":")
-            .map(Number);
-        const currentTime = schedule[field];
-        // 保持年月日不变，只修改时分
-        schedule[field] = currentTime.set({
-          hour: hours || currentTime.hour,
-          minute: minutes || currentTime.minute,
-          second: 0, // 重置秒数
-          millisecond: 0, // 重置毫秒
-        });
-      } else {
-        schedule[field] = value;
-      }
+        scheduleEditorTodayConfig.value.schedule[selectedScheduleId.value];
+    if (field === "startTime" || field === "endTime") {
+      const [hours, minutes] = (value as string).split(":").map(Number);
+      const currentTime = schedule[field];
+      // 保持年月日不变，只修改时分
+      schedule[field] = currentTime.set({
+        hour: hours || currentTime.hour,
+        minute: minutes || currentTime.minute,
+        second: 0, // 重置秒数
+        millisecond: 0, // 重置毫秒
+      });
+    } else {
+      (schedule as any)[field] = value;
     }
   }
 }
 
 function handleSubjectSelect(subjectId: string) {
-  if (selectedScheduleIndex.value >= 0 && subjectId) {
+  if (selectedScheduleId.value && subjectId) {
     const subject = subjects.value[subjectId];
     if (subject) {
       handleUpdate("name", subject.name);
@@ -56,23 +62,13 @@ function handleSubjectSelect(subjectId: string) {
   }
 }
 
-function generateUniqueId(): number {
-  // 找到当前最大的索引
-  const maxIndex =
-      scheduleEditorTodayConfig.value.schedule?.reduce(
-          (max, _item, index) => Math.max(max, index),
-          -1
-      ) ?? -1;
-  return maxIndex + 1;
-}
-
 function addSchedule() {
   if (!scheduleEditorTodayConfig.value.schedule) {
-    scheduleEditorTodayConfig.value.schedule = [];
+    scheduleEditorTodayConfig.value.schedule = {};
   }
 
   const now = DateTime.now();
-  const newSchedule = {
+  const newSchedule: todaySchedule = {
     name: "新课程",
     shortName: "新",
     teacherName: "",
@@ -81,34 +77,38 @@ function addSchedule() {
     endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
   };
 
-  scheduleEditorTodayConfig.value.schedule.push(newSchedule);
-  selectedScheduleIndex.value =
-      scheduleEditorTodayConfig.value.schedule.length - 1;
+  const uuid = uuidv4();
+  scheduleEditorTodayConfig.value.schedule[uuid] = newSchedule;
+  selectedScheduleId.value = uuid;
 }
 
-function copySchedule(index: number) {
-  if (scheduleEditorTodayConfig.value.schedule?.[index]) {
-    const schedule = scheduleEditorTodayConfig.value.schedule[index];
-    const newSchedule = {
+function copySchedule(id: string) {
+  if (scheduleEditorTodayConfig.value.schedule?.[id]) {
+    const schedule = scheduleEditorTodayConfig.value.schedule[id];
+    const newSchedule: todaySchedule = {
       ...schedule,
       name: `${schedule.name} (副本)`,
     };
-    scheduleEditorTodayConfig.value.schedule.push(newSchedule);
-    selectedScheduleIndex.value =
-        scheduleEditorTodayConfig.value.schedule.length - 1;
+    const uuid = uuidv4();
+    scheduleEditorTodayConfig.value.schedule[uuid] = newSchedule;
+    selectedScheduleId.value = uuid;
   }
 }
 
-function deleteSchedule(index: number) {
-  if (scheduleEditorTodayConfig.value.schedule?.[index]) {
-    scheduleEditorTodayConfig.value.schedule.splice(index, 1);
-    if (selectedScheduleIndex.value === index) {
-      selectedScheduleIndex.value = -1;
-    } else if (selectedScheduleIndex.value > index) {
-      selectedScheduleIndex.value--;
+function deleteSchedule(id: string) {
+  if (scheduleEditorTodayConfig.value.schedule?.[id]) {
+    delete scheduleEditorTodayConfig.value.schedule[id];
+    if (selectedScheduleId.value === id) {
+      selectedScheduleId.value = "";
     }
   }
 }
+
+defineExpose({
+  addSchedule,
+  copySchedule,
+  deleteSchedule,
+});
 </script>
 
 <template>
@@ -134,19 +134,19 @@ function deleteSchedule(index: number) {
             添加
           </TcButton>
           <TcButton
-              :disabled="selectedScheduleIndex < 0"
+              :disabled="!selectedScheduleId"
               class="flex-1"
               variant="tonal"
-              @click="copySchedule(selectedScheduleIndex)"
+              @click="copySchedule(selectedScheduleId)"
           >
             复制
           </TcButton>
           <TcButton
-              :disabled="selectedScheduleIndex < 0"
+              :disabled="!selectedScheduleId"
               class="flex-1"
               color="error"
               variant="tonal"
-              @click="deleteSchedule(selectedScheduleIndex)"
+              @click="deleteSchedule(selectedScheduleId)"
           >
             删除
           </TcButton>
@@ -161,16 +161,17 @@ function deleteSchedule(index: number) {
                 tag="div"
             >
               <button
-                  v-for="(item, index) in sortedSchedule"
-                  :key="index"
+                  v-for="[id, item] in sortedSchedule"
+                  :key="id"
                   :class="[
-                                    selectedScheduleIndex === index
+                                    selectedScheduleId === id
                                         ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
                                         : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
                                 ]"
                   class="text-left px-4 py-3 rounded-lg transition-all duration-200 select-none"
-                  @click="selectedScheduleIndex = index"
+                  @click="selectedScheduleId = id"
               >
+
                 <div class="flex flex-col gap-1">
                   <div class="flex items-center">
                     <div class="flex items-center gap-2">
@@ -202,16 +203,30 @@ function deleteSchedule(index: number) {
         <h2 class="text-lg font-medium px-2 text-center">课程详情</h2>
       </div>
       <div class="flex-1 overflow-y-auto bg-white rounded-lg shadow-sm">
-        <div v-if="selectedScheduleIndex >= 0" class="p-6">
+        <div
+            v-if="
+                        selectedScheduleId &&
+                        scheduleEditorTodayConfig.schedule[selectedScheduleId]
+                    "
+            class="p-6"
+        >
           <div class="text-2xl font-medium text-gray-800">
-            {{ sortedSchedule[selectedScheduleIndex].name }}
+            {{
+              scheduleEditorTodayConfig.schedule[
+                  selectedScheduleId
+                  ].name
+            }}
             <span
                 v-if="
-                                sortedSchedule[selectedScheduleIndex].shortName
+                                scheduleEditorTodayConfig.schedule[
+                                    selectedScheduleId
+                                ].shortName
                             "
                 class="text-sm text-gray-500 ml-2"
             >({{
-                sortedSchedule[selectedScheduleIndex].shortName
+                scheduleEditorTodayConfig.schedule[
+                    selectedScheduleId
+                    ].shortName
               }})</span
             >
           </div>
@@ -232,9 +247,6 @@ function deleteSchedule(index: number) {
               <!-- 弹出菜单 -->
               <div
                   v-if="showSubjectSelector"
-                  v-click-outside="
-                                    () => (showSubjectSelector = false)
-                                "
                   class="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto"
               >
                 <div class="p-1">
@@ -266,7 +278,9 @@ function deleteSchedule(index: number) {
               >
               <TcInput
                   :model-value="
-                                    sortedSchedule[selectedScheduleIndex].name
+                                    scheduleEditorTodayConfig.schedule[
+                                        selectedScheduleId
+                                    ].name
                                 "
                   placeholder="请输入课程名称"
                   @update:model-value="
@@ -279,8 +293,9 @@ function deleteSchedule(index: number) {
               <label class="text-sm text-gray-600">简称</label>
               <TcInput
                   :model-value="
-                                    sortedSchedule[selectedScheduleIndex]
-                                        .shortName
+                                    scheduleEditorTodayConfig.schedule[
+                                        selectedScheduleId
+                                    ].shortName
                                 "
                   placeholder="请输入课程简称"
                   @update:model-value="
@@ -295,8 +310,9 @@ function deleteSchedule(index: number) {
               >
               <TcInput
                   :model-value="
-                                    sortedSchedule[selectedScheduleIndex]
-                                        .teacherName
+                                    scheduleEditorTodayConfig.schedule[
+                                        selectedScheduleId
+                                    ].teacherName
                                 "
                   placeholder="请输入教师姓名"
                   @update:model-value="
@@ -313,8 +329,8 @@ function deleteSchedule(index: number) {
               >
               <input
                   :value="
-                                    sortedSchedule[
-                                        selectedScheduleIndex
+                                    scheduleEditorTodayConfig.schedule[
+                                        selectedScheduleId
                                     ].startTime.toFormat('HH:mm')
                                 "
                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
@@ -329,8 +345,8 @@ function deleteSchedule(index: number) {
               >
               <input
                   :value="
-                                    sortedSchedule[
-                                        selectedScheduleIndex
+                                    scheduleEditorTodayConfig.schedule[
+                                        selectedScheduleId
                                     ].endTime.toFormat('HH:mm')
                                 "
                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
@@ -348,8 +364,9 @@ function deleteSchedule(index: number) {
                 >
                 <TcSwitch
                     :model-value="
-                                        sortedSchedule[selectedScheduleIndex]
-                                            .noDisplayedSeparately
+                                        scheduleEditorTodayConfig.schedule[
+                                            selectedScheduleId
+                                        ].noDisplayedSeparately
                                     "
                     @update:model-value="
                                         (v) =>

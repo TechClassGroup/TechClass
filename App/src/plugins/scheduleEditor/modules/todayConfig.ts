@@ -3,6 +3,7 @@
  */
 import {ScheduleEditorProfileStore, todayConfig,} from "../scheduleEditorTypes";
 import {DateTime} from "luxon";
+import {v4 as uuidv4} from "uuid";
 
 import {CurriculumResult, processTimeGroupWithResult, TimeGroupInfo,} from "./timeGroupProcessor";
 import {scheduleEditorLogger} from "./utils";
@@ -95,7 +96,7 @@ function generateSchedule(
 ): todayConfig {
     const result: todayConfig = {
         generateDate: DateTime.now(),
-        schedule: [],
+        schedule: {},
     };
     if (!curriculum.curriculum) {
         scheduleEditorLogger.info("[generateSchedule] 今日无课程表");
@@ -113,6 +114,9 @@ function generateSchedule(
         );
         return result;
     }
+
+    const usedUuids = new Set();
+
     Object.entries(timetable.layouts).forEach(([layoutId, layout]) => {
         let name: string = "";
         let shortName: string = "";
@@ -157,7 +161,13 @@ function generateSchedule(
             }
         }
 
-        result.schedule.push({
+        let uuid = uuidv4();
+        while (usedUuids.has(uuid)) {
+            uuid = uuidv4();
+        }
+        usedUuids.add(uuid);
+
+        result.schedule[uuid] = {
             name: name,
             shortName: shortName,
             teacherName: teacherName,
@@ -174,9 +184,9 @@ function generateSchedule(
                 millisecond: 0,
             }),
             noDisplayedSeparately: layout.noDisplayedSeparately,
-        });
+        };
     });
-    result.schedule.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
+
     return result;
 }
 

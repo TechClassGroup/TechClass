@@ -217,7 +217,7 @@ export type ScheduleEditorProfileStore = {
     enableConfig: enableConfig;
 };
 
-interface todaySchedule {
+export interface todaySchedule {
     name: string;
     shortName: string;
     teacherName: string;
@@ -232,7 +232,9 @@ interface todaySchedule {
 
 export interface todayConfig {
     generateDate: DateTime;
-    schedule: todaySchedule[];
+    schedule: {
+        [key: string]: todaySchedule;
+    };
     attach?: {
         [key: string]: any;
     };

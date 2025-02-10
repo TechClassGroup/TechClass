@@ -1,7 +1,7 @@
 /**
  * @fileOverview 今日日程的存储
  */
-import {ref, watch} from "vue";
+import {ref, Ref, watch} from "vue";
 import {todayConfig} from "../scheduleEditorTypes";
 import {generateTodayConfigByDate} from "../modules/todayConfig";
 import {DateTime} from "luxon";
@@ -11,12 +11,14 @@ import logger from "../../../modules/logger";
 import {PluginFs} from "../../../modules/pluginUtils";
 import {createRetrySaveFunction, sleepUntil} from "../../../modules/utils";
 
-export const scheduleEditorTodayConfig = ref<todayConfig>({} as todayConfig);
+export const scheduleEditorTodayConfig: Ref<todayConfig> = ref<todayConfig>(
+    {} as todayConfig
+);
 // 是否循环引用？
 // 给展示用的
 export let isTodayConfigLoop = ref(false);
 
-function generateTodayConfig() {
+export function generateTodayConfig() {
     const date = DateTime.now();
     logger.trace("[scheduleEditor] 生成今日日程配置", date);
     const response = generateTodayConfigByDate(
@@ -42,8 +44,8 @@ function generateTodayConfig() {
 function deserializeDateTime(parsedTodayConfig: any): todayConfig {
     // 处理datetime
     const schedule = parsedTodayConfig.schedule;
-    // 这里不得不用any，不然IDE报错，超！
-    schedule.forEach((item: any) => {
+    // 遍历对象的值
+    Object.values(schedule).forEach((item: any) => {
         if (item.startTime) {
             item.startTime = DateTime.fromISO(item.startTime);
         }
@@ -147,9 +149,9 @@ export async function initTodayConfig(fs: PluginFs) {
     // 非今日检查
     if (
         !needGenerate &&
-        !scheduleEditorTodayConfig.value.generateDate.startOf("day").equals(
-            DateTime.now().startOf("day")
-        )
+        !scheduleEditorTodayConfig.value.generateDate
+            .startOf("day")
+            .equals(DateTime.now().startOf("day"))
     ) {
         logger.trace("[scheduleEditor] 非今日配置，重新生成");
         needGenerate = true;
