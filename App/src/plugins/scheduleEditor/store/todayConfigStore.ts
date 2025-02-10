@@ -147,9 +147,11 @@ export async function initTodayConfig(fs: PluginFs) {
     // 非今日检查
     if (
         !needGenerate &&
-        scheduleEditorTodayConfig.value.generateDate.startOf("day") !==
-        DateTime.now().startOf("day")
+        !scheduleEditorTodayConfig.value.generateDate.startOf("day").equals(
+            DateTime.now().startOf("day")
+        )
     ) {
+        logger.trace("[scheduleEditor] 非今日配置，重新生成");
         needGenerate = true;
     }
     if (needGenerate) {
