@@ -1,9 +1,13 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
 import {scheduleEditorTodayConfig} from "../../store/todayConfigStore";
+import {scheduleEditorProfile} from "../../store/scheduleEditorProfile";
 import TcInput from "../../../../UI/TcInput.vue";
+import TcSwitch from "../../../../UI/TcSwitch.vue";
+import TcButton from "../../../../UI/TcButton.vue";
 
 const selectedScheduleIndex = ref<number>(-1);
+const showSubjectSelector = ref(false);
 
 const sortedSchedule = computed(() => {
   return [...(scheduleEditorTodayConfig.value.schedule || [])].sort(
@@ -11,7 +15,9 @@ const sortedSchedule = computed(() => {
   );
 });
 
-function handleUpdate(field: string, value: string) {
+const subjects = computed(() => scheduleEditorProfile.value.subjects);
+
+function handleUpdate(field: string, value: string | boolean) {
   if (selectedScheduleIndex.value >= 0) {
     const schedule =
         scheduleEditorTodayConfig.value.schedule[
@@ -19,7 +25,9 @@ function handleUpdate(field: string, value: string) {
             ];
     if (schedule) {
       if (field === "startTime" || field === "endTime") {
-        const [hours, minutes] = value.split(":").map(Number);
+        const [hours, minutes] = (value as string)
+            .split(":")
+            .map(Number);
         const currentTime = schedule[field];
         // 保持年月日不变，只修改时分
         schedule[field] = currentTime.set({
@@ -31,6 +39,18 @@ function handleUpdate(field: string, value: string) {
       } else {
         schedule[field] = value;
       }
+    }
+  }
+}
+
+function handleSubjectSelect(subjectId: string) {
+  if (selectedScheduleIndex.value >= 0 && subjectId) {
+    const subject = subjects.value[subjectId];
+    if (subject) {
+      handleUpdate("name", subject.name);
+      handleUpdate("shortName", subject.shortName);
+      handleUpdate("teacherName", subject.teacherName);
+      showSubjectSelector.value = false;
     }
   }
 }
@@ -106,6 +126,49 @@ function handleUpdate(field: string, value: string) {
           </div>
 
           <div class="space-y-4 mt-6">
+            <!-- 科目选择器 -->
+            <div class="relative">
+              <TcButton
+                  class="w-full"
+                  variant="tonal"
+                  @click="
+                                    showSubjectSelector = !showSubjectSelector
+                                "
+              >
+                修改为其他科目
+              </TcButton>
+
+              <!-- 弹出菜单 -->
+              <div
+                  v-if="showSubjectSelector"
+                  v-click-outside="
+                                    () => (showSubjectSelector = false)
+                                "
+                  class="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto"
+              >
+                <div class="p-1">
+                  <button
+                      v-for="(subject, id) in subjects"
+                      :key="id"
+                      class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                      @click="handleSubjectSelect(String(id))"
+                  >
+                    <div class="font-medium">
+                      {{ subject.name }}
+                    </div>
+                    <div
+                        v-if="subject.shortName"
+                        class="text-sm text-gray-500"
+                    >
+                      ({{ subject.shortName }})
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-px bg-gray-200 my-4"></div>
+
             <div class="space-y-2">
               <label class="text-sm text-gray-600"
               >课程名称</label
@@ -151,6 +214,8 @@ function handleUpdate(field: string, value: string) {
               />
             </div>
 
+            <div class="h-px bg-gray-200 my-4"></div>
+
             <div class="space-y-2">
               <label class="text-sm text-gray-600"
               >开始时间</label
@@ -181,6 +246,32 @@ function handleUpdate(field: string, value: string) {
                   type="time"
                   @change="(e) => handleUpdate('endTime', (e.target as HTMLInputElement).value)"
               />
+            </div>
+
+            <div class="h-px bg-gray-200 my-4"></div>
+
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-sm text-gray-600"
+                >单独显示</label
+                >
+                <TcSwitch
+                    :model-value="
+                                        sortedSchedule[selectedScheduleIndex]
+                                            .noDisplayedSeparately
+                                    "
+                    @update:model-value="
+                                        (v) =>
+                                            handleUpdate(
+                                                'noDisplayedSeparately',
+                                                v
+                                            )
+                                    "
+                />
+              </div>
+              <div class="text-xs text-gray-500">
+                启用后，该课程将在单独的位置显示
+              </div>
             </div>
           </div>
         </div>
