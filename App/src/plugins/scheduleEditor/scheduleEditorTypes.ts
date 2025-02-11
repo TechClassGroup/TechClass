@@ -25,6 +25,15 @@ interface Subject {
 }
 
 /**
+ * 时间表布局类型
+ */
+type timetableLayouts = LessonLayout | BreakLayout | dividingLineLayout;
+/**
+ * 时间表布局类型的type
+ */
+type timetableLayoutTypes = timetableLayouts["type"];
+
+/**
  * 时间表接口
  */
 interface Timetable {
@@ -32,7 +41,7 @@ interface Timetable {
     name: string;
     /** 时间表布局，key为布局ID */
     layouts: {
-        [key: string]: LessonLayout | BreakLayout;
+        [key: string]: timetableLayouts;
     };
     /** 附加信息 */
     attach?: {
@@ -46,13 +55,7 @@ interface Timetable {
 interface BaseLayout {
     /** 开始时间 */
     startTime: DateTime;
-    /** 结束时间 */
-    endTime: DateTime;
-    /**
-     * 是否单独显示
-     * 为true时，只有时间适合时，才会显示在一个独立的位置，而不是和课程一起显示
-     */
-    noDisplayedSeparately: boolean;
+
     /** 附加信息 */
     attach?: {
         [key: string]: any;
@@ -67,6 +70,13 @@ interface LessonLayout extends BaseLayout {
     type: "lesson";
     /** 默认课程的ID */
     subjectId: string;
+    /** 结束时间 */
+    endTime: DateTime;
+    /**
+     * 是否单独显示
+     * 为true时，只有时间适合时，才会显示在一个独立的位置，而不是和课程一起显示
+     */
+    noDisplayedSeparately: boolean;
 }
 
 /**
@@ -77,6 +87,21 @@ interface BreakLayout extends BaseLayout {
     type: "break";
     /** 课间休息的名称 */
     breakName: string;
+    /** 结束时间 */
+    endTime: DateTime;
+    /**
+     * 是否单独显示
+     * 为true时，只有时间适合时，才会显示在一个独立的位置，而不是和课程一起显示
+     */
+    noDisplayedSeparately: boolean;
+}
+
+/**
+ * 分割线布局接口，继承自基础布局
+ * 他不关心结束时间，只关心开始时间
+ */
+interface dividingLineLayout extends BaseLayout {
+    type: "dividingLine";
 }
 
 type ClassType = {
@@ -189,52 +214,130 @@ export type timeGroupObject = {
 /**
  * 启用设置
  */
+/**
+ * 启用配置类型
+ */
 export type enableConfig = {
     /**
      * 当前启用的对象
      */
     selected: {
+        /**
+         * 启用对象的类型
+         */
         type: "curriculum" | "timegroup";
+        /**
+         * 启用对象的ID
+         */
         id: string;
     };
     /**
      * 临时覆盖的对象 允许有持续时间 (endTime之前)
      */
     tempSelected: {
+        /**
+         * 是否启用临时覆盖
+         */
         enable: boolean;
+        /**
+         * 临时覆盖对象的类型
+         */
         type: "curriculum" | "timegroup";
+        /**
+         * 临时覆盖对象的ID
+         */
         id: string;
+        /**
+         * 临时覆盖的开始时间
+         */
         startTime: DateTime;
+        /**
+         * 临时覆盖的结束时间
+         */
         endTime: DateTime;
     };
 };
 
+/**
+ * 课程表编辑器配置存储类型
+ */
 export type ScheduleEditorProfileStore = {
+    /**
+     * 课程对象
+     */
     subjects: SubjectObject;
+    /**
+     * 时间表对象
+     */
     timetables: TimetableObject;
+    /**
+     * 课程表对象
+     */
     curriculums: CurriculumObject;
+    /**
+     * 时间组对象
+     */
     timeGroups: timeGroupObject;
+    /**
+     * 启用配置
+     */
     enableConfig: enableConfig;
 };
 
+/**
+ * 今日课程类型
+ */
 export interface todaySchedule {
+    /**
+     * 课程名称
+     */
     name: string;
+    /**
+     * 课程简称
+     */
     shortName: string;
+    /**
+     * 教师姓名
+     */
     teacherName: string;
+    /**
+     * 是否不单独显示
+     */
     noDisplayedSeparately: boolean;
+    /**
+     * 开始时间
+     */
     startTime: DateTime;
+    /**
+     * 结束时间
+     */
     endTime: DateTime;
 
+    /**
+     * 附加数据
+     */
     attach?: {
         [key: string]: any;
     };
 }
 
+/**
+ * 今日配置类型
+ */
 export interface todayConfig {
+    /**
+     * 生成日期
+     */
     generateDate: DateTime;
+    /**
+     * 课程表，key为课程ID
+     */
     schedule: {
         [key: string]: todaySchedule;
     };
+    /**
+     * 附加数据
+     */
     attach?: {
         [key: string]: any;
     };
