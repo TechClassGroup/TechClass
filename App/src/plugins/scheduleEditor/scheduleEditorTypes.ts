@@ -284,47 +284,39 @@ export type ScheduleEditorProfileStore = {
     enableConfig: enableConfig;
 };
 type todayScheduleBase = {
-    name: string;
+
     startTime: DateTime;
+
+    attach?: {
+        [key: string]: any;
+    }
+}
+
+export interface todayScheduleLesson extends todayScheduleBase {
+    type: "lesson";
+    name: string;
+    shortName: string;
+    teacherName: string;
     endTime: DateTime;
+    noDisplayedSeparately: boolean;
+}
+
+export interface todayScheduleBreak extends todayScheduleBase {
+    type: "break";
+    shortName: string;
+    name: string;
+    endTime: DateTime;
+    noDisplayedSeparately: boolean;
+}
+
+export interface todayScheduleDividingLine extends todayScheduleBase {
+    type: "dividingLine";
 }
 
 /**
  * 今日课程类型
  */
-export interface todaySchedule {
-    /**
-     * 课程名称
-     */
-    name: string;
-    /**
-     * 课程简称
-     */
-    shortName: string;
-    /**
-     * 教师姓名
-     */
-    teacherName: string;
-    /**
-     * 是否不单独显示
-     */
-    noDisplayedSeparately: boolean;
-    /**
-     * 开始时间
-     */
-    startTime: DateTime;
-    /**
-     * 结束时间
-     */
-    endTime: DateTime;
-
-    /**
-     * 附加数据
-     */
-    attach?: {
-        [key: string]: any;
-    };
-}
+export type todaySchedule = todayScheduleLesson | todayScheduleBreak | todayScheduleDividingLine;
 
 /**
  * 今日配置类型

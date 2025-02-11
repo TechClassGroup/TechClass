@@ -7,6 +7,7 @@ import {v4 as uuidv4} from "uuid";
 
 import {CurriculumResult, processTimeGroupWithResult, TimeGroupInfo,} from "./timeGroupProcessor";
 import {scheduleEditorLogger} from "./utils";
+import logger from "../../../modules/logger";
 
 function findTodayCurriculum(
     targetDate: DateTime,
@@ -118,12 +119,35 @@ function generateSchedule(
     const usedUuids = new Set();
 
     Object.entries(timetable.layouts).forEach(([layoutId, layout]) => {
-        let name: string = "";
-        let shortName: string = "";
-        let teacherName: string = "";
+        let uuid = uuidv4();
+        while (usedUuids.has(uuid)) {
+            uuid = uuidv4();
+        }
+        usedUuids.add(uuid);
+        const startTime = DateTime.now().set({
+            hour: layout.startTime.hour,
+            minute: layout.startTime.minute,
+            second: 0,
+            millisecond: 0,
+        })
         if (layout.type === "break") {
-            name = layout.breakName;
-        } else {
+
+            result.schedule[uuid] = {
+                type: "break",
+                startTime: startTime,
+                endTime: DateTime.now().set({
+                    hour: layout.endTime.hour,
+                    minute: layout.endTime.minute,
+                    second: 0,
+                    millisecond: 0,
+                }),
+                name: layout.breakName,
+                noDisplayedSeparately: layout.noDisplayedSeparately,
+                shortName: "", // 等一会再说
+            }
+            return;
+        }
+        if (layout.type === "lesson") {
             // 判断classes里面timeId为layoutId的subjectId是否为空
             const currentClass = classes.find(
                 (item) => item.timeId === layoutId
@@ -134,6 +158,9 @@ function generateSchedule(
                 );
                 return;
             }
+            let name: string
+            let shortName: string
+            let teacherName: string
             if (currentClass.subjectId && currentClass.subjectId !== "") {
                 // 有指定的情况
                 const subject = profile.subjects[currentClass.subjectId];
@@ -159,32 +186,32 @@ function generateSchedule(
                 shortName = subject.shortName;
                 teacherName = subject.teacherName;
             }
+            result.schedule[uuid] = {
+                type: "lesson",
+                startTime: startTime,
+                endTime: DateTime.now().set({
+                    hour: layout.endTime.hour,
+                    minute: layout.endTime.minute,
+                    second: 0,
+                    millisecond: 0,
+                }),
+                name: name,
+                shortName: shortName,
+                teacherName: teacherName,
+                noDisplayedSeparately: layout.noDisplayedSeparately,
+            }
+            return
         }
-
-        let uuid = uuidv4();
-        while (usedUuids.has(uuid)) {
-            uuid = uuidv4();
+        if (layout.type === "dividingLine") {
+            result.schedule[uuid] = {
+                type: "dividingLine",
+                startTime: startTime,
+            }
+            return;
         }
-        usedUuids.add(uuid);
+        logger.error("未知的layout类型", layout);
 
-        result.schedule[uuid] = {
-            name: name,
-            shortName: shortName,
-            teacherName: teacherName,
-            startTime: DateTime.now().set({
-                hour: layout.startTime.hour,
-                minute: layout.startTime.minute,
-                second: 0,
-                millisecond: 0,
-            }),
-            endTime: DateTime.now().set({
-                hour: layout.endTime.hour,
-                minute: layout.endTime.minute,
-                second: 0,
-                millisecond: 0,
-            }),
-            noDisplayedSeparately: layout.noDisplayedSeparately,
-        };
+
     });
 
     return result;
