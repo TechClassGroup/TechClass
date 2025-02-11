@@ -172,7 +172,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
       <!-- 时间设置 -->
       <div class="space-y-4">
         <h3 class="text-lg font-medium text-gray-900">时间设置</h3>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 gap-4">
           <div>
             <label
                 class="block text-sm font-medium text-gray-700 mb-1"
