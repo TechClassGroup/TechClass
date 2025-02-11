@@ -143,7 +143,7 @@ function generateSchedule(
                 }),
                 name: layout.breakName,
                 noDisplayedSeparately: layout.noDisplayedSeparately,
-                shortName: "", // 等一会再说
+                shortName: layout.breakShortName,
             }
             return;
         }

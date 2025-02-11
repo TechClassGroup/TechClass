@@ -87,6 +87,7 @@ interface BreakLayout extends BaseLayout {
     type: "break";
     /** 课间休息的名称 */
     breakName: string;
+    breakShortName: string;
     /** 结束时间 */
     endTime: DateTime;
     /**
