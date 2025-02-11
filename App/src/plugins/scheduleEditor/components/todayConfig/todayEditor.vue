@@ -7,10 +7,11 @@ import TcSwitch from "../../../../UI/TcSwitch.vue";
 import TcButton from "../../../../UI/TcButton.vue";
 import {DateTime} from "luxon";
 import {v4 as uuidv4} from "uuid";
-import type {todaySchedule, todayScheduleBreak, todayScheduleLesson} from "../../scheduleEditorTypes";
+import type {todaySchedule, todayScheduleBreak, todayScheduleLesson,} from "../../scheduleEditorTypes";
 
 const selectedScheduleId = ref<string>("");
 const showSubjectSelector = ref(false);
+const showTypeSelector = ref(false);
 
 const sortedSchedule = computed(() => {
   if (!scheduleEditorTodayConfig.value.schedule) {
@@ -62,25 +63,48 @@ function handleSubjectSelect(subjectId: string) {
   }
 }
 
-function addSchedule() {
+function addSchedule(type: "lesson" | "break" | "dividingLine" = "lesson") {
   if (!scheduleEditorTodayConfig.value.schedule) {
     scheduleEditorTodayConfig.value.schedule = {};
   }
 
   const now = DateTime.now();
-  const newSchedule: todaySchedule = {
-    type: "lesson",
-    name: "新课程",
-    shortName: "新",
-    teacherName: "",
-    noDisplayedSeparately: false,
+  const baseSchedule = {
     startTime: now.set({hour: 8, minute: 0, second: 0, millisecond: 0}),
-    endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
   };
+
+  let newSchedule: todaySchedule;
+
+  if (type === "lesson") {
+    newSchedule = {
+      ...baseSchedule,
+      type: "lesson",
+      name: "新课程",
+      shortName: "新",
+      teacherName: "",
+      noDisplayedSeparately: false,
+      endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
+    };
+  } else if (type === "break") {
+    newSchedule = {
+      ...baseSchedule,
+      type: "break",
+      name: "课间休息",
+      shortName: "休息",
+      noDisplayedSeparately: false,
+      endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
+    };
+  } else {
+    newSchedule = {
+      ...baseSchedule,
+      type: "dividingLine",
+    };
+  }
 
   const uuid = uuidv4();
   scheduleEditorTodayConfig.value.schedule[uuid] = newSchedule;
   selectedScheduleId.value = uuid;
+  showTypeSelector.value = false;
 }
 
 function copySchedule(id: string) {
@@ -129,11 +153,11 @@ type withName = todayScheduleLesson | todayScheduleBreak;
           class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col"
       >
         <!-- 操作按钮 -->
-        <div class="p-2 flex gap-2 border-b border-gray-200">
+        <div class="p-2 flex gap-2 border-b border-gray-200 relative">
           <TcButton
               class="flex-1"
               variant="filled"
-              @click="addSchedule"
+              @click="showTypeSelector = !showTypeSelector"
           >
             添加
           </TcButton>
@@ -154,6 +178,42 @@ type withName = todayScheduleLesson | todayScheduleBreak;
           >
             删除
           </TcButton>
+
+          <!-- 类型选择对话框 -->
+          <div
+              v-if="showTypeSelector"
+              class="absolute left-2 right-2 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-10"
+          >
+            <div class="p-1">
+              <button
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                  @click="addSchedule('lesson')"
+              >
+                <div class="font-medium">课程</div>
+                <div class="text-sm text-gray-500">
+                  添加一个新的课程项目
+                </div>
+              </button>
+              <button
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                  @click="addSchedule('break')"
+              >
+                <div class="font-medium">课间</div>
+                <div class="text-sm text-gray-500">
+                  添加一个课间休息时间
+                </div>
+              </button>
+              <button
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                  @click="addSchedule('dividingLine')"
+              >
+                <div class="font-medium">分割线</div>
+                <div class="text-sm text-gray-500">
+                  添加一个时间分割线
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- 列表内容 -->
@@ -175,32 +235,41 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                   class="text-left px-4 py-3 rounded-lg transition-all duration-200 select-none"
                   @click="selectedScheduleId = id"
               >
-
                 <div class="flex flex-col gap-1">
                   <div class="flex items-center">
                     <div class="flex items-center gap-2">
-                      <template v-if="item.type !== 'dividingLine'">
-                        <span class="font-medium">{{
-                            item.name
-                          }}</span>
+                      <template
+                          v-if="
+                                                    item.type !== 'dividingLine'
+                                                "
+                      >
+                                                <span class="font-medium">{{
+                                                    item.name
+                                                  }}</span>
                         <span
                             v-if="item.shortName"
                             class="text-sm opacity-60"
-                        >({{ item.shortName }})</span>
+                        >({{
+                            item.shortName
+                          }})</span
+                        >
                       </template>
                       <template v-else>
-                        <span class="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded whitespace-nowrap">
-                          分割线
-                        </span>
+                                                <span
+                                                    class="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded whitespace-nowrap"
+                                                >
+                                                    分割线
+                                                </span>
                       </template>
-
-
                     </div>
                   </div>
                   <div class="text-xs text-gray-500 pl-0.5">
                     {{ item.startTime.toFormat("HH:mm") }}
-                    <template v-if="item.type !== 'dividingLine'">
-                      - {{ item.endTime.toFormat("HH:mm") }}
+                    <template
+                        v-if="item.type !== 'dividingLine'"
+                    >
+                      -
+                      {{ item.endTime.toFormat("HH:mm") }}
                     </template>
                   </div>
                 </div>
@@ -224,12 +293,20 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                     "
             class="p-6"
         >
-          <template v-if="scheduleEditorTodayConfig.schedule[selectedScheduleId].type !== 'dividingLine'">
+          <template
+              v-if="
+                            scheduleEditorTodayConfig.schedule[
+                                selectedScheduleId
+                            ].type !== 'dividingLine'
+                        "
+          >
             <div class="text-2xl font-medium text-gray-800">
               {{
-                (scheduleEditorTodayConfig.schedule[
-                    selectedScheduleId
-                    ] as withName).name
+                (
+                    scheduleEditorTodayConfig.schedule[
+                        selectedScheduleId
+                        ] as withName
+                ).name
               }}
               <span
                   v-if="
@@ -239,24 +316,33 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                             "
                   class="text-sm text-gray-500 ml-2"
               >({{
-                  (scheduleEditorTodayConfig.schedule[
-                      selectedScheduleId
-                      ] as withName).shortName
+                  (
+                      scheduleEditorTodayConfig.schedule[
+                          selectedScheduleId
+                          ] as withName
+                  ).shortName
                 }})</span
               >
             </div>
           </template>
 
           <div class="space-y-4 mt-6">
-            <template v-if="scheduleEditorTodayConfig.schedule[selectedScheduleId].type === 'lesson'">
+            <template
+                v-if="
+                                scheduleEditorTodayConfig.schedule[
+                                    selectedScheduleId
+                                ].type === 'lesson'
+                            "
+            >
               <!-- 科目选择器 -->
               <div class="relative">
                 <TcButton
                     class="w-full"
                     variant="tonal"
                     @click="
-                                    showSubjectSelector = !showSubjectSelector
-                                "
+                                        showSubjectSelector =
+                                            !showSubjectSelector
+                                    "
                 >
                   修改为其他科目
                 </TcButton>
@@ -271,7 +357,9 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                         v-for="(subject, id) in subjects"
                         :key="id"
                         class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
-                        @click="handleSubjectSelect(String(id))"
+                        @click="
+                                                handleSubjectSelect(String(id))
+                                            "
                     >
                       <div class="font-medium">
                         {{ subject.name }}
@@ -288,7 +376,13 @@ type withName = todayScheduleLesson | todayScheduleBreak;
               </div>
             </template>
             <div class="h-px bg-gray-200 my-4"></div>
-            <template v-if="scheduleEditorTodayConfig.schedule[selectedScheduleId].type !== 'dividingLine'">
+            <template
+                v-if="
+                                scheduleEditorTodayConfig.schedule[
+                                    selectedScheduleId
+                                ].type !== 'dividingLine'
+                            "
+            >
               <div class="space-y-2">
                 <label class="text-sm text-gray-600"
                 >课程名称</label
@@ -301,13 +395,14 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                 "
                     placeholder="请输入课程名称"
                     @update:model-value="
-                                    (v) => handleUpdate('name', v)
-                                "
+                                        (v) => handleUpdate('name', v)
+                                    "
                 />
               </div>
               <div class="space-y-2">
-
-                <label class="text-sm text-gray-600">简称</label>
+                <label class="text-sm text-gray-600"
+                >简称</label
+                >
                 <TcInput
                     :model-value="
                                     (scheduleEditorTodayConfig.schedule[
@@ -316,13 +411,19 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                 "
                     placeholder="请输入课程简称"
                     @update:model-value="
-                                    (v) => handleUpdate('shortName', v)
-                                "
+                                        (v) => handleUpdate('shortName', v)
+                                    "
                 />
               </div>
             </template>
 
-            <template v-if="scheduleEditorTodayConfig.schedule[selectedScheduleId].type === 'lesson'">
+            <template
+                v-if="
+                                scheduleEditorTodayConfig.schedule[
+                                    selectedScheduleId
+                                ].type === 'lesson'
+                            "
+            >
               <div class="space-y-2">
                 <label class="text-sm text-gray-600"
                 >教师姓名</label
@@ -335,12 +436,11 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                 "
                     placeholder="请输入教师姓名"
                     @update:model-value="
-                                    (v) => handleUpdate('teacherName', v)
-                                "
+                                        (v) => handleUpdate('teacherName', v)
+                                    "
                 />
               </div>
             </template>
-
 
             <div class="h-px bg-gray-200 my-4"></div>
 
@@ -359,7 +459,13 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                   @change="(e) => handleUpdate('startTime', (e.target as HTMLInputElement).value)"
               />
             </div>
-            <template v-if="scheduleEditorTodayConfig.schedule[selectedScheduleId].type !== 'dividingLine'">
+            <template
+                v-if="
+                                scheduleEditorTodayConfig.schedule[
+                                    selectedScheduleId
+                                ].type !== 'dividingLine'
+                            "
+            >
               <div class="space-y-2">
                 <label class="text-sm text-gray-600"
                 >结束时间</label
@@ -390,12 +496,12 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                         ] as withName).noDisplayedSeparately
                                     "
                       @update:model-value="
-                                        (v) =>
-                                            handleUpdate(
-                                                'noDisplayedSeparately',
-                                                v
-                                            )
-                                    "
+                                            (v) =>
+                                                handleUpdate(
+                                                    'noDisplayedSeparately',
+                                                    v
+                                                )
+                                        "
                   />
                 </div>
                 <div class="text-xs text-gray-500">
