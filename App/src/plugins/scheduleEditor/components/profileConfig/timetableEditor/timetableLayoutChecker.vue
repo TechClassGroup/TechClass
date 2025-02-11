@@ -148,7 +148,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
 
 <template>
   <div
-      class="p-4  h-full  overflow-y-auto flex flex-col gap-6 h-full" style="scrollbar-gutter: stable"
+      class="p-4  overflow-y-auto flex flex-col gap-6 h-full" style="scrollbar-gutter: stable"
   >
     <!-- 时间表基本信息 -->
     <div v-if="currentTimetable" class="space-y-4">
@@ -165,7 +165,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
       </div>
     </div>
 
-    <div v-if="currentTimetable" class=" h-[1px] bg-gray-200"></div>
+    <div v-if="currentTimetable" class=" h-[1px] bg-gray-200 flex-none"></div>
 
     <!-- 课程布局详情 -->
     <template v-if="currentLayout">
