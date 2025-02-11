@@ -80,11 +80,15 @@ function updateTime(field: "startTime" | "endTime", timeStr: string) {
 
     if (field === "startTime") {
         currentLayout.value.startTime = newTime;
+      // 不处理分割线的结束时间
+      if (currentLayout.value.type === "dividingLine") return;
         if (newTime >= currentLayout.value.endTime) {
             currentLayout.value.endTime = newTime;
         }
     } else {
-        currentLayout.value.endTime = newTime;
+      // 不处理分割线的结束时间
+      if (currentLayout.value.type === "dividingLine") return;
+      currentLayout.value.endTime = newTime;
         if (newTime <= currentLayout.value.startTime) {
             currentLayout.value.endTime = currentLayout.value.startTime;
         }
@@ -93,7 +97,7 @@ function updateTime(field: "startTime" | "endTime", timeStr: string) {
 
 function updateType(type: string) {
     if (!currentLayout.value) return;
-    if (type !== "lesson" && type !== "break") return;
+  if (type !== "lesson" && type !== "break" && type !== "dividingLine") return;
 
     if (type === "lesson") {
         Object.assign(currentLayout.value, {
@@ -101,16 +105,16 @@ function updateType(type: string) {
             subjectId: "",
           noDisplayedSeparately: false,
         });
-        // @ts-ignore
-        delete currentLayout.value.breakName;
-    } else {
+    } else if (type === "break") {
         Object.assign(currentLayout.value, {
             type: "break",
             breakName: "课间",
           noDisplayedSeparately: true,
         });
-        // @ts-ignore
-        delete currentLayout.value.subjectId;
+    } else {
+      Object.assign(currentLayout.value, {
+        type: "dividingLine",
+      })
     }
 }
 
@@ -128,8 +132,9 @@ function formatTimeForInput(time: DateTime): string {
   return time.toFormat("HH:mm:ss");
 }
 
-function updatenoDisplayedSeparately(noDisplayedSeparately: boolean) {
+function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
     if (!currentLayout.value) return;
+  if (currentLayout.value.type === "dividingLine") return;
   currentLayout.value.noDisplayedSeparately = noDisplayedSeparately;
 }
 </script>
@@ -177,7 +182,7 @@ function updatenoDisplayedSeparately(noDisplayedSeparately: boolean) {
                             step="1"
                         />
                     </div>
-                    <div>
+                  <div v-if="currentLayout.type !== 'dividingLine'">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-1"
                             >结束时间</label
@@ -212,6 +217,7 @@ function updatenoDisplayedSeparately(noDisplayedSeparately: boolean) {
                     >
                         <option value="lesson">课程</option>
                         <option value="break">课间</option>
+                      <option value="dividingLine">分割线</option>
                     </select>
                 </div>
             </div>
@@ -244,12 +250,12 @@ function updatenoDisplayedSeparately(noDisplayedSeparately: boolean) {
                     >
                     <TcSwitch
                         :model-value="currentLayout.noDisplayedSeparately"
-                        @update:model-value="updatenoDisplayedSeparately"
+                        @update:model-value="updateNoDisplayedSeparately"
                     />
                 </div>
             </div>
 
-            <div class="space-y-4" v-else>
+          <div v-if="currentLayout.type === 'break'" class="space-y-4">
                 <h3 class="text-lg font-medium text-gray-900">课间名称</h3>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -267,7 +273,7 @@ function updatenoDisplayedSeparately(noDisplayedSeparately: boolean) {
                     >
                     <TcSwitch
                         :model-value="currentLayout.noDisplayedSeparately"
-                        @update:model-value="updatenoDisplayedSeparately"
+                        @update:model-value="updateNoDisplayedSeparately"
                     />
                 </div>
             </div>

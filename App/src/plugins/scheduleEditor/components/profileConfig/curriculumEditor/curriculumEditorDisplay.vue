@@ -33,7 +33,9 @@ const sortedLayouts = computed(() => {
 
   return Object.entries(currentTimetable.value.layouts)
       .sort(([, a], [, b]) => {
-        return a.startTime.toMillis() - b.startTime.toMillis();
+        const aMinutes = a.startTime.hour * 60 + a.startTime.minute;
+        const bMinutes = b.startTime.hour * 60 + b.startTime.minute;
+        return aMinutes - bMinutes;
       })
       .reduce((acc, [key, value]) => {
         acc[key] = value;
@@ -127,8 +129,11 @@ function getClassSubjectId(timeId: string): string {
                         <div class="flex items-center gap-4">
                             <!-- 时间显示 -->
                             <div class="text-sm font-medium text-gray-500 w-24">
-                                {{ formatTime(layout.startTime) }} -
+                              {{ formatTime(layout.startTime) }}
+                              <template v-if="layout.type !== 'dividingLine'">
+                                -
                                 {{ formatTime(layout.endTime) }}
+                              </template>
                             </div>
 
                             <!-- 课程时段 -->
@@ -190,10 +195,30 @@ function getClassSubjectId(timeId: string): string {
                             </template>
 
                             <!-- 课间时段 -->
-                            <template v-else>
+                          <template v-else-if="layout.type === 'break'">
                                 <div class="flex-1">
                                     <div class="text-sm text-gray-500">
                                         {{ layout.breakName }}
+                                    </div>
+                                </div>
+                          </template>
+                          <!-- 分割线 -->
+                          <template
+                              v-else-if="layout.type === 'dividingLine'"
+                          >
+                            <div class="flex-1">
+                              <div class="flex items-center gap-2">
+                                <div
+                                    class="flex-grow h-px bg-purple-300"
+                                ></div>
+                                <div
+                                    class="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded whitespace-nowrap"
+                                >
+                                  分割线
+                                </div>
+                                <div
+                                    class="flex-grow h-px bg-purple-300"
+                                ></div>
                                     </div>
                                 </div>
                             </template>

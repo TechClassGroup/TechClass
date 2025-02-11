@@ -283,6 +283,11 @@ export type ScheduleEditorProfileStore = {
      */
     enableConfig: enableConfig;
 };
+type todayScheduleBase = {
+    name: string;
+    startTime: DateTime;
+    endTime: DateTime;
+}
 
 /**
  * 今日课程类型

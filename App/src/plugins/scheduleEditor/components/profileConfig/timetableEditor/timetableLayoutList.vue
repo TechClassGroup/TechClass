@@ -32,7 +32,9 @@ const sortedLayouts = computed(() => {
   const layouts = {...currentLayouts.value};
   return Object.entries(layouts)
       .sort(([, a], [, b]) => {
-        return a.startTime.toMillis() - b.startTime.toMillis();
+        const aTime = a.startTime.set({year: 2000, month: 1, day: 1});
+        const bTime = b.startTime.set({year: 2000, month: 1, day: 1});
+        return aTime.toMillis() - bTime.toMillis();
       })
       .reduce((acc, [key, value]) => {
         acc[key] = value;
@@ -73,12 +75,11 @@ function addLayout() {
     second: 0,
     millisecond: 0,
   });
-  const endTime = now.set({hour: 8, minute: 45, second: 0, millisecond: 0});
 
   currentLayouts.value[newId] = {
     type: "lesson",
     startTime: startTime,
-    endTime: endTime,
+    endTime: startTime.plus({minutes: 45}),
     subjectId: "",
     noDisplayedSeparately: false,
   };
@@ -90,11 +91,19 @@ function copyLayout(id: string | number) {
 
   const newId = generateUniqueId();
   const original = currentLayouts.value[id];
-  currentLayouts.value[newId] = {
-    ...original,
-    startTime: original.startTime.set({millisecond: 0}),
-    endTime: original.endTime.set({millisecond: 0}),
-  };
+
+  if (original.type === "dividingLine") {
+    currentLayouts.value[newId] = {
+      type: "dividingLine",
+      startTime: original.startTime.set({millisecond: 0}),
+    };
+  } else {
+    currentLayouts.value[newId] = {
+      ...original,
+      startTime: original.startTime.set({millisecond: 0}),
+      endTime: original.endTime.set({millisecond: 0}),
+    };
+  }
   selectedLayoutId.value = newId;
 }
 
@@ -161,25 +170,36 @@ function deleteLayout(id: string | number) {
             <div class="flex flex-col gap-1">
               <div class="flex items-center justify-between">
                                 <span class="font-medium">
-                                    {{ formatTime(layout.startTime) }} -
-                                    {{ formatTime(layout.endTime) }}
+                                    {{ formatTime(layout.startTime) }}
+                                    <template
+                                        v-if="layout.type !== 'dividingLine'"
+                                    >
+                                        - {{ formatTime(layout.endTime) }}
+                                    </template>
                                 </span>
                 <span
                     :class="[
                                         'text-xs px-1.5 py-0.5 rounded',
                                         layout.type === 'lesson'
                                             ? 'bg-blue-100 text-blue-700'
-                                            : 'bg-green-100 text-green-700',
+                                            : layout.type === 'break'
+                                            ? 'bg-green-100 text-green-700'
+                                            : 'bg-purple-100 text-purple-700',
                                     ]"
                 >
                                     {{
                     layout.type === "lesson"
                         ? "课程"
-                        : "课间"
+                        : layout.type === "break"
+                            ? "课间"
+                            : "分割线"
                   }}
                                 </span>
               </div>
-              <div class="text-xs text-gray-500 pl-0.5">
+              <div
+                  v-if="layout.type !== 'dividingLine'"
+                  class="text-xs text-gray-500 pl-0.5"
+              >
                 持续时间:
                 {{
                   calculateDuration(
