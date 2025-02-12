@@ -2,6 +2,8 @@
  * @fileOverview 课程表编辑器的类型定义
  */
 import {DateTime} from "luxon";
+import {scheduleEditorProfile} from "./store/scheduleEditorProfile";
+import {scheduleEditorTodayConfig} from "./store/todayConfigStore";
 
 /**
  * 课程信息接口
@@ -339,4 +341,9 @@ export interface todayConfig {
     attach?: {
         [key: string]: any;
     };
+}
+
+export interface scheduleEditorApi {
+    profile: typeof scheduleEditorProfile;
+    todayConfig: typeof scheduleEditorTodayConfig;
 }

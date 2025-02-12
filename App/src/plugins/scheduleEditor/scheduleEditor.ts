@@ -4,6 +4,9 @@
 import {IPlugin, PluginStore} from "../../types/plugins";
 import scheduleEditorSetting from "./components/scheduleEditorSetting.vue";
 import {clearStore, initializeStore} from "./store/scheduleStore";
+import {scheduleEditorProfile} from "./store/scheduleEditorProfile";
+import {scheduleEditorTodayConfig} from "./store/todayConfigStore";
+import {scheduleEditorApi} from "./scheduleEditorTypes";
 
 type ConfigType = "course" | "enable" | "todayConfig";
 
@@ -26,6 +29,10 @@ export const scheduleEditor: IPlugin = {
         mainPage: null,
         settingPage: scheduleEditorSetting,
     },
+    api: {
+        profile: scheduleEditorProfile,
+        todayConfig: scheduleEditorTodayConfig
+    } as scheduleEditorApi,
     hooks: {
         onMounted: (store: PluginStore, api) => {
             initializeStore(store, api.fs);
