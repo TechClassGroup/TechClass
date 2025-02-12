@@ -11,7 +11,6 @@ import type {todaySchedule, todayScheduleBreak, todayScheduleLesson,} from "../.
 
 const selectedScheduleId = ref<string>("");
 const showSubjectSelector = ref(false);
-const showTypeSelector = ref(false);
 
 const sortedSchedule = computed(() => {
   if (!scheduleEditorTodayConfig.value.schedule) {
@@ -51,6 +50,61 @@ function handleUpdate(field: string, value: string | boolean) {
   }
 }
 
+function updateType(type: "lesson" | "break" | "dividingLine") {
+  if (selectedScheduleId.value && type) {
+    const now = DateTime.now();
+    const baseSchedule = {
+      startTime: now.set({
+        hour: 8,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      }),
+    };
+
+    let newSchedule: todaySchedule;
+
+    if (type === "lesson") {
+      newSchedule = {
+        ...baseSchedule,
+        type: "lesson",
+        name: "新课程",
+        shortName: "新",
+        teacherName: "",
+        noDisplayedSeparately: false,
+        endTime: now.set({
+          hour: 9,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }),
+      };
+    } else if (type === "break") {
+      newSchedule = {
+        ...baseSchedule,
+        type: "break",
+        name: "课间休息",
+        shortName: "休息",
+        noDisplayedSeparately: false,
+        endTime: now.set({
+          hour: 9,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }),
+      };
+    } else {
+      newSchedule = {
+        ...baseSchedule,
+        type: "dividingLine",
+      };
+    }
+
+    scheduleEditorTodayConfig.value.schedule[selectedScheduleId.value] =
+        newSchedule;
+  }
+}
+
 function handleSubjectSelect(subjectId: string) {
   if (selectedScheduleId.value && subjectId) {
     const subject = subjects.value[subjectId];
@@ -63,48 +117,25 @@ function handleSubjectSelect(subjectId: string) {
   }
 }
 
-function addSchedule(type: "lesson" | "break" | "dividingLine" = "lesson") {
+function addSchedule() {
   if (!scheduleEditorTodayConfig.value.schedule) {
     scheduleEditorTodayConfig.value.schedule = {};
   }
 
   const now = DateTime.now();
-  const baseSchedule = {
+  const newSchedule: todaySchedule = {
+    type: "lesson",
+    name: "新课程",
+    shortName: "新",
+    teacherName: "",
+    noDisplayedSeparately: false,
     startTime: now.set({hour: 8, minute: 0, second: 0, millisecond: 0}),
+    endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
   };
-
-  let newSchedule: todaySchedule;
-
-  if (type === "lesson") {
-    newSchedule = {
-      ...baseSchedule,
-      type: "lesson",
-      name: "新课程",
-      shortName: "新",
-      teacherName: "",
-      noDisplayedSeparately: false,
-      endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
-    };
-  } else if (type === "break") {
-    newSchedule = {
-      ...baseSchedule,
-      type: "break",
-      name: "课间休息",
-      shortName: "休息",
-      noDisplayedSeparately: false,
-      endTime: now.set({hour: 9, minute: 0, second: 0, millisecond: 0}),
-    };
-  } else {
-    newSchedule = {
-      ...baseSchedule,
-      type: "dividingLine",
-    };
-  }
 
   const uuid = uuidv4();
   scheduleEditorTodayConfig.value.schedule[uuid] = newSchedule;
   selectedScheduleId.value = uuid;
-  showTypeSelector.value = false;
 }
 
 function copySchedule(id: string) {
@@ -153,11 +184,11 @@ type withName = todayScheduleLesson | todayScheduleBreak;
           class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col"
       >
         <!-- 操作按钮 -->
-        <div class="p-2 flex gap-2 border-b border-gray-200 relative">
+        <div class="p-2 flex gap-2 border-b border-gray-200">
           <TcButton
               class="flex-1"
               variant="filled"
-              @click="showTypeSelector = !showTypeSelector"
+              @click="addSchedule"
           >
             添加
           </TcButton>
@@ -178,42 +209,6 @@ type withName = todayScheduleLesson | todayScheduleBreak;
           >
             删除
           </TcButton>
-
-          <!-- 类型选择对话框 -->
-          <div
-              v-if="showTypeSelector"
-              class="absolute left-2 right-2 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-10"
-          >
-            <div class="p-1">
-              <button
-                  class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
-                  @click="addSchedule('lesson')"
-              >
-                <div class="font-medium">课程</div>
-                <div class="text-sm text-gray-500">
-                  添加一个新的课程项目
-                </div>
-              </button>
-              <button
-                  class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
-                  @click="addSchedule('break')"
-              >
-                <div class="font-medium">课间</div>
-                <div class="text-sm text-gray-500">
-                  添加一个课间休息时间
-                </div>
-              </button>
-              <button
-                  class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
-                  @click="addSchedule('dividingLine')"
-              >
-                <div class="font-medium">分割线</div>
-                <div class="text-sm text-gray-500">
-                  添加一个时间分割线
-                </div>
-              </button>
-            </div>
-          </div>
         </div>
 
         <!-- 列表内容 -->
@@ -327,6 +322,24 @@ type withName = todayScheduleLesson | todayScheduleBreak;
           </template>
 
           <div class="space-y-4 mt-6">
+            <!-- 类型选择 -->
+            <div class="space-y-2">
+              <label class="text-sm text-gray-600">类型</label>
+              <select
+                  :value="
+                                    scheduleEditorTodayConfig.schedule[
+                                        selectedScheduleId
+                                    ].type
+                                "
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  @change="(e) => updateType((e.target as HTMLSelectElement).value as 'lesson' | 'break' | 'dividingLine')"
+              >
+                <option value="lesson">课程</option>
+                <option value="break">课间</option>
+                <option value="dividingLine">分割线</option>
+              </select>
+            </div>
+
             <template
                 v-if="
                                 scheduleEditorTodayConfig.schedule[
