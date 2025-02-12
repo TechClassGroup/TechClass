@@ -3,9 +3,12 @@
  */
 import timeDisplay from "./timeDisplay/timeDisplay";
 import {scheduleEditor} from "./scheduleEditor/scheduleEditor";
+import {scheduleDisplay} from "./scheduleDisplay/scheduleDisplayer";
+import {IPlugin} from "../types/plugins";
 
-const plugins = [
+const plugins: IPlugin<any>[] = [
     scheduleEditor,
+    scheduleDisplay,
     timeDisplay,
 ];
 
