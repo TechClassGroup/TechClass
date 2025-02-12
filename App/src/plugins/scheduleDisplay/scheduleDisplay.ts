@@ -29,6 +29,7 @@ export const scheduleDisplay: IPlugin = {
                 .then((api) => {
                     if (!signal.aborted && api) {
                         scheduleEditorApi.value = api;
+                        logger.debug("[scheduleDisplay] 获取scheduleEditorApi成功");
                     }
                 })
                 .catch((error) => {
