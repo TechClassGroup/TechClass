@@ -148,7 +148,8 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
 
 <template>
   <div
-      class="p-4  overflow-y-auto flex flex-col gap-6 h-full" style="scrollbar-gutter: stable"
+      class="p-4 overflow-y-auto flex flex-col gap-6 h-full"
+      style="scrollbar-gutter: stable"
   >
     <!-- 时间表基本信息 -->
     <div v-if="currentTimetable" class="space-y-4">
@@ -165,10 +166,31 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
       </div>
     </div>
 
-    <div v-if="currentTimetable" class=" h-[1px] bg-gray-200 flex-none"></div>
+    <div
+        v-if="currentTimetable"
+        class="h-[1px] bg-gray-200 flex-none"
+    ></div>
 
     <!-- 课程布局详情 -->
     <template v-if="currentLayout">
+      <!-- 类型选择 -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-medium text-gray-900">类型设置</h3>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+          >选择类型</label
+          >
+          <select
+              :value="currentLayout.type"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+              @change="(e) => updateType((e.target as HTMLSelectElement).value)"
+          >
+            <option value="lesson">课程</option>
+            <option value="break">课间</option>
+            <option value="dividingLine">分割线</option>
+          </select>
+        </div>
+      </div>
       <!-- 时间设置 -->
       <div class="space-y-4">
         <h3 class="text-lg font-medium text-gray-900">时间设置</h3>
@@ -209,25 +231,6 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
                             "
             />
           </div>
-        </div>
-      </div>
-
-      <!-- 类型选择 -->
-      <div class="space-y-4">
-        <h3 class="text-lg font-medium text-gray-900">类型设置</h3>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
-          >选择类型</label
-          >
-          <select
-              :value="currentLayout.type"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
-              @change="(e) => updateType((e.target as HTMLSelectElement).value)"
-          >
-            <option value="lesson">课程</option>
-            <option value="break">课间</option>
-            <option value="dividingLine">分割线</option>
-          </select>
         </div>
       </div>
 
@@ -308,8 +311,6 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
       请选择一个课程进行编辑
     </div>
   </div>
-
-
 </template>
 
 <style scoped>
