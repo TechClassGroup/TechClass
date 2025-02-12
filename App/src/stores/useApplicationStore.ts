@@ -7,7 +7,7 @@ import {init_plugins} from "../modules/pluginsManager";
 import {watch} from "vue";
 
 type AppStore = ReturnType<typeof useApplicationStore>;
-
+// @ts-ignore
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: () => {
         return {
