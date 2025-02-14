@@ -18,7 +18,7 @@ const onResizeDrag = ($event: any, status: DraggableComponentStatus) => {
   updateComponentStatus(status, $event[0], $event[1], $event[2], $event[3]);
 };
 
-const getComponentProps = (status: any) => ({
+const getComponentProps = (status: DraggableComponentStatus) => ({
   maxWidth: status.maxWidth,
   maxHeight: status.maxHeight,
   minWidth: status.minWidth,
