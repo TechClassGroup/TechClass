@@ -26,7 +26,7 @@ watch(isSecondDisabled, (newValue) => {
       <div
           class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
       >
-        <span class="text-gray-700">显示时间</span>
+        <span class="text-gray-700">显示小时</span>
         <tc-switch
             v-model="store.storage.displayHour"
             class="ml-2"
