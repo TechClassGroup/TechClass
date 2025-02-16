@@ -6,18 +6,21 @@ import {ref} from "vue";
 import {scheduleEditorApi} from "../scheduleEditor/scheduleEditorTypes";
 import {InterPluginApi} from "../../modules/pluginUtils";
 import logger from "../../modules/logger";
+import nextLesson from "./component/nextLesson.vue"
 
 type apiType = {} | scheduleEditorApi;
 const scheduleEditorApi = ref<apiType>({});
 let abortController: AbortController | null = null;
-
-export const scheduleDisplay: IPlugin = {
+type mainPageKeys = "nextLesson"
+export const scheduleDisplay: IPlugin<mainPageKeys> = {
     name: "课表展示器",
     description: "",
     id: "scheduleDisplay",
     isOfficial: true,
     component: {
-        mainPage: null,
+        mainPage: {
+            nextLesson: nextLesson,
+        },
         settingPage: null,
     },
     hooks: {
@@ -46,4 +49,11 @@ export const scheduleDisplay: IPlugin = {
             scheduleEditorApi.value = {};
         },
     },
+    storeConfig: {
+        storageConfig: {
+            enabled: true,
+            keys: ["componentStatus"],
+
+        }
+    }
 };
