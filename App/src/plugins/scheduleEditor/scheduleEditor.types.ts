@@ -343,7 +343,16 @@ export interface todayConfig {
     };
 }
 
+/**
+ * 课表编辑器的API
+ */
 export interface scheduleEditorApi {
+    /**
+     * 获取课程表编辑器的配置
+     */
     profile: typeof scheduleEditorProfile;
+    /**
+     * 获取今日课程的配置
+     */
     todayConfig: typeof scheduleEditorTodayConfig;
 }

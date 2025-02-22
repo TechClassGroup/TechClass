@@ -5,53 +5,20 @@
 import {computed, ref} from "vue";
 import {scheduleEditorTodayConfig} from "../scheduleEditor/store/todayConfigStore";
 import {DateTime} from "luxon";
-import {todaySchedule} from "../scheduleEditor/scheduleEditor.types";
+import {
+    LessonList,
+    LessonListEnum,
+    lessonStatus,
+    LessonStatusEnum,
+    ScheduleWithId,
+    ScheduleWithIdWithoutDividingLine
+} from "./scheduleDisplay.types";
 
 const currentTime = ref<DateTime>(DateTime.now());
 // temp
 setInterval(() => {
     currentTime.value = DateTime.now();
 }, 1000);
-
-type ScheduleWithoutDividingLine = Exclude<
-    todaySchedule,
-    { type: "dividingLine" }
->;
-
-interface ScheduleWithId {
-    id: string;
-    lesson: todaySchedule;
-}
-
-interface ScheduleWithIdWithoutDividingLine {
-    id: string;
-    lesson: ScheduleWithoutDividingLine;
-}
-
-enum LessonStatusEnum {
-    ok,
-    beforeFirst,
-    afterLast,
-    noLesson,
-}
-
-interface lessonStatus {
-    currentLessons: ScheduleWithIdWithoutDividingLine[];
-    futureLessons: ScheduleWithIdWithoutDividingLine[];
-    status: LessonStatusEnum;
-}
-
-enum LessonListEnum {
-    current,
-    future,
-    normal
-}
-
-type LessonList = {
-    id: string;
-    lesson: todaySchedule;
-    status: LessonListEnum;
-}[];
 
 const sortedLessons = computed<ScheduleWithId[]>(() => {
     if (!scheduleEditorTodayConfig.value.schedule) {
