@@ -13,46 +13,87 @@ setInterval(() => {
     currentTime.value = DateTime.now();
 }, 1000);
 
-const sortedLessons = computed(() => {
+type ScheduleWithoutDividingLine = Exclude<
+    todaySchedule,
+    { type: "dividingLine" }
+>;
+
+interface ScheduleWithId {
+    id: string;
+    lesson: todaySchedule;
+}
+
+interface ScheduleWithIdWithoutDividingLine {
+    id: string;
+    lesson: ScheduleWithoutDividingLine;
+}
+
+enum LessonStatusEnum {
+    ok,
+    beforeFirst,
+    afterLast,
+    noLesson,
+}
+
+interface lessonStatus {
+    currentLessons: ScheduleWithIdWithoutDividingLine[];
+    futureLessons: ScheduleWithIdWithoutDividingLine[];
+    status: LessonStatusEnum;
+}
+
+enum LessonListEnum {
+    current,
+    future,
+    normal
+}
+
+type LessonList = {
+    id: string;
+    lesson: todaySchedule;
+    status: LessonListEnum;
+}[];
+
+const sortedLessons = computed<ScheduleWithId[]>(() => {
     if (!scheduleEditorTodayConfig.value.schedule) {
         return [];
     }
-    return Object.values(scheduleEditorTodayConfig.value.schedule).sort(
-        (a, b) => {
-            // 如果是分割线，放在最前面
-            if (a.type === "dividingLine" && b.type !== "dividingLine")
-                return -1;
-            if (b.type === "dividingLine" && a.type !== "dividingLine")
-                return 1;
 
-            // 比较开始时间
-            const startDiff = a.startTime.diff(b.startTime).toMillis();
-            if (startDiff !== 0) return startDiff;
+    const lessonsWithId: ScheduleWithId[] = Object.entries(
+        scheduleEditorTodayConfig.value.schedule
+    ).map(([id, lesson]) => ({
+        id,
+        lesson,
+    }));
 
-            // 如果开始时间相同，比较结束时间（只有非分割线的项目才有endTime）
-            if (a.type !== "dividingLine" && b.type !== "dividingLine") {
-                return a.endTime.diff(b.endTime).toMillis();
-            }
+    return lessonsWithId.sort((a, b) => {
+        // 首先比较开始时间
+        const startDiff =
+            a.lesson.type !== "dividingLine" && b.lesson.type !== "dividingLine"
+                ? a.lesson.startTime.diff(b.lesson.startTime).toMillis()
+                : 0;
 
-            return 0;
-        }
-    );
+        if (startDiff !== 0) return startDiff;
+
+        // 开始时间相同时，分割线优先
+        if (a.lesson.type === "dividingLine") return -1;
+        if (b.lesson.type === "dividingLine") return 1;
+
+        // 最后比较结束时间
+        return a.lesson.endTime.diff(b.lesson.endTime).toMillis();
+    });
 });
-const sortedLessonsWithoutDividingLine = computed(() => {
+
+const sortedLessonsWithoutDividingLine = computed<
+    ScheduleWithIdWithoutDividingLine[]
+>(() => {
     return sortedLessons.value.filter(
-        (lesson) => lesson.type !== "dividingLine"
-    );
+        (lesson) => lesson.lesson.type !== "dividingLine"
+    ) as ScheduleWithIdWithoutDividingLine[];
 });
-
-interface lessonStatus {
-    currentLessons: todaySchedule[];
-    futureLessons: todaySchedule[];
-    status: "ok" | "beforeFirst" | "afterLast" | "noLesson";
-}
 
 const lessonStatus = computed<lessonStatus>(() => {
-    const currentLessons: todaySchedule[] = [];
-    const futureLessons: todaySchedule[] = [];
+    const currentLessons: ScheduleWithIdWithoutDividingLine[] = [];
+    const futureLessons: ScheduleWithIdWithoutDividingLine[] = [];
     const now = currentTime.value;
 
     // 如果没有课程，返回beforeFirst状态
@@ -60,22 +101,24 @@ const lessonStatus = computed<lessonStatus>(() => {
         return {
             currentLessons,
             futureLessons,
-            status: "noLesson" as const,
+            status: LessonStatusEnum.noLesson
         };
     }
 
     // 检查是否在第一节课之前
     const firstLesson = sortedLessonsWithoutDividingLine.value[0];
-    if (now < firstLesson.startTime) {
+    if (now < firstLesson.lesson.startTime) {
+        // 找到所有与第一节课开始时间相同的课程
         return {
             currentLessons,
-            futureLessons: [
-                firstLesson,
-                ...sortedLessonsWithoutDividingLine.value.filter((lesson) =>
-                    lesson.startTime.equals(firstLesson.startTime)
-                ),
-            ],
-            status: "beforeFirst" as const,
+            futureLessons: sortedLessonsWithoutDividingLine.value.filter(
+                (lesson) => {
+                    lesson.lesson.startTime.equals(
+                        firstLesson.lesson.startTime
+                    );
+                }
+            ),
+            status: LessonStatusEnum.beforeFirst
         };
     }
 
@@ -84,26 +127,31 @@ const lessonStatus = computed<lessonStatus>(() => {
         sortedLessonsWithoutDividingLine.value[
         sortedLessonsWithoutDividingLine.value.length - 1
             ];
-    if (now > lastLesson.endTime) {
+    if (now > lastLesson.lesson.endTime) {
         return {
             currentLessons,
             futureLessons,
-            status: "afterLast" as const,
+            status: LessonStatusEnum.afterLast
         };
     }
 
     // 找出当前正在进行的课程和下一节课
     let firstFutureTime: DateTime | null = null;
 
-    sortedLessonsWithoutDividingLine.value.forEach((lesson) => {
+    sortedLessonsWithoutDividingLine.value.forEach((val) => {
+        const lesson = val.lesson;
+        // current
         if (now >= lesson.startTime && now <= lesson.endTime) {
-            currentLessons.push(lesson);
-        } else if (now < lesson.startTime) {
+            currentLessons.push(val);
+            return;
+        }
+        // future
+        if (now < lesson.startTime) {
             if (firstFutureTime === null) {
                 firstFutureTime = lesson.startTime;
-                futureLessons.push(lesson);
-            } else if (lesson.startTime.equals(firstFutureTime)) {
-                futureLessons.push(lesson);
+            }
+            if (lesson.startTime.equals(firstFutureTime)) {
+                futureLessons.push(val);
             }
         }
     });
@@ -111,7 +159,30 @@ const lessonStatus = computed<lessonStatus>(() => {
     return {
         currentLessons,
         futureLessons,
-        status: "ok" as const,
+        status: LessonStatusEnum.ok,
     };
 });
 
+const lessonList = computed<LessonList>(() => {
+    const list: LessonList = [];
+    const currentLessons = lessonStatus.value.currentLessons;
+    const futureLessons = lessonStatus.value.futureLessons;
+    sortedLessons.value.forEach((val) => {
+        const lesson = val.lesson;
+        const id = val.id;
+        if (lesson.type === "dividingLine") {
+            list.push({id, lesson, status: LessonListEnum.normal});
+            return;
+        }
+        if (currentLessons.find((val) => val.id === id)) {
+            list.push({id, lesson, status: LessonListEnum.current});
+            return;
+        }
+        if (futureLessons.find((val) => val.id === id)) {
+            list.push({id, lesson, status: LessonListEnum.future});
+            return;
+        }
+        list.push({id, lesson, status: LessonListEnum.normal});
+    })
+    return list;
+});
