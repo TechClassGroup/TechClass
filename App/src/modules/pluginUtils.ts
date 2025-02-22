@@ -2,9 +2,9 @@
  * @fileOverview 插件的一些工具函数
  */
 import {computed, ComputedRef} from "vue";
-import {IPlugin, PluginComponentStore} from "../types/plugins";
+import {IPlugin, PluginComponentStore} from "../types/plugins.types";
 import {loadedPlugins, onPluginRegister} from "./pluginsManager";
-import {FsItemInfo, PluginType} from "../types/rsShared";
+import {FsItemInfo, PluginType} from "../types/rsShared.types";
 import {rustFs} from "./rustApi";
 
 export const computedPluginsComponent: ComputedRef<

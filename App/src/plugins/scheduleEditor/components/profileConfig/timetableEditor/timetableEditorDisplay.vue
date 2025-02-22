@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {TimetableObject} from "../../../scheduleEditorTypes";
+import {TimetableObject} from "../../../scheduleEditor.types";
 import {v4 as uuidv4} from "uuid";
 import TcButton from "../../../../../UI/TcButton.vue";
 

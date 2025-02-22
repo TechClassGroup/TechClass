@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, onUnmounted, ref} from "vue";
-import {PluginProps} from "../../types/plugins";
+import {PluginProps} from "../../types/plugins.types";
 
 const hours = ref("");
 const minutes = ref("");

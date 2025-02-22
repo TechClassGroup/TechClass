@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {ref} from "vue";
-import {SubjectObject} from "../../../scheduleEditorTypes";
+import {SubjectObject} from "../../../scheduleEditor.types";
 import SubjectEditorDisplay from "./subjectEditorDisplay.vue";
 import SubjectEditorChecker from "./subjectEditorChecker.vue";
 import {v4 as uuidv4} from "uuid";

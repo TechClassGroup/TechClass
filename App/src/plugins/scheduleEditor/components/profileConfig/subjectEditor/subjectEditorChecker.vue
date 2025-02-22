@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {SubjectObject} from "../../../scheduleEditorTypes";
+import {SubjectObject} from "../../../scheduleEditor.types";
 import TcInput from "../../../../../UI/TcInput.vue";
 
 const props = defineProps<{

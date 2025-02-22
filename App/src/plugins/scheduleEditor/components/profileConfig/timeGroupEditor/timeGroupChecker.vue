@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import type {timeGroupObject} from "../../../scheduleEditorTypes";
+import type {timeGroupObject} from "../../../scheduleEditor.types";
 import TcInput from "../../../../../UI/TcInput.vue";
 import TcSwitch from "../../../../../UI/TcSwitch.vue";
 import {DateTime} from "luxon";

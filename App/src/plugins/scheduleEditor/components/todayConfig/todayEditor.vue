@@ -7,7 +7,7 @@ import TcSwitch from "../../../../UI/TcSwitch.vue";
 import TcButton from "../../../../UI/TcButton.vue";
 import {DateTime} from "luxon";
 import {v4 as uuidv4} from "uuid";
-import type {todaySchedule, todayScheduleBreak, todayScheduleLesson,} from "../../scheduleEditorTypes";
+import type {todaySchedule, todayScheduleBreak, todayScheduleLesson,} from "../../scheduleEditor.types";
 
 const selectedScheduleId = ref<string>("");
 const showSubjectSelector = ref(false);

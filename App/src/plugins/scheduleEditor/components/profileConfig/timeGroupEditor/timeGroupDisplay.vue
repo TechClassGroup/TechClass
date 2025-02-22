@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {timeGroupObject} from "../../../scheduleEditorTypes";
+import {timeGroupObject} from "../../../scheduleEditor.types";
 import {v4 as uuidv4} from "uuid";
 import TcButton from "../../../../../UI/TcButton.vue";
 import {DateTime} from "luxon";

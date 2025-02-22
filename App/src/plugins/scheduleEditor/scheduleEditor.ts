@@ -1,12 +1,12 @@
 /**
  * @fileOverview 课表编辑器插件
  */
-import {IPlugin, PluginStore} from "../../types/plugins";
+import {IPlugin, PluginStore} from "../../types/plugins.types";
 import scheduleEditorSetting from "./components/scheduleEditorSetting.vue";
 import {clearStore, initializeStore} from "./store/scheduleStore";
 import {scheduleEditorProfile} from "./store/scheduleEditorProfile";
 import {scheduleEditorTodayConfig} from "./store/todayConfigStore";
-import {scheduleEditorApi} from "./scheduleEditorTypes";
+import {scheduleEditorApi} from "./scheduleEditor.types";
 
 type ConfigType = "course" | "enable" | "todayConfig";
 

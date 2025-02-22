@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {DraggableComponentStatus} from "../types/plugins.js";
+import {DraggableComponentStatus} from "../types/plugins.types.js";
 import {computedPluginsComponent} from "../modules/pluginUtils";
 
 const updateComponentStatus = (

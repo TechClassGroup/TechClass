@@ -5,7 +5,7 @@
 import logger from "./logger";
 import {defineStore} from "pinia";
 import {markRaw, ref, Ref, watch} from "vue";
-import {DraggableComponentStatus, InstancePlugin, IPlugin,} from "../types/plugins";
+import {DraggableComponentStatus, InstancePlugin, IPlugin,} from "../types/plugins.types";
 import {useApplicationStore} from "../stores/useApplicationStore";
 import {officialPlugins} from "../plugins/officialPlugins";
 import {PluginFs} from "./pluginUtils";

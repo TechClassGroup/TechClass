@@ -1,7 +1,7 @@
 /**
  * @fileOverview 档案的store
  */
-import {ScheduleEditorProfileStore} from "../scheduleEditorTypes";
+import {ScheduleEditorProfileStore} from "../scheduleEditor.types";
 import logger from "../../../modules/logger";
 import {PluginFs} from "../../../modules/pluginUtils";
 import {DateTime} from "luxon";

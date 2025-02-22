@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {TimetableObject} from "../../../scheduleEditorTypes";
+import {TimetableObject} from "../../../scheduleEditor.types";
 import {DateTime} from "luxon";
 import TcInput from "../../../../../UI/TcInput.vue";
 import TcSwitch from "../../../../../UI/TcSwitch.vue";

@@ -1,7 +1,7 @@
 /**
  * @fileOverview Rust API
  */
-import {FsItemInfo, PluginType} from "../types/rsShared";
+import {FsItemInfo, PluginType} from "../types/rsShared.types";
 import {invoke} from "@tauri-apps/api/core";
 
 export class rustFs {

@@ -1,7 +1,7 @@
 /**
  * @fileOverview 今日课程配置
  */
-import {ScheduleEditorProfileStore, todayConfig,} from "../scheduleEditorTypes";
+import {ScheduleEditorProfileStore, todayConfig,} from "../scheduleEditor.types";
 import {DateTime} from "luxon";
 import {v4 as uuidv4} from "uuid";
 

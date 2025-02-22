@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {timeGroupObject} from "../../../scheduleEditorTypes";
+import {timeGroupObject} from "../../../scheduleEditor.types";
 
 import {scheduleEditorProfile} from "../../../store/scheduleEditorProfile";
 

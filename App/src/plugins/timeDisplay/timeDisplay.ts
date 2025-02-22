@@ -3,7 +3,7 @@
  */
 
 import timeDisplayMain from "./timeDisplayMain.vue";
-import { IPlugin } from "../../types/plugins";
+import {IPlugin} from "../../types/plugins.types";
 import timeDisplaySetting from "./timeDisplaySetting.vue";
 
 type MainComponentKey = "main";

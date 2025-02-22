@@ -5,7 +5,7 @@ import About from "./setting/About.vue";
 import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSet from "./setting/PluginSet.vue";
 import {computedPluginsComponent} from "../modules/pluginUtils";
-import {PluginStore} from "../types/plugins";
+import {PluginStore} from "../types/plugins.types";
 
 const store = useApplicationStore();
 

@@ -3,7 +3,7 @@
  * 用于处理时间组的层级关系和课表查找
  */
 import {DateTime} from "luxon";
-import {Curriculum, ScheduleEditorProfileStore, TimeGroup, TimeGroupLayout,} from "../scheduleEditorTypes";
+import {Curriculum, ScheduleEditorProfileStore, TimeGroup, TimeGroupLayout,} from "../scheduleEditor.types";
 import {scheduleEditorLogger} from "./utils";
 
 export interface TimeGroupInfo {

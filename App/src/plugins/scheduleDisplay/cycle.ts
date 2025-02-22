@@ -5,7 +5,7 @@
 import {computed, ref} from "vue";
 import {scheduleEditorTodayConfig} from "../scheduleEditor/store/todayConfigStore";
 import {DateTime} from "luxon";
-import {todaySchedule} from "../scheduleEditor/scheduleEditorTypes";
+import {todaySchedule} from "../scheduleEditor/scheduleEditor.types";
 
 const currentTime = ref<DateTime>(DateTime.now());
 // temp

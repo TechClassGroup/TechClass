@@ -1,5 +1,5 @@
-import {ScheduleEditorProfileStore} from "../scheduleEditorTypes";
-import {PluginStore} from "../../../types/plugins";
+import {ScheduleEditorProfileStore} from "../scheduleEditor.types";
+import {PluginStore} from "../../../types/plugins.types";
 import {PluginFs} from "../../../modules/pluginUtils";
 import {clearProfile, initProfile, scheduleEditorProfile} from "./scheduleEditorProfile";
 import {clearTodayConfig, initTodayConfig} from "./todayConfigStore";

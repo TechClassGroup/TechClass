@@ -8,7 +8,7 @@ import {throttle} from "lodash";
 
 import {invoke} from "@tauri-apps/api/core";
 import logger from "../modules/logger";
-import {IpcErrorKind, PluginType} from "../types/rsShared";
+import {IpcErrorKind, PluginType} from "../types/rsShared.types";
 
 export interface ConfigStorageOptions {
     config_storage?: {

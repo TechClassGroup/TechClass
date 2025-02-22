@@ -1,9 +1,9 @@
 /**
  * @fileOverview 课表展示器插件
  */
-import {IPlugin} from "../../types/plugins";
+import {IPlugin} from "../../types/plugins.types";
 import {ref} from "vue";
-import {scheduleEditorApi} from "../scheduleEditor/scheduleEditorTypes";
+import {scheduleEditorApi} from "../scheduleEditor/scheduleEditor.types";
 import {InterPluginApi} from "../../modules/pluginUtils";
 import logger from "../../modules/logger";
 import nextLesson from "./component/nextLesson.vue"

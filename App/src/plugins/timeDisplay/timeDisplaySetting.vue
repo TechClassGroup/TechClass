@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {PluginProps} from "../../types/plugins";
+import {PluginProps} from "../../types/plugins.types";
 import TcSwitch from "../../UI/TcSwitch.vue";
 import {computed, watch} from "vue";
 

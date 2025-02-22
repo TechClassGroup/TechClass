@@ -2,7 +2,7 @@
  * @fileOverview 今日日程的存储
  */
 import {ref, Ref, watch} from "vue";
-import {todayConfig} from "../scheduleEditorTypes";
+import {todayConfig} from "../scheduleEditor.types";
 import {generateTodayConfigByDate} from "../modules/todayConfig";
 import {DateTime} from "luxon";
 import {scheduleEditorProfile, waitForInit} from "./scheduleEditorProfile";
