@@ -8,8 +8,8 @@ import {DateTime} from "luxon";
 import {
     LessonList,
     LessonListEnum,
-    lessonStatus,
     LessonStatusEnum,
+    lessonStatusType,
     ScheduleWithId,
     ScheduleWithIdWithoutDividingLine
 } from "./scheduleDisplay.types";
@@ -58,7 +58,7 @@ const sortedLessonsWithoutDividingLine = computed<
     ) as ScheduleWithIdWithoutDividingLine[];
 });
 
-const lessonStatus = computed<lessonStatus>(() => {
+export const lessonStatus = computed<lessonStatusType>(() => {
     const currentLessons: ScheduleWithIdWithoutDividingLine[] = [];
     const futureLessons: ScheduleWithIdWithoutDividingLine[] = [];
     const now = currentTime.value;
@@ -130,7 +130,7 @@ const lessonStatus = computed<lessonStatus>(() => {
     };
 });
 
-const lessonList = computed<LessonList>(() => {
+export const lessonList = computed<LessonList>(() => {
     const list: LessonList = [];
     const currentLessons = lessonStatus.value.currentLessons;
     const futureLessons = lessonStatus.value.futureLessons;

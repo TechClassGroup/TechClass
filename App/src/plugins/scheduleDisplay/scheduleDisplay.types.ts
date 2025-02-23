@@ -50,12 +50,12 @@ export enum LessonStatusEnum {
 
 /**
  * 课程状态接口
- * @interface lessonStatus
+ * @interface lessonStatusType
  * @property {ScheduleWithIdWithoutDividingLine[]} currentLessons - 当前正在进行的课程列表
  * @property {ScheduleWithIdWithoutDividingLine[]} futureLessons - 未来将要进行的课程列表
  * @property {LessonStatusEnum} status - 课程状态
  */
-export interface lessonStatus {
+export interface lessonStatusType {
     currentLessons: ScheduleWithIdWithoutDividingLine[];
     futureLessons: ScheduleWithIdWithoutDividingLine[];
     status: LessonStatusEnum;
