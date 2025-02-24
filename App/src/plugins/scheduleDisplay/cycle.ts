@@ -153,3 +153,13 @@ export const lessonList = computed<LessonList>(() => {
     })
     return list;
 });
+
+export const normalLessonList = computed<LessonList>(() => {
+    return lessonList.value.filter((val) => {
+        if (val.lesson.type === "dividingLine") {
+            return true;
+        }
+        return val.lesson.noDisplayedSeparately === false;
+    });
+})
+

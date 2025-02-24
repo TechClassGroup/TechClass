@@ -76,10 +76,9 @@ export enum LessonListEnum {
 
 /**
  * 课程列表类型
- * @typedef {Object[]} LessonList
- * @property {string} id - 课程的唯一标识符
- * @property {todaySchedule} lesson - 课程内容
- * @property {LessonListEnum} status - 课程状态
+ *  id - 课程的唯一标识符
+ *  lesson - 课程内容
+ *  status - 课程状态
  */
 export type LessonList = {
     id: string;

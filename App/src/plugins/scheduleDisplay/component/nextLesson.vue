@@ -66,7 +66,7 @@ const formatDuration = computed(() => {
           >
         </template>
       </div>
-      <div class="text-4xl font-medium text-[#0078D4]">
+      <div class="text-4xl font-medium text-[rgb(43,173,242)]">
         {{ formatDuration }}
       </div>
     </template>
