@@ -33,12 +33,9 @@ const sortedLessons = computed<ScheduleWithId[]>(() => {
     }));
 
     return lessonsWithId.sort((a, b) => {
-        // 首先比较开始时间
-        const startDiff =
-            a.lesson.type !== "dividingLine" && b.lesson.type !== "dividingLine"
-                ? a.lesson.startTime.diff(b.lesson.startTime).toMillis()
-                : 0;
-
+        // 首先比较开始时间 - 所有类型都应该按开始时间排序
+        const startDiff = a.lesson.startTime.diff(b.lesson.startTime).toMillis();
+        
         if (startDiff !== 0) return startDiff;
 
         // 开始时间相同时，分割线优先
