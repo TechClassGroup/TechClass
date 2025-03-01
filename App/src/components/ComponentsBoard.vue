@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {DraggableComponentStatus} from "../types/plugins.types.js";
 import {computedPluginsComponent} from "../modules/pluginUtils";
+import {computed} from "vue";
 
 const updateComponentStatus = (
     status: DraggableComponentStatus,
@@ -14,28 +15,26 @@ const updateComponentStatus = (
   if (width !== undefined) status.width = width as any;
   if (height !== undefined) {
     status.height = height as any;
-
   }
-
 };
 const onResizeDrag = ($event: any, status: DraggableComponentStatus) => {
   updateComponentStatus(status, $event[0], $event[1], $event[2], $event[3]);
 };
 
 const getComponentProps = (status: DraggableComponentStatus) => {
-  return {
+  return computed(() => ({
     maxWidth: status.maxWidth,
     maxHeight: status.maxHeight,
     minWidth: status.minWidth,
     minHeight: status.minHeight,
-    width: status.width,
-    height: status.height,
+    w: status.width,
+    h: status.height,
     x: status.x,
     y: status.y,
     draggable: status.draggable,
     resizable: status.resizable,
     z: status.zIndex,
-  };
+  })).value;
 };
 </script>
 
