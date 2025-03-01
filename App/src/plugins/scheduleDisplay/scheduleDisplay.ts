@@ -55,7 +55,6 @@ export const scheduleDisplay: IPlugin<mainPageKeys> = {
         storageConfig: {
             enabled: true,
             keys: ["componentStatus"],
-
-        }
+        },
     }
 };

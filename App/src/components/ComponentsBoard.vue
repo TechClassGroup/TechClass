@@ -9,28 +9,34 @@ const updateComponentStatus = (
     width: number,
     height: number
 ) => {
-  status.x = left as any;
-  status.y = top as any;
-  status.width = width as any;
-  status.height = height as any;
+  if (left !== undefined) status.x = left as any;
+  if (top !== undefined) status.y = top as any;
+  if (width !== undefined) status.width = width as any;
+  if (height !== undefined) {
+    status.height = height as any;
+
+  }
+
 };
 const onResizeDrag = ($event: any, status: DraggableComponentStatus) => {
   updateComponentStatus(status, $event[0], $event[1], $event[2], $event[3]);
 };
 
-const getComponentProps = (status: DraggableComponentStatus) => ({
-  maxWidth: status.maxWidth,
-  maxHeight: status.maxHeight,
-  minWidth: status.minWidth,
-  minHeight: status.minHeight,
-  width: status.width,
-  height: status.height,
-  x: status.x,
-  y: status.y,
-  draggable: status.draggable,
-  resizable: status.resizable,
-  z: status.zIndex,
-});
+const getComponentProps = (status: DraggableComponentStatus) => {
+  return {
+    maxWidth: status.maxWidth,
+    maxHeight: status.maxHeight,
+    minWidth: status.minWidth,
+    minHeight: status.minHeight,
+    width: status.width,
+    height: status.height,
+    x: status.x,
+    y: status.y,
+    draggable: status.draggable,
+    resizable: status.resizable,
+    z: status.zIndex,
+  };
+};
 </script>
 
 <template>

@@ -64,14 +64,8 @@ export function ConfigStoragePiniaPlugin({
                 }
             }
 
-            // 检查类型是否匹配
-            if (
-                typeof sourceValue === typeof target ||
-                (Array.isArray(target) && Array.isArray(sourceValue))
-            ) {
-                return sourceValue;
-            }
-            return target; // 类型不匹配时保持原值
+            // 只要路径有效且值不是undefined，就使用source中的值
+            return sourceValue !== undefined ? sourceValue : target;
         }
 
         // 如果是对象，递归合并
@@ -118,6 +112,7 @@ export function ConfigStoragePiniaPlugin({
                         logger.info(
                             `[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`
                         );
+                        ;
                     } else {
                         logger.warn(
                             `[Config Storage Pinia Plugin] 加载失败 属性不存在: ${id} key: ${key}`

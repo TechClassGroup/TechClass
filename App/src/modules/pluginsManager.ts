@@ -65,14 +65,14 @@ export function registerPlugin(plugin: IPlugin<any>) {
              * 更新组件的拖动状态
              */
             updateComponentStatus() {
-                logger.debug(`更新${plugin.name}的组件状态`);
+                logger.debug(`更新${plugin.name} 的组件状态`);
 
                 for (const key in plugin.component.mainPage) {
                     if (!this.componentStatus[key]) {
                         // 组件的默认值
                         this.componentStatus[key] = {
-                            maxHeight: Infinity,
-                            maxWidth: Infinity,
+                            maxHeight: Number.MAX_SAFE_INTEGER,
+                            maxWidth: Number.MAX_SAFE_INTEGER,
                             minHeight: 0,
                             minWidth: 0,
                             width: "auto",
