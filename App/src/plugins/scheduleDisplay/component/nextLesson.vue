@@ -27,6 +27,17 @@ const nextLessonInfo = computed(() => {
     };
   }
 
+  if (status.currentLessons.length > 0) {
+    const currentLesson = status.currentLessons[0];
+    const endTime = currentLesson.lesson.endTime;
+    const duration = endTime.diff(now);
+    return {
+      text: "距离课程结束",
+      remainingTime: duration,
+      lessons: [],
+    };
+  }
+
   return {text: "今天的课程已结束", remainingTime: null, lessons: []};
 });
 

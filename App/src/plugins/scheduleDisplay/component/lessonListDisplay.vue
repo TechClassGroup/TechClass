@@ -10,7 +10,8 @@ import {LessonListEnum, LessonListWithoutDividingLine,} from "../scheduleDisplay
  * 这些课程会在列表顶部突出显示，与普通课程列表分开
  */
 const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
-  const slotList = noDisplayedSeparatelyLessonList.value as LessonListWithoutDividingLine;
+  const slotList =
+      noDisplayedSeparatelyLessonList.value as LessonListWithoutDividingLine;
 
   // 查找 future 状态的课程
   const futureSlots = slotList.filter(
@@ -35,7 +36,7 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
 
 <template>
   <div class="h-full w-full flex flex-col gap-1 p-1 overflow-hidden">
-    <!-- 高亮显示的课程 -->
+    <!-- 非显示的课程 -->
     <template v-if="noDisplaySepLesson.length > 0">
       <template
           v-for="(item, index) in noDisplaySepLesson"
@@ -47,11 +48,28 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
           <div
               class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
           >
+            {{ item.lesson.name }}
+          </div>
+          <!-- 状态指示器 -->
+          <div
+              v-if="
+                            item.status === LessonListEnum.future ||
+                            item.status === LessonListEnum.current
+                        "
+              :class="{
+                            'bg-red-500 text-white':
+                                item.status === LessonListEnum.future,
+                            'bg-green-500 text-white':
+                                item.status === LessonListEnum.current,
+                        }"
+              class="absolute right-0 top-1/2 -translate-y-1/2 px-2 py-1 rounded-l-md text-sm font-medium"
+          >
             {{
-              item.lesson.name
+              item.status === LessonListEnum.future
+                  ? "未来"
+                  : "当前"
             }}
           </div>
-
         </div>
       </template>
 
@@ -78,7 +96,26 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
         >
           {{ item.lesson.name }}
         </div>
-
+        <!-- 状态指示器 -->
+        <div
+            v-if="
+                        item.status === LessonListEnum.future ||
+                        item.status === LessonListEnum.current
+                    "
+            :class="{
+                        'bg-red-500 text-white':
+                            item.status === LessonListEnum.future,
+                        'bg-green-500 text-white':
+                            item.status === LessonListEnum.current,
+                    }"
+            class="absolute right-0 top-1/2 -translate-y-1/2 px-2 py-1 rounded-l-md text-sm font-medium"
+        >
+          {{
+            item.status === LessonListEnum.future
+                ? "未来"
+                : "当前"
+          }}
+        </div>
       </div>
     </template>
 
