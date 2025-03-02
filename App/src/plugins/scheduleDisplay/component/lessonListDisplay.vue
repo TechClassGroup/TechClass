@@ -38,40 +38,44 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
   <div class="h-full w-full flex flex-col gap-1 p-1 overflow-hidden">
     <!-- 非显示的课程 -->
     <template v-if="noDisplaySepLesson.length > 0">
-      <template
-          v-for="(item, index) in noDisplaySepLesson"
-          :key="item.id"
-      >
-        <div
-            class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
+      <TransitionGroup class="flex flex-col gap-1" name="list" tag="div">
+        <template
+            v-for="(item, index) in noDisplaySepLesson"
+            :key="item.id"
         >
           <div
-              class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
+              class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
           >
-            {{ item.lesson.name }}
+            <div
+                class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
+            >
+              {{ item.lesson.name }}
+            </div>
+            <!-- 状态指示器 -->
+            <Transition name="slide-fade">
+              <div
+                  v-if="
+                                    item.status === LessonListEnum.future ||
+                                    item.status === LessonListEnum.current
+                                "
+                  :class="{
+                                    'bg-red-500 text-white':
+                                        item.status === LessonListEnum.future,
+                                    'bg-green-500 text-white':
+                                        item.status === LessonListEnum.current,
+                                }"
+                  class="absolute right-0 top-1/2 -translate-y-1/2 px-2 py-1 rounded-l-md text-sm font-medium"
+              >
+                {{
+                  item.status === LessonListEnum.future
+                      ? "未来"
+                      : "当前"
+                }}
+              </div>
+            </Transition>
           </div>
-          <!-- 状态指示器 -->
-          <div
-              v-if="
-                            item.status === LessonListEnum.future ||
-                            item.status === LessonListEnum.current
-                        "
-              :class="{
-                            'bg-red-500 text-white':
-                                item.status === LessonListEnum.future,
-                            'bg-green-500 text-white':
-                                item.status === LessonListEnum.current,
-                        }"
-              class="absolute right-0 top-1/2 -translate-y-1/2 px-2 py-1 rounded-l-md text-sm font-medium"
-          >
-            {{
-              item.status === LessonListEnum.future
-                  ? "未来"
-                  : "当前"
-            }}
-          </div>
-        </div>
-      </template>
+        </template>
+      </TransitionGroup>
 
       <!-- 分隔区域 -->
       <div
@@ -80,53 +84,110 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
     </template>
 
     <!-- 常规课程列表 -->
-    <template v-for="(item, index) in normalLessonList" :key="item.id">
-      <!-- 分割线 -->
-      <div
-          v-if="item.lesson.type === 'dividingLine'"
-          class="my-2 border-b border-gray-300"
-      ></div>
+    <TransitionGroup class="flex flex-col gap-1" name="list" tag="div">
+      <template v-for="(item, index) in normalLessonList" :key="item.id">
+        <!-- 分割线 -->
+        <div
+            v-if="item.lesson.type === 'dividingLine'"
+            class="my-2 border-b border-gray-300"
+        ></div>
 
-      <div
-          v-else
-          class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
-      >
         <div
-            class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
+            v-else
+            class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
         >
-          {{ item.lesson.name }}
+          <div
+              class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
+          >
+            {{ item.lesson.name }}
+          </div>
+          <!-- 状态指示器 -->
+          <Transition name="slide-fade">
+            <div
+                v-if="
+                                item.status === LessonListEnum.future ||
+                                item.status === LessonListEnum.current
+                            "
+                :class="{
+                                'bg-red-500 text-white':
+                                    item.status === LessonListEnum.future,
+                                'bg-green-500 text-white':
+                                    item.status === LessonListEnum.current,
+                            }"
+                class="absolute right-0 top-1/2 -translate-y-1/2 px-2 py-1 rounded-l-md text-sm font-medium"
+            >
+              {{
+                item.status === LessonListEnum.future
+                    ? "未来"
+                    : "当前"
+              }}
+            </div>
+          </Transition>
         </div>
-        <!-- 状态指示器 -->
-        <div
-            v-if="
-                        item.status === LessonListEnum.future ||
-                        item.status === LessonListEnum.current
-                    "
-            :class="{
-                        'bg-red-500 text-white':
-                            item.status === LessonListEnum.future,
-                        'bg-green-500 text-white':
-                            item.status === LessonListEnum.current,
-                    }"
-            class="absolute right-0 top-1/2 -translate-y-1/2 px-2 py-1 rounded-l-md text-sm font-medium"
-        >
-          {{
-            item.status === LessonListEnum.future
-                ? "未来"
-                : "当前"
-          }}
-        </div>
-      </div>
-    </template>
+      </template>
+    </TransitionGroup>
 
     <!-- 无课程时显示 -->
-    <div
-        v-if="normalLessonList.length === 0"
-        class="empty-state p-2 text-center text-gray-500"
-    >
-      暂无课程安排
-    </div>
+    <Transition name="fade">
+      <div
+          v-if="normalLessonList.length === 0"
+          class="empty-state p-2 text-center text-gray-500"
+      >
+        暂无课程安排
+      </div>
+    </Transition>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 列表动画 */
+.list-move {
+  transition: transform 0.3s ease;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+
+.list-enter-from {
+  transform: translateY(-30px);
+  opacity: 0;
+}
+
+.list-leave-to {
+  transform: translateY(-30px);
+  opacity: 0;
+}
+
+.list-leave-active {
+  position: absolute;
+}
+
+/* 状态指示器滑动动画 */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-fade-enter-from {
+  transform: translate(30px, -50%);
+  opacity: 0;
+}
+
+.slide-fade-leave-to {
+  transform: translate(30px, -50%);
+  opacity: 0;
+}
+
+/* 淡入淡出动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
