@@ -8,6 +8,7 @@ import {DateTime} from "luxon";
 import {
     LessonList,
     LessonListEnum,
+    LessonListWithoutDividingLine,
     LessonStatusEnum,
     lessonStatusType,
     ScheduleWithId,
@@ -160,14 +161,12 @@ export const normalLessonList = computed<LessonList>(() => {
     });
 })
 
-export const noDisplayedSeparatelyLessonList = computed(() => {
+export const noDisplayedSeparatelyLessonList = computed<LessonListWithoutDividingLine>(() => {
     return lessonList.value.filter((val) => {
         if (val.lesson.type === "dividingLine") {
             return false;
         }
-        if (val.lesson.noDisplayedSeparately === true) {
-            return true;
-        }
-        return false;
-    })
+        return val.lesson.noDisplayedSeparately === true;
+
+    }) as LessonListWithoutDividingLine;
 })

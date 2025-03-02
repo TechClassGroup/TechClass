@@ -85,3 +85,11 @@ export type LessonList = {
     lesson: todaySchedule;
     status: LessonListEnum;
 }[];
+/**
+ * 课程表类型 但是没有分割线
+ */
+export type LessonListWithoutDividingLine = {
+    id: string;
+    lesson: ScheduleWithoutDividingLine;
+    status: LessonListEnum;
+}[]
