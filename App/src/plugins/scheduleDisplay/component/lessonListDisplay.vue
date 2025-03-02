@@ -4,12 +4,12 @@ import {computed} from "vue";
 import {LessonListEnum, ScheduleWithIdWithoutDividingLine,} from "../scheduleDisplay.types";
 
 /**
- * 当前高亮显示的课程
+ * 非单独显示
  * 优先显示未来即将开始的课程（future状态）
  * 如果没有未来课程，则显示当前正在进行的课程（current状态）
  * 这些课程会在列表顶部突出显示，与普通课程列表分开
  */
-const highlightedLesson = computed<ScheduleWithIdWithoutDividingLine[]>(() => {
+const noDisplaySepLesson = computed<ScheduleWithIdWithoutDividingLine[]>(() => {
   const slotList = noDisplayedSeparatelyLessonList.value;
 
   // 查找 future 状态的课程
@@ -36,8 +36,8 @@ const highlightedLesson = computed<ScheduleWithIdWithoutDividingLine[]>(() => {
 <template>
   <div class="h-full w-full flex flex-col gap-1 p-1 overflow-hidden">
     <!-- 高亮显示的课程 -->
-    <template v-if="highlightedLesson.length > 0">
-      <template v-for="(item, index) in highlightedLesson" :key="item.id">
+    <template v-if="noDisplaySepLesson.length > 0">
+      <template v-for="(item, index) in noDisplaySepLesson" :key="item.id">
         <div
             class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center"
         >
