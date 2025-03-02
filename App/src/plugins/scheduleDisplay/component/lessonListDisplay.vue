@@ -16,7 +16,9 @@ import {normalLessonList} from "../cycle";
           v-else
           class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200"
       >
-        <div class="font-medium text-center lesson-name">
+        <div
+            class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
+        >
           {{ item.lesson.name }}
         </div>
       </div>
@@ -32,12 +34,4 @@ import {normalLessonList} from "../cycle";
   </div>
 </template>
 
-<style scoped>
-.lesson-name {
-  font-size: clamp(0.75rem, 3vw, 1.5rem);
-  line-height: 1.2;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-</style>
+<style scoped></style>
