@@ -35,7 +35,7 @@ jobs:
       - name: setup powershell dependencies
         shell: pwsh
         run: |
-          Install-Module -Name PSToml -Scope CurrentUser
+          Install-Module -Name PSToml -Scope CurrentUser -Force
       # 数据处理
       - name: set loglevel
         shell: pwsh
