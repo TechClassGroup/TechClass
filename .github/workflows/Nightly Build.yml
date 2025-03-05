@@ -32,6 +32,11 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./App/src-tauri -> target"
+      - name: setup powershell dependencies
+        shell: pwsh
+        run: |
+          Install-Module PowerShellTOML -Scope CurrentUser -Force
+          Import-Module PowerShellTOML
       # 数据处理
       - name: set loglevel
         shell: pwsh
