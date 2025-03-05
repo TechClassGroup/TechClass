@@ -13,4 +13,5 @@ tomlObject.package.metadata.loglevel.release = "trace";
 tomlObject.package.metadata.loglevel.releaseFrontend = "trace";
 
 const newContent = toml.stringify(tomlObject);
+console.log(newContent);
 fs.writeFileSync(cargoPath, newContent);
