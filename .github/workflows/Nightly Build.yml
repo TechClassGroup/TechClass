@@ -1,0 +1,63 @@
+name: 每日构建
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+permissions: write-all
+jobs:
+  build:
+    name: Nightly Build
+    runs-on: windows-latest
+    steps:
+      # 准备环境
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "pnpm"
+      - name: install dependencies
+        run: pnpm install
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./App/src-tauri -> target"
+      # 数据处理
+      - name: set loglevel
+        shell: pwsh
+        run: |
+          $cargoPath = "App/src-tauri/Cargo.toml"
+          $content = Get-Content $cargoPath -Raw
+          $tomlObject = $content | ConvertFrom-Toml
+          $tomlObject.log.release = "trace"
+          $tomlObject.log.releaseFrontend = "trace"
+          $newContent = $tomlObject | ConvertTo-Toml
+          Set-Content -Path $cargoPath -Value $newContent
+      # Build
+      - name: Build
+        run: pnpm --filter @techclass/app tauri build
+      - name: Rename artifact
+        shell: pwsh
+        run: |
+          $date = Get-Date -Format "yyyyMMdd"
+          $hash = git rev-parse --short HEAD
+          $sourcePath = Get-ChildItem -Path "App/src-tauri/target/release/bundle/nsis" -File | Select-Object -First 1
+          $newName = "Techclass-nightly-${date}-${hash}$($sourcePath.Extension)"
+          Rename-Item -Path $sourcePath.FullName -NewName $newName
+          "ARTIFACT_NAME=$newName" | Out-File -FilePath $env:GITHUB_ENV -Append
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: App/src-tauri/target/release/bundle/nsis/*
+          retention-days: 30
