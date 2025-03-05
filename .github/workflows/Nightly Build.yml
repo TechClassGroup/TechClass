@@ -33,10 +33,9 @@ jobs:
         with:
           workspaces: "./App/src-tauri -> target"
       - name: setup powershell dependencies
-        shell: pwsh 
+        shell: pwsh
         run: |
           Install-Module -Name PSToml -Scope CurrentUser
-          Import-Module PowerShellTOML
       # 数据处理
       - name: set loglevel
         shell: pwsh
