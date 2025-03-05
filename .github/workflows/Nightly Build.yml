@@ -43,8 +43,8 @@ jobs:
           $cargoPath = "App/src-tauri/Cargo.toml"
           $content = Get-Content $cargoPath -Raw
           $tomlObject = $content | ConvertFrom-Toml
-          $tomlObject.log.release = "trace"
-          $tomlObject.log.releaseFrontend = "trace"
+          $tomlObject.package.metadata.loglevel.release = "trace"
+          $tomlObject.package.metadata.loglevel.releaseFrontend = "trace"
           $newContent = $tomlObject | ConvertTo-Toml
           Set-Content -Path $cargoPath -Value $newContent
       # Build
