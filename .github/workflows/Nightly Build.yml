@@ -36,7 +36,6 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name PSToml -Scope CurrentUser
-          Import-Module PowerShellTOML
       # 数据处理
       - name: set loglevel
         shell: pwsh
