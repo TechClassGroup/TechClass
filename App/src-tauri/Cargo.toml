@@ -1,0 +1,31 @@
+[package]
+name = "TechClass"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["erduotong"]
+edition = "2021"
+
+[package.metadata.loglevel]
+debug = "trace"
+debugFrontend = "trace"
+release = "info"
+releaseFrontend = "info"
+
+[lib]
+name = "techclass_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+toml = "0.8.10"
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+log = "0.4"
+time = "0.3.36"
+lazy_static = "1.5.0"
+flexi_logger = "0.29.6"
+thiserror = "1.0"

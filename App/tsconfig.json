@@ -1,0 +1,42 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "skipLibCheck": true,
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "preserve",
+        "strict": true,
+        "noUnusedLocals": false,
+        // 禁用未使用本地变量的报错
+        "noUnusedParameters": false,
+        // 禁用未使用参数的报错
+        "allowJs": true,
+        "noImplicitAny": false,
+        "noFallthroughCasesInSwitch": true,
+        "allowSyntheticDefaultImports": true,
+        "composite": true,
+        "paths": {
+            "@/*": ["./src/*"],
+            "@components/*": ["./src/components/*"],
+            "@assets/*": ["./src/assets/*"],
+            "@docs/*": ["../docs/src/*"]
+        }
+    },
+    "include": [
+        "App/src/**/*.ts",
+        "App/src/**/*.d.ts",
+        "App/src/**/*.tsx",
+        "App/src/**/*.vue",
+        "scripts/**/*.ts",
+        "./rsbuild.config.ts"
+    ],
+    "ts-node": {
+        "esm": true
+    }
+}

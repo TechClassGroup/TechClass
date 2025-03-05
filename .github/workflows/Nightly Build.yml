@@ -14,24 +14,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: develop
-      - name: setup powershell dependencies
-        shell: pwsh
-        run: |
-          Install-Module -Name PSToml -Scope CurrentUser -Force
-      # 数据处理
-      - name: set loglevel
-        shell: pwsh
-        run: |
-          $cargoPath = "App/src-tauri/Cargo.toml"
-          $content = Get-Content $cargoPath -Raw
-          $tomlObject = $content | ConvertFrom-Toml
-          $tomlObject.package.metadata.loglevel.release = "trace"
-          $tomlObject.package.metadata.loglevel.releaseFrontend = "trace"
-          $newContent = $tomlObject | ConvertTo-Toml
-          Set-Content -Path $cargoPath -Value $newContent
-          $modifiedContent = Get-Content $cargoPath -Raw
-          Write-Output "Modified Cargo.toml content:"
-          Write-Output $modifiedContent
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
@@ -50,7 +32,9 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./App/src-tauri -> target"
-
+      # 数据处理
+      - name: set loglevel
+        run: node .github/scripts/nightlyBuildProcess.js
       # Build
       - name: Build
         run: pnpm --filter @techclass/app tauri build
