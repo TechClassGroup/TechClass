@@ -6,6 +6,7 @@ import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSet from "./setting/PluginSet.vue";
 import {computedPluginsComponent} from "../modules/pluginUtils";
 import {PluginStore} from "../types/plugins.types";
+import {CircleX} from "lucide-vue-next";
 
 const store = useApplicationStore();
 
@@ -88,11 +89,7 @@ watch(
                 class="absolute top-1 right-1 m-2 w-8 h-8 hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center"
                 @click="store.reverseSettingOpen()"
             >
-                <img
-                    alt="关闭窗口"
-                    src="../assets/images/web-window-close.svg"
-                    class="w-6 h-6"
-                />
+              <CircleX />
             </button>
 
             <div
