@@ -2,7 +2,7 @@
  * @fileOverview 前后端分享的类型定义
  */
 
-export enum IpcErrorKind {
+export const enum IpcErrorKind {
     Io = "Io",
     Json = "Json",
     InvalidPluginType = "InvalidPluginType",
@@ -18,7 +18,7 @@ export interface IpcError {
 }
 
 
-export enum PluginType {
+export const enum PluginType {
     Official = "official",
     Custom = "custom",
 }
