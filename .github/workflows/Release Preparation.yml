@@ -1,0 +1,40 @@
+name: 发布准备
+on:
+  create:
+    branches:
+      - "release/*"
+jobs:
+  prepare:
+    name: 发布准备
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "pnpm"
+      - name: install dependencies
+        run: pnpm install
+      - name: 获得版本号
+        id: get_version
+        shell: pwsh
+        run: |
+          $branchName = git branch --show-current
+          $version = $branchName -replace '^release/', ''
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            Write-Error "版本号格式不正确，应为 x.y.z 格式，其中 x、y、z 均为数字"
+            exit 1
+          }
+          Write-Host "检测到版本号: $version"
+          "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+      - name: 更新版本号
+        run: node .github/scripts/updateAppVersion.js --version=${{ env.VERSION }}
+
