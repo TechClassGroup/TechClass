@@ -3,7 +3,7 @@
  */
 import {invoke} from "@tauri-apps/api/core";
 
-enum LoggerType {
+const enum LoggerType {
     trace = "log_trace",
     debug = "log_debug",
     info = "log_info",

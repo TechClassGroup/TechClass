@@ -37,7 +37,7 @@ export interface ScheduleWithIdWithoutDividingLine {
  * 课程状态枚举
  * @enum {number}
  */
-export enum LessonStatusEnum {
+export const enum LessonStatusEnum {
     /** 正常状态 */
     ok,
     /** 在第一节课之前 */
@@ -65,7 +65,7 @@ export interface lessonStatusType {
  * 课程列表类型枚举
  * @enum {number}
  */
-export enum LessonListEnum {
+export const enum LessonListEnum {
     /** 当前课程 */
     current,
     /** 未来课程 */
