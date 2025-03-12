@@ -37,4 +37,5 @@ jobs:
           "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
       - name: 更新版本号
         run: node .github/scripts/updateAppVersion.js --version=${{ env.VERSION }}
-
+      - name: 更新 Changelog
+        run: node .github/scripts/updateChangelog.js --version=${{ env.VERSION }}
