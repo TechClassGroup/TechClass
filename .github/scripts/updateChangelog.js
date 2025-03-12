@@ -32,7 +32,7 @@ let changelogContent = fs.readFileSync(changelogTemplate, "utf-8");
 console.log("模板文件读取成功");
 
 for (const [key, value] of Object.entries(replaceObject)) {
-    changelogContent = changelogContent.replace(key, value);
+    changelogContent = changelogContent.replaceAll(key, value);
 }
 console.log("模板文件替换成功", changelogContent);
 // 写入文件
