@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@iarna/toml": "^2.2.5"
+  },
+  "dependencies": {
+    "luxon": "^3.5.0"
   }
 }
