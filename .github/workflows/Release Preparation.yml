@@ -7,9 +7,16 @@ jobs:
   prepare:
     name: 发布准备
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - name: setup Git
+        run: |
+          git config --global user.name "Github Action"
+          git config --global user.email "noreply@github.com."
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
@@ -24,7 +31,6 @@ jobs:
         run: pnpm install
       - name: 获得版本号
         id: get_version
-        shell: pwsh
         run: |
           $branchName = git branch --show-current
           $version = $branchName -replace '^release/', ''
@@ -36,6 +42,13 @@ jobs:
           "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
           "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
       - name: 更新版本号
-        run: node .github/scripts/updateAppVersion.js --version=${{ env.VERSION }}
+        run: |
+          node .github/scripts/updateAppVersion.js --version=${{ env.VERSION }}
       - name: 更新 Changelog
         run: node .github/scripts/updateChangelog.js --version=${{ env.VERSION }}
+      - name: 更新提交
+        run: |
+          git add .
+          git commit -m "chore: 更新版本号和更新日志 ${{ env.VERSION }}"
+          git push origin HEAD
+
