@@ -50,7 +50,7 @@ jobs:
         run: node .github/scripts/updateChangelog.js --version=${{ env.VERSION }}
       - name: 更新提交
         run: |
-          git add . ':!pnpm-lock.yaml'
+          git add .
           git commit -m "chore: 更新版本号和更新日志 ${{ env.VERSION }}"
           git push origin HEAD
 
