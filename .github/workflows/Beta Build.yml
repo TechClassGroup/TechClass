@@ -1,0 +1,12 @@
+name: Release 构建预览
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 选择要构建的分支
+        type: string
+        required: true
+        default: develop
+
+jobs:
+
