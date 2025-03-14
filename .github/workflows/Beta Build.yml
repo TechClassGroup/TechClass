@@ -1,4 +1,4 @@
-name: Release 构建预览
+name: 构建预览
 on:
   workflow_dispatch:
     inputs:
@@ -7,6 +7,75 @@ on:
         type: string
         required: true
         default: develop
+  workflow_call:
+    inputs:
+      branch:
+        description: 选择要构建的分支
+        type: string
+        required: true
 
 jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest' # for Arm based macs (M1 and above).
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest' # for Intel based macs.
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
 
+    runs-on: ${{ matrix.platform }}
+    steps:
+      # 准备环境
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "pnpm"
+      - name: install dependencies
+        run: pnpm install
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Those targets are only used on macOS runners so it's in an `if` to slightly speed up windows and linux builds.
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./App/src-tauri -> target"
+      # 预处理数据
+      - name: set loglevel
+        run: node .github/scripts/processLoglevelToTrace.js
+      # 构建时间
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: ${{ matrix.args }}
+          projectPath: './App/'
+      - name: 查看一下构建产物
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path "App/src-tauri/target/release/bundle" -Recurse | ForEach-Object {
+            Write-Host $_.FullName
+          }

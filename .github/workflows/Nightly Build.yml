@@ -41,7 +41,7 @@ jobs:
       - name: Rename artifact
         shell: pwsh
         run: |
-          $date = Get-Date -Format "yyyyMMdd"
+          $date = (Get-Date).AddHours(8).ToString("yyyyMMdd")
           $hash = git rev-parse --short HEAD
           $sourcePath = Get-ChildItem -Path "App/src-tauri/target/release/bundle/nsis" -File | Select-Object -First 1
           $newName = "Techclass-nightly-${date}-${hash}$($sourcePath.Extension)"
