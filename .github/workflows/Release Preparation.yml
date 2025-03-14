@@ -53,10 +53,6 @@ jobs:
           git add . ':!pnpm-lock.yaml'
           git commit -m "chore: 更新版本号和更新日志 ${{ env.VERSION }}"
           git push origin HEAD
-      - name: 触发 Beta Build
-        uses: ./.github/workflows/Beta Build.yml
-        with:
-          branch: ${{ github.ref_name }}
   beta_build:
     name: 触发 Beta Build
     permissions:
