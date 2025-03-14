@@ -25,26 +25,26 @@ jobs:
           - platform: "macos-latest" # for Arm based macs (M1 and above).
             args: "--target aarch64-apple-darwin"
             upload_name: "MacOS-ARM"
-            upload_path:
-              - "App/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg"
-              - "App/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app"
+            upload_path: |
+              App/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+              App/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app
           - platform: "macos-latest" # for Intel based macs.
             args: "--target x86_64-apple-darwin"
             upload_name: "MacOS-Intel"
-            upload_path:
-              - "App/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg"
-              - "TechClass/App/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app"
+            upload_path: |
+              App/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+              TechClass/App/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app
           - platform: "ubuntu-22.04"
             args: ""
             upload_name: "Ubuntu"
-            upload_path:
-              - "App/src-tauri/target/release/bundle/appimage/*.AppImage"
-              - "App/src-tauri/target/release/bundle/deb/*.deb"
+            upload_path: |
+              App/src-tauri/target/release/bundle/appimage/*.AppImage
+              App/src-tauri/target/release/bundle/deb/*.deb
           - platform: "windows-latest"
             args: ""
             upload_name: "Windows"
-            upload_path:
-              - "App/src-tauri/target/release/bundle/nsis/*"
+            upload_path: |
+              App/src-tauri/target/release/bundle/nsis/*
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -91,17 +91,9 @@ jobs:
       - name: 设置日期格式
         id: date
         run: echo "date=$(date -d '${{ github.event.head_commit.timestamp }}' +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-      - name: 处理上传路径
-        id: paths
-        run: |
-          echo "paths<<EOF" >> $GITHUB_OUTPUT
-          for path in ${{ toJSON(matrix.upload_path) }}; do
-            echo "$path" >> $GITHUB_OUTPUT
-          done
-          echo "EOF" >> $GITHUB_OUTPUT
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
           name: TechClass-beta-${{ matrix.upload_name }}.${{ steps.date.outputs.date }}.${{ github.sha }}.${{ inputs.branch }}
-          path: ${{ steps.paths.outputs.paths }}
+          path: ${{ matrix.upload_path }}
           retention-days: 7
