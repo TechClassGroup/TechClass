@@ -57,3 +57,9 @@ jobs:
         uses: ./.github/workflows/Beta Build.yml
         with:
           branch: ${{ github.ref_name }}
+  beta_build:
+    name: 触发 Beta Build
+    needs: prepare
+    uses: ./.github/workflows/Beta Build.yml
+    with:
+      branch: ${{ github.ref_name }}
