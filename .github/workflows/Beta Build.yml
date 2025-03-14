@@ -22,14 +22,29 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest' # for Arm based macs (M1 and above).
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest' # for Intel based macs.
-            args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+          - platform: "macos-latest" # for Arm based macs (M1 and above).
+            args: "--target aarch64-apple-darwin"
+            upload_name: "MacOS-ARM"
+            upload_path:
+              - "App/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg"
+              - "App/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app"
+          - platform: "macos-latest" # for Intel based macs.
+            args: "--target x86_64-apple-darwin"
+            upload_name: "MacOS-Intel"
+            upload_path:
+              - "App/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg"
+              - "TechClass/App/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app"
+          - platform: "ubuntu-22.04"
+            args: ""
+            upload_name: "Ubuntu"
+            upload_path:
+              - "App/src-tauri/target/release/bundle/appimage/*.AppImage"
+              - "App/src-tauri/target/release/bundle/deb/*.deb"
+          - platform: "windows-latest"
+            args: ""
+            upload_name: "Windows"
+            upload_path:
+              - "App/src-tauri/target/release/bundle/nsis/*"
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -72,10 +87,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           args: ${{ matrix.args }}
-          projectPath: './App/'
-      - name: 查看一下构建产物
+          projectPath: "./App/"
+      # upload!
+      - name: 设置日期格式
+        id: date
+        run: echo "date=$(date -d '${{ github.event.head_commit.timestamp }}' +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      - name: 处理上传路径
+        id: paths
         shell: pwsh
         run: |
-          Get-ChildItem -Path "App/src-tauri/target/" -Recurse | ForEach-Object {
-            Write-Host $_.FullName
-          }
+          $paths = ${{ toJSON(matrix.upload_path) }}
+          $output = $paths -join "`n"
+          echo "paths<<EOF" >> $env:GITHUB_OUTPUT
+          echo $output >> $env:GITHUB_OUTPUT
+          echo "EOF" >> $env:GITHUB_OUTPUT
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: TechClass-beta-${{ matrix.upload_name }}.${{ steps.date.outputs.date }}.${{ github.sha }}.${{ inputs.branch }}
+          path: ${{ steps.paths.outputs.paths }}
+          retention-days: 30
