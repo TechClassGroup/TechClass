@@ -76,6 +76,6 @@ jobs:
       - name: 查看一下构建产物
         shell: pwsh
         run: |
-          Get-ChildItem -Path "App/src-tauri/target/release/bundle" -Recurse | ForEach-Object {
+          Get-ChildItem -Path "App/src-tauri/target/" -Recurse | ForEach-Object {
             Write-Host $_.FullName
           }
