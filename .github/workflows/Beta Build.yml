@@ -94,6 +94,6 @@ jobs:
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
-          name: TechClass-beta-${{ matrix.upload_name }}.${{ steps.date.outputs.date }}.${{ github.sha }}.${{ inputs.branch }}
+          name: TechClass-beta-${{ matrix.upload_name }}.${{ steps.date.outputs.date }}.${{ github.sha }}
           path: ${{ matrix.upload_path }}
           retention-days: 7
