@@ -22,15 +22,15 @@ jobs:
           - platform: "macos-latest" # for Arm based macs (M1 and above).
             args: "--target aarch64-apple-darwin"
             platform_name: "macos-arm64"
-            upload_path: "App/src-tauri/target/**/*.dmg"
+            upload_path: "App/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg"
           - platform: "macos-latest" # for Intel based macs.
             args: "--target x86_64-apple-darwin"
             platform_name: "macos-x86_64"
-            upload_path: "App/src-tauri/target/**/*.dmg"
+            upload_path: "App/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg"
           - platform: "ubuntu-22.04" # for Tauri v1 you could replace this with ubuntu-20.04.
             args: ""
             platform_name: "linux-x86_64"
-            upload_path: "App/src-tauri/target/**/*.AppImage"
+            upload_path: "App/src-tauri/target/release/bundle/appimage/*.AppImage"
           - platform: "windows-latest"
             args: ""
             platform_name: "windows-x86_64"
