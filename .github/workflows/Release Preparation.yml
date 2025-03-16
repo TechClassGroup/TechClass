@@ -56,8 +56,9 @@ jobs:
   beta_build:
     name: 触发 Beta Build
     permissions:
-      contents: write # 显式设置权限
+      contents: write
     needs: prepare
-    uses: ./.github/workflows/Beta Build.yml
+    uses: ./.github/workflows/Build.yml
     with:
       branch: ${{ github.ref_name }}
+      build_mode: "beta"
