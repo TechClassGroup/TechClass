@@ -19,14 +19,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest' # for Arm based macs (M1 and above).
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest' # for Intel based macs.
-            args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+          - platform: "macos-latest" # for Arm based macs (M1 and above).
+            args: "--target aarch64-apple-darwin"
+            platform_name: "macos-arm64"
+            upload_path: "App/src-tauri/target/*.dmg"
+          - platform: "macos-latest" # for Intel based macs.
+            args: "--target x86_64-apple-darwin"
+            platform_name: "macos-x86_64"
+            upload_path: "App/src-tauri/target/*.dmg"
+          - platform: "ubuntu-22.04" # for Tauri v1 you could replace this with ubuntu-20.04.
+            args: ""
+            platform_name: "linux-x86_64"
+            upload_path: "App/src-tauri/target/*.AppImage"
+          - platform: "windows-latest"
+            args: ""
+            platform_name: "windows-x86_64"
+            upload_path: "App/src-tauri/target/release/bundle/nsis/*.exe"
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -62,8 +70,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
         # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
         # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
-
-      # 数据处理
+      # 数据处理-Beta
       - name: Set Loglevel - Beta
         if: inputs.build_mode == 'beta'
         run: node .github/scripts/processLoglevelToTrace.js
@@ -76,3 +83,10 @@ jobs:
           projectPath: "./App/"
       - name: Upload Build - beta
         if: inputs.build_mode == 'beta'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TechClass-Beta-${{ matrix.platform_name }}
+          if-no-files-found: ignore
+          include-hidden-files: "false"
+          path: ${{ matrix.upload_path }}
+          retention-days: 30
