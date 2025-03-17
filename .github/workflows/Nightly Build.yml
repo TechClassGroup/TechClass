@@ -1,4 +1,4 @@
-name: 每日构建
+name: 每日构建 ${{ github.sha }}
 on:
   schedule:
     - cron: "0 20 * * *"
@@ -6,7 +6,7 @@ on:
 permissions: write-all
 jobs:
   build:
-    name: Nightly Build ${{ github.sha }}
+    name: Nightly Build
     runs-on: windows-latest
     steps:
       # 准备环境
