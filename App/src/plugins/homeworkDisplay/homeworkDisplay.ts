@@ -6,9 +6,9 @@ import {IPlugin} from "../../types/plugins.types";
 
 // type mainPageKeys = ""
 export const homeworkDisplay: IPlugin = {
-    name: "课表展示器",
+    name: "作业展示器",
     description: "",
-    id: "scheduleDisplay",
+    id: "homeworkDisplay",
     isOfficial: true,
     component: {
         mainPage: {},
