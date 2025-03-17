@@ -6,7 +6,7 @@ on:
 permissions: write-all
 jobs:
   build:
-    name: Nightly Build
+    name: Nightly Build ${{ github.sha }}
     runs-on: windows-latest
     steps:
       # 准备环境
