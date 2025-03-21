@@ -168,7 +168,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
 
     <div
         v-if="currentTimetable"
-        class="h-[1px] bg-gray-200 flex-none"
+        class="h-[1px] bg-500 flex-none"
     ></div>
 
     <!-- 课程布局详情 -->

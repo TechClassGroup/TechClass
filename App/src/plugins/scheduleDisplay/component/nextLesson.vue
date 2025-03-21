@@ -62,7 +62,7 @@ const formatDuration = computed(() => {
 
 <template>
   <div
-      class="select-none text-4xl font-light text-gray-800 tracking-wider p-4 bg-white shadow-lg rounded-lg hover:opacity-90 flex flex-col items-center justify-center h-full cursor-pointer gap-1"
+      class="select-none text-4xl font-light text-gray-800 tracking-wider p-4 bg-50 shadow-lg rounded-lg hover:opacity-90 flex flex-col items-center justify-center h-full cursor-pointer gap-1"
   >
     <template v-if="nextLessonInfo.remainingTime">
       <div class="text-2xl text-gray-600">

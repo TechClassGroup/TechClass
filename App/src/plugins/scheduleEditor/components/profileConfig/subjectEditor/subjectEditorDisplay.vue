@@ -12,7 +12,7 @@ defineEmits<{
 </script>
 
 <template>
-    <div class="flex flex-col gap-2 p-2 bg-gray-50 rounded-lg">
+  <div class="flex flex-col gap-2 p-2 bg-100 rounded-lg">
         <TransitionGroup class="flex flex-col gap-2" name="list" tag="div">
             <div
                 v-for="(subject, id) in subjects"
@@ -20,7 +20,7 @@ defineEmits<{
                 :class="[
                     selectedSubjectId === id
                         ? 'bg-primary/10 text-primary shadow-sm'
-                        : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                        : 'text-gray-600 hover:bg-500 hover:translate-x-1',
                 ]"
                 class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                 @click="$emit('select', String(id))"

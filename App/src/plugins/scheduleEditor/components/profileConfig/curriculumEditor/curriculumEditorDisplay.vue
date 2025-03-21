@@ -124,7 +124,7 @@ function getClassSubjectId(timeId: string): string {
                     <div
                         v-for="(layout, id) in sortedLayouts"
                         :key="id"
-                        class="p-4 hover:bg-gray-50"
+                        class="p-4 hover:bg-100"
                     >
                         <div class="flex items-center gap-4">
                             <!-- 时间显示 -->

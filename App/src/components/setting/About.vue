@@ -22,19 +22,19 @@
                     这是一个基于 Tauri + Vue3 + TypeScript 开发的现代化桌面应用
                 </p>
                 <div class="flex flex-wrap justify-center gap-2 text-sm">
-                    <span class="px-3 py-1 bg-gray-100 rounded-full"
+                    <span class="px-3 py-1 bg-300 rounded-full"
                         >Tauri</span
                     >
-                    <span class="px-3 py-1 bg-gray-100 rounded-full"
+                  <span class="px-3 py-1 bg-300 rounded-full"
                         >Vue 3</span
                     >
-                    <span class="px-3 py-1 bg-gray-100 rounded-full"
+                  <span class="px-3 py-1 bg-300 rounded-full"
                         >TypeScript</span
                     >
-                    <span class="px-3 py-1 bg-gray-100 rounded-full"
+                  <span class="px-3 py-1 bg-300 rounded-full"
                         >Tailwind CSS</span
                     >
-                    <span class="px-3 py-1 bg-gray-100 rounded-full"
+                  <span class="px-3 py-1 bg-300 rounded-full"
                         >Pinia</span
                     >
                 </div>

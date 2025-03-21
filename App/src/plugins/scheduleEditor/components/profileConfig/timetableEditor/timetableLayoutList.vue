@@ -149,7 +149,7 @@ function deleteLayout(id: string | number) {
     </div>
 
     <!-- 课程列表 -->
-    <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+    <div class="flex-1 overflow-y-auto scrollbar-stable bg-100">
       <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
         <TransitionGroup
             class="flex flex-col gap-2"
@@ -162,7 +162,7 @@ function deleteLayout(id: string | number) {
               :class="[
                             selectedLayoutId === id
                                 ? 'bg-primary/10 text-primary shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                : 'text-gray-600 hover:bg-500 hover:translate-x-1',
                         ]"
               class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
               @click="selectedLayoutId = id"

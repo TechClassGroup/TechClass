@@ -52,7 +52,7 @@ const reload_plugins = () => {
       <div
           v-for="item in officialPlugins"
           :key="item.id"
-          class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out"
+          class="bg-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out"
       >
         <div class="flex items-center justify-between p-4">
           <div class="flex-1 mr-4">

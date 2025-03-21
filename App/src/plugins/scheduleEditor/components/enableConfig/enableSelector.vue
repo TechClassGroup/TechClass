@@ -148,11 +148,11 @@ const getItemInfo = (item: SelectableItem) => {
   <div class="flex gap-4 h-full">
     <!-- 左侧选择列表 -->
     <div class="w-2/5 flex flex-col">
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">当前启用</h2>
       </div>
       <div
-          class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50 rounded-lg"
+          class="flex-1 overflow-y-auto scrollbar-stable bg-100 rounded-lg"
       >
         <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
           <TransitionGroup
@@ -167,7 +167,7 @@ const getItemInfo = (item: SelectableItem) => {
                                 selectedItem.type === item.type &&
                                 selectedItem.id === item.id
                                     ? 'bg-primary/10 text-primary shadow-sm'
-                                    : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                    : 'text-gray-600 hover:bg-500 hover:translate-x-1',
                                 item.type === 'timegroup' &&
                                 !isTimeGroupSelectable(item.id)
                                     ? 'opacity-50 cursor-not-allowed hover:translate-x-0 hover:bg-transparent'
@@ -216,11 +216,11 @@ const getItemInfo = (item: SelectableItem) => {
 
     <!-- 右侧信息展示 -->
     <div class="w-3/5 flex flex-col">
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm relative">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm relative">
         <h2 class="text-lg font-medium px-2 text-center">详细信息</h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden p-4"
+          class="flex-1 bg-50 rounded-lg shadow-sm overflow-hidden p-4"
       >
         <div v-if="selectedItem.id" class="space-y-4">
           <!-- 基本信息 -->

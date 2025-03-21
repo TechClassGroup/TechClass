@@ -106,8 +106,8 @@ const inputClasses = computed(() => ({
   "hover:border-primary hover:shadow-sm": !props.disabled && !props.error,
   "focus:border-primary focus:ring-1 focus:ring-primary/20 focus:shadow":
         !props.disabled && !props.error,
-    "bg-gray-100 cursor-not-allowed": props.disabled,
-    "bg-white": !props.disabled,
+  "bg-300 cursor-not-allowed": props.disabled,
+  "bg-50": !props.disabled,
 }));
 
 // 自适应高度相关函数

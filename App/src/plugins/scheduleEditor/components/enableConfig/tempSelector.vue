@@ -212,15 +212,15 @@ onMounted(() => {
       <Transition name="mask">
         <div
             v-if="!tempEnabled"
-            class="absolute inset-0 bg-gray-500/20 z-10 cursor-pointer rounded-lg transition-all duration-300"
+            class="absolute inset-0 bg-900/20 z-10 cursor-pointer rounded-lg transition-all duration-300"
             @click="tempEnabled = true"
         />
       </Transition>
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">临时启用</h2>
       </div>
       <div
-          class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50 rounded-lg"
+          class="flex-1 overflow-y-auto scrollbar-stable bg-100 rounded-lg"
       >
         <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
           <TransitionGroup
@@ -235,7 +235,7 @@ onMounted(() => {
                                 selectedItem.type === item.type &&
                                 selectedItem.id === item.id
                                     ? 'bg-primary/10 text-primary shadow-sm'
-                                    : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                    : 'text-gray-600 hover:bg-500 hover:translate-x-1',
                                 item.type === 'timegroup' &&
                                 !isTimeGroupSelectable(item.id)
                                     ? 'opacity-50 cursor-not-allowed hover:translate-x-0 hover:bg-transparent'
@@ -288,19 +288,19 @@ onMounted(() => {
       <Transition name="mask">
         <div
             v-if="!tempEnabled"
-            class="absolute inset-0 bg-gray-500/20 z-10 cursor-pointer rounded-lg transition-all duration-300"
+            class="absolute inset-0 bg-900/20 z-10 cursor-pointer rounded-lg transition-all duration-300"
             @click="tempEnabled = true"
         />
       </Transition>
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">详细信息</h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden p-4"
+          class="flex-1 bg-50 rounded-lg shadow-sm overflow-hidden p-4"
       >
         <!-- 启用开关 -->
         <div
-            class="mb-6 flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg"
+            class="mb-6 flex items-center justify-between px-4 py-2 bg-100 rounded-lg"
         >
           <span class="text-gray-700 font-medium">临时启用</span>
           <tc-switch v-model="tempEnabled" />

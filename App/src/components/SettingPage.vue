@@ -82,18 +82,18 @@ watch(
         @click.self="store.reverseSettingOpen()"
     >
         <div
-            class="relative w-[1200px] max-h-[90vh] h-[800px] p-1 max-w-[70vw] bg-gray-100 rounded-xl flex overflow-hidden shadow-2xl transform transition-transform duration-300"
+            class="relative w-[1200px] max-h-[90vh] h-[800px] p-1 max-w-[70vw] bg-300 rounded-xl flex overflow-hidden shadow-2xl transform transition-transform duration-300"
             :class="store.setting.open ? 'scale-100' : 'scale-95'"
         >
             <button
-                class="absolute top-1 right-1 m-2 w-8 h-8 hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center"
+                class="absolute top-1 right-1 m-2 w-8 h-8 hover:bg-500 rounded-full transition-all duration-200 flex items-center justify-center"
                 @click="store.reverseSettingOpen()"
             >
               <CircleX />
             </button>
 
             <div
-                class="w-1/4 max-w-52  p-3 bg-gray-200/70 backdrop-blur-sm rounded-lg overflow-y-auto flex-col flex gap-1 m-1"
+                class="w-1/4 max-w-52  p-3 bg-500/70 backdrop-blur-sm rounded-lg overflow-y-auto flex-col flex gap-1 m-1"
             >
                 <!-- 基础设置组 -->
                 <TransitionGroup tag="div" class="flex flex-col gap-1">
@@ -104,7 +104,7 @@ watch(
                             :class="[
                                 store.setting.current_page === key
                                     ? 'text-primary bg-primary/10 shadow-sm'
-                                    : 'text-gray-600 hover:bg-gray-300/50 hover:translate-x-1',
+                                    : 'text-gray-600 hover:bg-700/50 hover:translate-x-1',
                             ]"
                         >
                             <div
@@ -121,11 +121,11 @@ watch(
                         v-if="Object.keys(officialPlugins).length > 0"
                         class="flex items-center gap-2 mt-8 mb-1 px-2"
                     >
-                        <div class="h-[1px] bg-gray-300 flex-grow"></div>
+                      <div class="h-[1px] bg-700 flex-grow"></div>
                         <span class="text-sm text-gray-500 font-medium"
                             >官方插件</span
                         >
-                        <div class="h-[1px] bg-gray-300 flex-grow"></div>
+                      <div class="h-[1px] bg-700 flex-grow"></div>
                     </div>
                 </Transition>
 
@@ -145,7 +145,7 @@ watch(
                             :class="[
                                 store.setting.current_page === key
                                     ? 'text-primary bg-primary/10 shadow-sm'
-                                    : 'text-gray-600 hover:bg-gray-300/50 hover:translate-x-1',
+                                    : 'text-gray-600 hover:bg-700/50 hover:translate-x-1',
                             ]"
                         >
                             <div
@@ -158,7 +158,7 @@ watch(
                 </TransitionGroup>
             </div>
 
-            <div class="bg-gray-100 w-3/4 p-8 rounded-lg ml-1 flex-grow">
+          <div class="bg-300 w-3/4 p-8 rounded-lg ml-1 flex-grow">
                 <component
                     :is="routes[store.setting.current_page].component"
                     v-bind="

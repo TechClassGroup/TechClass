@@ -96,7 +96,7 @@ const availableTimeGroups = computed(() => {
 </script>
 
 <template>
-    <div class="flex flex-col h-full bg-gray-50">
+  <div class="flex flex-col h-full bg-100">
         <div class="flex-1 overflow-y-auto scrollbar-stable p-4">
             <div class="flex flex-col gap-4">
                 <TransitionGroup
@@ -108,11 +108,11 @@ const availableTimeGroups = computed(() => {
                         v-for="(layout, index) in currentTimeGroup?.layout ||
                         []"
                         :key="index"
-                        class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200"
+                        class="bg-50 rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200"
                     >
                         <!-- 标题栏 -->
                         <div
-                            class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between"
+                            class="px-4 py-3 bg-100 border-b border-gray-200 flex items-center justify-between"
                         >
                             <div class="font-medium text-gray-700">
                                 {{ getCycleName(index) }}
@@ -130,7 +130,7 @@ const availableTimeGroups = computed(() => {
                         </div>
 
                         <!-- 内容区 -->
-                        <div class="p-4 space-y-4 bg-white">
+                      <div class="p-4 space-y-4 bg-50">
                             <!-- 类型选择 -->
                             <div>
                                 <label
@@ -140,7 +140,7 @@ const availableTimeGroups = computed(() => {
                                 <select
                                     :value="layout.type"
                                     @change="(e: Event) => updateLayoutType(index, ((e.target as HTMLSelectElement).value) as 'curriculum' | 'timegroup')"
-                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50"
+                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary bg-100"
                                 >
                                     <option value="curriculum">课表</option>
                                     <option value="timegroup">时间组</option>
@@ -167,7 +167,7 @@ const availableTimeGroups = computed(() => {
                                                 (e.target as HTMLSelectElement).value
                                             )
                                     "
-                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50"
+                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary bg-100"
                                 >
                                     <option value="">请选择</option>
                                     <template

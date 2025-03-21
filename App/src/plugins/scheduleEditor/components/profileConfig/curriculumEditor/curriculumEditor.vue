@@ -11,10 +11,10 @@ const selectedCurriculumId = ref("");
   <div class="flex gap-4 h-full">
         <!-- 课程表列表 -->
         <div class="flex-1 max-w-60 flex flex-col">
-            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+          <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
                 <h2 class="text-lg font-medium px-2 text-center">课程表列表</h2>
             </div>
-            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="flex-1 bg-50 rounded-lg shadow-sm overflow-hidden">
                 <curriculum-editor-list
                     v-model:selected-curriculum-id="selectedCurriculumId"
                 />
@@ -23,10 +23,10 @@ const selectedCurriculumId = ref("");
 
         <!-- 课程表详情 -->
         <div class="flex-1 max-w-96 flex flex-col">
-            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+          <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
                 <h2 class="text-lg font-medium px-2 text-center">课程表详情</h2>
             </div>
-            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="flex-1 bg-50 rounded-lg shadow-sm overflow-hidden">
                 <curriculum-editor-display
                     v-model:selected-curriculum-id="selectedCurriculumId"
                 />
@@ -35,10 +35,10 @@ const selectedCurriculumId = ref("");
 
         <!-- 课程表设置 -->
         <div class="flex-1 flex flex-col">
-            <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+          <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
                 <h2 class="text-lg font-medium px-2 text-center">课程表设置</h2>
             </div>
-            <div class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="flex-1 bg-50 rounded-lg shadow-sm overflow-hidden">
                 <curriculum-editor-checker
                     v-model:selected-curriculum-id="selectedCurriculumId"
                 />

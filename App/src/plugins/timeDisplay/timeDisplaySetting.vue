@@ -21,10 +21,10 @@ watch(isSecondDisabled, (newValue) => {
 </script>
 
 <template>
-  <div class="p-4 bg-white rounded-lg shadow-md">
+  <div class="p-4 bg-50 rounded-lg shadow-md">
     <div class="space-y-4">
       <div
-          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+          class="flex items-center justify-between p-3 bg-100 rounded-lg"
       >
         <span class="text-gray-700">显示小时</span>
         <tc-switch
@@ -32,12 +32,12 @@ watch(isSecondDisabled, (newValue) => {
             class="ml-2"
             :class="{
                         'bg-blue-500': store.storage.displayHour,
-                        'bg-gray-300': !store.storage.displayHour,
+                        'bg-700': !store.storage.displayHour,
                     }"
         ></tc-switch>
       </div>
       <div
-          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+          class="flex items-center justify-between p-3 bg-100 rounded-lg"
       >
         <span class="text-gray-700">显示分钟</span>
         <tc-switch
@@ -45,12 +45,12 @@ watch(isSecondDisabled, (newValue) => {
             class="ml-2"
             :class="{
                         'bg-blue-500': store.storage.displayMinute,
-                        'bg-gray-300': !store.storage.displayMinute,
+                        'bg-700': !store.storage.displayMinute,
                     }"
         ></tc-switch>
       </div>
       <div
-          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+          class="flex items-center justify-between p-3 bg-100 rounded-lg"
       >
         <span class="text-gray-700">显示秒</span>
         <tc-switch
@@ -59,7 +59,7 @@ watch(isSecondDisabled, (newValue) => {
             class="ml-2"
             :class="{
                         'bg-blue-500': store.storage.displaySecond,
-                        'bg-gray-300': !store.storage.displaySecond,
+                        'bg-700': !store.storage.displaySecond,
                     }"
         ></tc-switch>
       </div>

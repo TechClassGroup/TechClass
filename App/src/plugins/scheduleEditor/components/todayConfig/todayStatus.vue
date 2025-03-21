@@ -121,14 +121,14 @@ async function regenerateTodaySchedule() {
     <div class="flex-1 max-w-96 flex flex-col">
       <!-- 状态卡片 -->
       <div
-          class="bg-white rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
+          class="bg-50 rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
       >
         <h2 class="text-lg font-medium px-2 text-center text-gray-800">
           今日课表状态
         </h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
+          class="flex-1 bg-50 rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
       >
         <!-- 状态显示 -->
         <div
@@ -158,7 +158,7 @@ async function regenerateTodaySchedule() {
         <!-- 基本信息 -->
         <div class="space-y-4">
           <div
-              class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+              class="flex items-center justify-between p-4 bg-100 rounded-xl hover:bg-300 transition-colors duration-200"
           >
                         <span class="text-gray-700 font-medium"
                         >今日课程数量</span
@@ -175,14 +175,14 @@ async function regenerateTodaySchedule() {
     <div class="flex-1 flex flex-col">
       <!-- 操作卡片 -->
       <div
-          class="bg-white rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
+          class="bg-50 rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
       >
         <h2 class="text-lg font-medium px-2 text-center text-gray-800">
           操作
         </h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
+          class="flex-1 bg-50 rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
       >
         <!-- 重新生成按钮 -->
         <div class="mb-8">
@@ -201,7 +201,7 @@ async function regenerateTodaySchedule() {
             即将生成：
           </div>
           <div
-              class="p-5 rounded-xl bg-gray-50 flex flex-col gap-3 hover:bg-gray-100 transition-colors duration-200"
+              class="p-5 rounded-xl bg-100 flex flex-col gap-3 hover:bg-300 transition-colors duration-200"
           >
             <div class="flex items-center justify-between">
               <span class="text-gray-700">生成日期</span>

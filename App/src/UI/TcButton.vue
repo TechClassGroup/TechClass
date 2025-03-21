@@ -70,7 +70,7 @@ const colorClasses = computed(() => ({
             "border-2 border-primary text-primary hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
       text: "text-primary hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
         elevated:
-            "bg-white text-primary shadow-md hover:shadow-lg hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
+            "bg-50 text-primary shadow-md hover:shadow-lg hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
     },
     error: {
         filled: "bg-[#D92D20] text-white hover:bg-[#C41E3A] active:bg-[#B31B1B]",
@@ -79,7 +79,7 @@ const colorClasses = computed(() => ({
             "border-2 border-[#D92D20] text-[#D92D20] hover:bg-[#FEF3F2] active:bg-[#FEE4E2]",
         text: "text-[#D92D20] hover:bg-[#FEF3F2] active:bg-[#FEE4E2]",
         elevated:
-            "bg-white text-[#D92D20] shadow-md hover:shadow-lg hover:bg-[#FEF3F2] active:bg-[#FEE4E2]",
+            "bg-50 text-[#D92D20] shadow-md hover:shadow-lg hover:bg-[#FEF3F2] active:bg-[#FEE4E2]",
     },
 }));
 

@@ -50,14 +50,14 @@ const sizeClasses = {
 // 计算属性
 const switchClasses = computed(() => [
   "group relative inline-flex items-center rounded-full transition-colors duration-200 ease-in-out",
-  model.value ? "bg-primary" : "bg-gray-200",
+  model.value ? "bg-primary" : "bg-500",
   props.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
   sizeClasses[props.size].switch,
   "focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2",
 ]);
 
 const thumbClasses = computed(() => [
-  "inline-block transform rounded-full bg-white transition-all duration-200 ease-in-out",
+  "inline-block transform rounded-full bg-50 transition-all duration-200 ease-in-out",
   sizeClasses[props.size].thumb,
   model.value
       ? [sizeClasses[props.size].translate, "shadow-md"]
