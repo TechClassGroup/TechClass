@@ -116,7 +116,7 @@ async function regenerateTodaySchedule() {
 </script>
 
 <template>
-  <div class="flex gap-6 h-[100%]">
+  <div class="flex gap-6 h-full">
     <!-- 左侧：状态和基本信息 -->
     <div class="flex-1 max-w-96 flex flex-col">
       <!-- 状态卡片 -->

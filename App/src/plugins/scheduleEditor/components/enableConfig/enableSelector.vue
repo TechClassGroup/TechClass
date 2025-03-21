@@ -145,7 +145,7 @@ const getItemInfo = (item: SelectableItem) => {
 </script>
 
 <template>
-  <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-4 h-full">
     <!-- 左侧选择列表 -->
     <div class="w-2/5 flex flex-col">
       <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">

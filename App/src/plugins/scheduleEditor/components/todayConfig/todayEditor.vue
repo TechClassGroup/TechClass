@@ -171,7 +171,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
 </script>
 
 <template>
-  <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-4 h-full">
     <!-- 左侧面板 -->
     <div class="flex-1 max-w-60 flex flex-col">
       <!-- 标题 -->

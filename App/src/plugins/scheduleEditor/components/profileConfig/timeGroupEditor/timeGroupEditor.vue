@@ -12,7 +12,7 @@ const timeGroups = scheduleEditorProfile.value.timeGroups;
 </script>
 
 <template>
-    <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-4 h-full">
         <!-- 时间组列表 -->
         <div class="flex-1 max-w-60 flex flex-col">
             <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">

@@ -205,7 +205,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-4 h-full">
     <!-- 左侧选择列表 -->
     <div class="w-2/5 flex flex-col relative">
       <!-- 遮罩层 -->
