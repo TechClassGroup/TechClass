@@ -182,7 +182,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
           >
           <select
               :value="currentLayout.type"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
               @change="(e) => updateType((e.target as HTMLSelectElement).value)"
           >
             <option value="lesson">课程</option>
@@ -243,7 +243,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
           >
           <select
               :value="currentLayout.subjectId"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
               @change="(e) => updateSubject((e.target as HTMLSelectElement).value)"
           >
             <option value="">无</option>

@@ -90,7 +90,7 @@ function deleteTimetable(id: string | number) {
                         :key="id"
                         :class="[
                             selectedTimetableId === id
-                                ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
+                                ? 'bg-primary/10 text-primary shadow-sm'
                                 : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
                         ]"
                         class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"

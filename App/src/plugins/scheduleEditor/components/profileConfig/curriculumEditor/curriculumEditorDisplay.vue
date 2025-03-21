@@ -154,7 +154,7 @@ function getClassSubjectId(timeId: string): string {
                                                 getClassSubjectId(String(id))
                                             "
                                             @change="(e) => updateSubject(String(id), (e.target as HTMLSelectElement).value)"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                                         >
                                             <option value="">
                                                 继承默认课程
@@ -177,7 +177,7 @@ function getClassSubjectId(timeId: string): string {
                                                 getClassSubjectId(String(id))
                                             "
                                             @change="(e) => updateSubject(String(id), (e.target as HTMLSelectElement).value)"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                                         >
                                             <option value="">请选择课程</option>
                                             <option

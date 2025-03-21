@@ -234,7 +234,7 @@ onMounted(() => {
                 :class="[
                                 selectedItem.type === item.type &&
                                 selectedItem.id === item.id
-                                    ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
+                                    ? 'bg-primary/10 text-primary shadow-sm'
                                     : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
                                 item.type === 'timegroup' &&
                                 !isTimeGroupSelectable(item.id)
@@ -318,7 +318,7 @@ onMounted(() => {
               <div class="text-gray-600">启用覆盖时间</div>
               <input
                   :value="startTime.toFormat('yyyy-MM-dd')"
-                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
                   type="date"
                   @input="
                                     handleStartTimeChange(
@@ -333,7 +333,7 @@ onMounted(() => {
               <div class="text-gray-600">结束覆盖时间</div>
               <input
                   :value="endTime.toFormat('yyyy-MM-dd')"
-                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
                   type="date"
                   @input="
                                     handleEndTimeChange(

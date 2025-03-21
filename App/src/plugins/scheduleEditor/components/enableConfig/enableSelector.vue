@@ -166,7 +166,7 @@ const getItemInfo = (item: SelectableItem) => {
                 :class="[
                                 selectedItem.type === item.type &&
                                 selectedItem.id === item.id
-                                    ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
+                                    ? 'bg-primary/10 text-primary shadow-sm'
                                     : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
                                 item.type === 'timegroup' &&
                                 !isTimeGroupSelectable(item.id)

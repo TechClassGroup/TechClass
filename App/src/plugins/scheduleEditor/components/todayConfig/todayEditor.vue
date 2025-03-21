@@ -224,7 +224,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                   :key="id"
                   :class="[
                                     selectedScheduleId === id
-                                        ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
+                                        ? 'bg-primary/10 text-primary shadow-sm'
                                         : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
                                 ]"
                   class="text-left px-4 py-3 rounded-lg transition-all duration-200 select-none"
@@ -331,7 +331,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                         selectedScheduleId
                                     ].type
                                 "
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   @change="(e) => updateType((e.target as HTMLSelectElement).value as 'lesson' | 'break' | 'dividingLine')"
               >
                 <option value="lesson">课程</option>
@@ -467,7 +467,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                         selectedScheduleId
                                     ].startTime.toFormat('HH:mm')
                                 "
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   type="time"
                   @change="(e) => handleUpdate('startTime', (e.target as HTMLInputElement).value)"
               />
@@ -489,7 +489,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                         selectedScheduleId
                                     ] as withName).endTime.toFormat('HH:mm')
                                 "
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                     type="time"
                     @change="(e) => handleUpdate('endTime', (e.target as HTMLInputElement).value)"
                 />

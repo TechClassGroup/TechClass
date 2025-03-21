@@ -140,7 +140,7 @@ const availableTimeGroups = computed(() => {
                                 <select
                                     :value="layout.type"
                                     @change="(e: Event) => updateLayoutType(index, ((e.target as HTMLSelectElement).value) as 'curriculum' | 'timegroup')"
-                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4] bg-gray-50"
+                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50"
                                 >
                                     <option value="curriculum">课表</option>
                                     <option value="timegroup">时间组</option>
@@ -167,7 +167,7 @@ const availableTimeGroups = computed(() => {
                                                 (e.target as HTMLSelectElement).value
                                             )
                                     "
-                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4] bg-gray-50"
+                                    class="w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50"
                                 >
                                     <option value="">请选择</option>
                                     <template

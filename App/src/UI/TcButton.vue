@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import {computed} from "vue";
 
 interface Props {
     /**
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
 // 基础样式类
 const baseClasses = computed(() => [
     "rounded-md font-medium transition-all duration-200 ease-in-out",
-    "focus-visible:outline-2 focus-visible:outline-offset-2",
+  "focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2",
     props.disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
 ]);
 
@@ -64,13 +64,13 @@ const sizeClasses = {
 // 颜色映射
 const colorClasses = computed(() => ({
     primary: {
-        filled: "bg-[#0078D4] text-white hover:bg-[#006CBE] active:bg-[#005BA1]",
-        tonal: "bg-[#EFF6FC] text-[#0078D4] hover:bg-[#DEECF9] active:bg-[#C7E0F4]",
+      filled: "bg-primary text-white hover:bg-[#006CBE] active:bg-[#005BA1]",
+      tonal: "bg-[#EFF6FC] text-primary hover:bg-[#DEECF9] active:bg-[#C7E0F4]",
         outlined:
-            "border-2 border-[#0078D4] text-[#0078D4] hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
-        text: "text-[#0078D4] hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
+            "border-2 border-primary text-primary hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
+      text: "text-primary hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
         elevated:
-            "bg-white text-[#0078D4] shadow-md hover:shadow-lg hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
+            "bg-white text-primary shadow-md hover:shadow-lg hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
     },
     error: {
         filled: "bg-[#D92D20] text-white hover:bg-[#C41E3A] active:bg-[#B31B1B]",
@@ -98,10 +98,3 @@ const buttonClasses = computed(() => [
         <slot></slot>
     </button>
 </template>
-
-<style scoped>
-button:focus-visible {
-    outline: 2px solid #0078d4;
-    outline-offset: 2px;
-}
-</style>

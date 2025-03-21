@@ -103,8 +103,8 @@ const inputClasses = computed(() => ({
     ...sizeClasses.value,
     "border-red-500": props.error,
     "border-gray-300": !props.error,
-    "hover:border-[#0078D4] hover:shadow-sm": !props.disabled && !props.error,
-    "focus:border-[#0078D4] focus:ring-1 focus:ring-[#0078D4]/20 focus:shadow":
+  "hover:border-primary hover:shadow-sm": !props.disabled && !props.error,
+  "focus:border-primary focus:ring-1 focus:ring-primary/20 focus:shadow":
         !props.disabled && !props.error,
     "bg-gray-100 cursor-not-allowed": props.disabled,
     "bg-white": !props.disabled,

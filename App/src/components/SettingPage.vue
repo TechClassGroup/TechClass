@@ -103,13 +103,13 @@ watch(
                             class="relative px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                             :class="[
                                 store.setting.current_page === key
-                                    ? 'text-[#0078D4] bg-[#0078D4]/10 shadow-sm'
+                                    ? 'text-primary bg-primary/10 shadow-sm'
                                     : 'text-gray-600 hover:bg-gray-300/50 hover:translate-x-1',
                             ]"
                         >
                             <div
                                 v-if="store.setting.current_page === key"
-                                class="absolute left-0 top-[10%] bottom-[10%] w-1 bg-[#0078D4] rounded-full transition-all duration-300"
+                                class="absolute left-0 top-[10%] bottom-[10%] w-1 bg-primary rounded-full transition-all duration-300"
                             ></div>
                             {{ value.name }}
                         </div>
@@ -144,13 +144,13 @@ watch(
                             class="relative px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                             :class="[
                                 store.setting.current_page === key
-                                    ? 'text-[#0078D4] bg-[#0078D4]/10 shadow-sm'
+                                    ? 'text-primary bg-primary/10 shadow-sm'
                                     : 'text-gray-600 hover:bg-gray-300/50 hover:translate-x-1',
                             ]"
                         >
                             <div
                                 v-if="store.setting.current_page === key"
-                                class="absolute left-0 top-[10%] bottom-[10%] w-1 bg-[#0078D4] rounded-full transition-all duration-300"
+                                class="absolute left-0 top-[10%] bottom-[10%] w-1 bg-primary rounded-full transition-all duration-300"
                             ></div>
                             {{ value.name }}
                         </div>
