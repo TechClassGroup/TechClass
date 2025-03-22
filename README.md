@@ -1,23 +1,11 @@
-# Tauri + Vue + TypeScript
+# TechClass
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3
-`<script setup>` SFCs, check out
-the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+欢迎使用 Techclass —— 您的智能课表管理与作业展示助手！
 
-## Recommended IDE Setup
+无论您是学生还是教师，Techclass
+都将为您提供高效、便捷的课程管理体验。通过简洁直观的编辑界面，您可以快速生成个性化课表，轻松设置课程时间、内容及任课老师信息。支持按天、周、月、年多种模式编辑，满足不同需求。独特的单双周区分功能，让您的课程安排一目了然。
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+不仅如此，Techclass 还能帮助您展示作业、查看老师信息及重要通知，确保您不错过任何关键内容。界面设计简洁大方，采用可移动布局，您可以根据个人喜好自由搭建专属界面，打造最适合自己的展示环境。
 
-## Type Support For `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type
-by default. In most cases this is fine if you don't really care about component prop types outside of templates.
-However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual
-`h(...)` calls), you can enable Volar's Take Over mode by following these steps:
-
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for
-   `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take
-   Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
-
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+项目尚未开发完善，欢迎实时跟进进度~  
+可以加入Q群 -> 637116921 <-

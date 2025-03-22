@@ -81,9 +81,9 @@ function deleteSubject(id: string) {
 </script>
 
 <template>
-    <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-4 h-full">
         <div class="flex-1 max-w-60 flex flex-col">
-            <div class="bg-white rounded-lg p-2 mb-2 flex gap-2 shadow-sm">
+          <div class="bg-50 rounded-lg p-2 mb-2 flex gap-2 shadow-sm">
                 <TcButton class="flex-1" variant="filled" @click="addSubject">
                     添加
                 </TcButton>
@@ -112,7 +112,7 @@ function deleteSubject(id: string) {
                 @select="handleSubjectSelect"
             />
         </div>
-        <div class="flex-1 bg-white rounded-lg flex flex-col overflow-y-auto">
+    <div class="flex-1 bg-50 rounded-lg flex flex-col overflow-y-auto">
             <SubjectEditorChecker
                 :subject="subjects[selectedSubjectId]"
                 :subject-id="selectedSubjectId"

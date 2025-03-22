@@ -41,7 +41,7 @@ function updateTimetable(timetableId: string) {
 <template>
     <div class="flex flex-col h-full">
         <!-- 未选择课程表时的提示 -->
-        <div v-if="!currentCurriculum" class="text-center text-gray-500 p-4">
+      <div v-if="!currentCurriculum" class="text-center text-muted p-4">
             请选择一个课程表
         </div>
 
@@ -54,7 +54,7 @@ function updateTimetable(timetableId: string) {
             <div class="flex-1 overflow-y-auto scrollbar-stable">
                 <div class="p-4 space-y-6">
                     <div class="space-y-2">
-                        <label class="text-sm text-gray-600">课程表名称</label>
+                      <label class="text-sm text-normal">课程表名称</label>
                         <TcInput
                             :model-value="currentCurriculum.name"
                             placeholder="请输入课程表名称"
@@ -63,7 +63,7 @@ function updateTimetable(timetableId: string) {
                     </div>
 
                     <div class="space-y-2">
-                        <label class="text-sm text-gray-600">选择时间表</label>
+                      <label class="text-sm text-normal">选择时间表</label>
                         <select
                             :value="currentCurriculum.timetableId"
                             @change="
@@ -72,7 +72,7 @@ function updateTimetable(timetableId: string) {
                                         (e.target as HTMLSelectElement).value
                                     )
                             "
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                         >
                             <option value="">请选择时间表</option>
                             <option

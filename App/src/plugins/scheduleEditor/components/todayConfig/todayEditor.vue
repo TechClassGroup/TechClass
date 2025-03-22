@@ -171,17 +171,17 @@ type withName = todayScheduleLesson | todayScheduleBreak;
 </script>
 
 <template>
-  <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-4 h-full">
     <!-- 左侧面板 -->
     <div class="flex-1 max-w-60 flex flex-col">
       <!-- 标题 -->
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">课程列表</h2>
       </div>
 
       <!-- 列表卡片 -->
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col"
+          class="flex-1 bg-50 rounded-lg shadow-sm overflow-hidden flex flex-col"
       >
         <!-- 操作按钮 -->
         <div class="p-2 flex gap-2 border-b border-gray-200">
@@ -212,7 +212,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
         </div>
 
         <!-- 列表内容 -->
-        <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+        <div class="flex-1 overflow-y-auto scrollbar-stable bg-100">
           <div class="p-2 flex flex-col gap-2">
             <TransitionGroup
                 class="flex flex-col gap-2"
@@ -224,8 +224,8 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                   :key="id"
                   :class="[
                                     selectedScheduleId === id
-                                        ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
-                                        : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                        ? 'bg-primary/10 text-primary shadow-sm'
+                                        : 'text-normal hover:bg-500 hover:translate-x-1',
                                 ]"
                   class="text-left px-4 py-3 rounded-lg transition-all duration-200 select-none"
                   @click="selectedScheduleId = id"
@@ -258,7 +258,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                       </template>
                     </div>
                   </div>
-                  <div class="text-xs text-gray-500 pl-0.5">
+                  <div class="text-xs text-muted pl-0.5">
                     {{ item.startTime.toFormat("HH:mm") }}
                     <template
                         v-if="item.type !== 'dividingLine'"
@@ -277,10 +277,10 @@ type withName = todayScheduleLesson | todayScheduleBreak;
 
     <!-- 右侧面板 -->
     <div class="flex-1 flex flex-col">
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">课程详情</h2>
       </div>
-      <div class="flex-1 overflow-y-auto bg-white rounded-lg shadow-sm">
+      <div class="flex-1 overflow-y-auto bg-50 rounded-lg shadow-sm">
         <div
             v-if="
                         selectedScheduleId &&
@@ -295,7 +295,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                             ].type !== 'dividingLine'
                         "
           >
-            <div class="text-2xl font-medium text-gray-800">
+            <div class="text-2xl font-medium text-title">
               {{
                 (
                     scheduleEditorTodayConfig.schedule[
@@ -309,7 +309,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                     selectedScheduleId
                                 ] as withName).shortName 
                             "
-                  class="text-sm text-gray-500 ml-2"
+                  class="text-sm text-muted ml-2"
               >({{
                   (
                       scheduleEditorTodayConfig.schedule[
@@ -324,14 +324,14 @@ type withName = todayScheduleLesson | todayScheduleBreak;
           <div class="space-y-4 mt-6">
             <!-- 类型选择 -->
             <div class="space-y-2">
-              <label class="text-sm text-gray-600">类型</label>
+              <label class="text-sm text-normal">类型</label>
               <select
                   :value="
                                     scheduleEditorTodayConfig.schedule[
                                         selectedScheduleId
                                     ].type
                                 "
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   @change="(e) => updateType((e.target as HTMLSelectElement).value as 'lesson' | 'break' | 'dividingLine')"
               >
                 <option value="lesson">课程</option>
@@ -363,13 +363,13 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                 <!-- 弹出菜单 -->
                 <div
                     v-if="showSubjectSelector"
-                    class="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto"
+                    class="absolute z-10 w-full mt-2 bg-50 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto"
                 >
                   <div class="p-1">
                     <button
                         v-for="(subject, id) in subjects"
                         :key="id"
-                        class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
+                        class="w-full text-left px-4 py-2 hover:bg-300 rounded-md transition-colors duration-200"
                         @click="
                                                 handleSubjectSelect(String(id))
                                             "
@@ -379,7 +379,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                       </div>
                       <div
                           v-if="subject.shortName"
-                          class="text-sm text-gray-500"
+                          class="text-sm text-muted"
                       >
                         ({{ subject.shortName }})
                       </div>
@@ -388,7 +388,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                 </div>
               </div>
             </template>
-            <div class="h-px bg-gray-200 my-4"></div>
+            <div class="h-px bg-500 my-4"></div>
             <template
                 v-if="
                                 scheduleEditorTodayConfig.schedule[
@@ -397,7 +397,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                             "
             >
               <div class="space-y-2">
-                <label class="text-sm text-gray-600"
+                <label class="text-sm text-normal"
                 >课程名称</label
                 >
                 <TcInput
@@ -413,7 +413,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                 />
               </div>
               <div class="space-y-2">
-                <label class="text-sm text-gray-600"
+                <label class="text-sm text-normal"
                 >简称</label
                 >
                 <TcInput
@@ -438,7 +438,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                             "
             >
               <div class="space-y-2">
-                <label class="text-sm text-gray-600"
+                <label class="text-sm text-normal"
                 >教师姓名</label
                 >
                 <TcInput
@@ -455,10 +455,10 @@ type withName = todayScheduleLesson | todayScheduleBreak;
               </div>
             </template>
 
-            <div class="h-px bg-gray-200 my-4"></div>
+            <div class="h-px bg-500 my-4"></div>
 
             <div class="space-y-2">
-              <label class="text-sm text-gray-600"
+              <label class="text-sm text-normal"
               >开始时间</label
               >
               <input
@@ -467,7 +467,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                         selectedScheduleId
                                     ].startTime.toFormat('HH:mm')
                                 "
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   type="time"
                   @change="(e) => handleUpdate('startTime', (e.target as HTMLInputElement).value)"
               />
@@ -480,7 +480,7 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                             "
             >
               <div class="space-y-2">
-                <label class="text-sm text-gray-600"
+                <label class="text-sm text-normal"
                 >结束时间</label
                 >
                 <input
@@ -489,17 +489,17 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                         selectedScheduleId
                                     ] as withName).endTime.toFormat('HH:mm')
                                 "
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                     type="time"
                     @change="(e) => handleUpdate('endTime', (e.target as HTMLInputElement).value)"
                 />
               </div>
 
-              <div class="h-px bg-gray-200 my-4"></div>
+              <div class="h-px bg-500 my-4"></div>
 
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
-                  <label class="text-sm text-gray-600"
+                  <label class="text-sm text-normal"
                   >合并显示</label
                   >
                   <TcSwitch
@@ -517,14 +517,14 @@ type withName = todayScheduleLesson | todayScheduleBreak;
                                         "
                   />
                 </div>
-                <div class="text-xs text-gray-500">
+                <div class="text-xs text-muted">
                   启用后，该课程将在单独的位置和其他的课程合并显示
                 </div>
               </div>
             </template>
           </div>
         </div>
-        <div v-else class="p-4 text-gray-500 text-center">
+        <div v-else class="p-4 text-muted text-center">
           请选择左侧课程
         </div>
       </div>

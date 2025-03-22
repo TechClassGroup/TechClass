@@ -6,9 +6,9 @@ const store = useApplicationStore();
 </script>
 
 <template>
-  <div class="w-[40px] bg-gray-200 h-dvh flex flex-col p-1 shadow-md">
+  <div class="w-[40px] bg-500 h-dvh flex flex-col p-1 shadow-md">
     <div></div>
-    <button class="p-1 mt-auto hover:bg-gray-300 rounded-lg transition-colors"
+    <button class="p-1 mt-auto hover:bg-700 rounded-lg transition-colors"
             @click="store.reverseSettingOpen()">
       <Settings class="opacity-70 hover:opacity-100 transition-opacity" />
     </button>

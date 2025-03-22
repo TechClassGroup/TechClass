@@ -149,7 +149,7 @@ function deleteLayout(id: string | number) {
     </div>
 
     <!-- 课程列表 -->
-    <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+    <div class="flex-1 overflow-y-auto scrollbar-stable bg-100">
       <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
         <TransitionGroup
             class="flex flex-col gap-2"
@@ -161,8 +161,8 @@ function deleteLayout(id: string | number) {
               :key="id"
               :class="[
                             selectedLayoutId === id
-                                ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                ? 'bg-primary/10 text-primary shadow-sm'
+                                : 'text-normal hover:bg-500 hover:translate-x-1',
                         ]"
               class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
               @click="selectedLayoutId = id"
@@ -181,7 +181,7 @@ function deleteLayout(id: string | number) {
                     :class="[
                                         'text-xs px-1.5 py-0.5 rounded',
                                         layout.type === 'lesson'
-                                            ? 'bg-blue-100 text-blue-700'
+                                            ? 'bg-primary-100 text-primary'
                                             : layout.type === 'break'
                                             ? 'bg-green-100 text-green-700'
                                             : 'bg-purple-100 text-purple-700',
@@ -198,7 +198,7 @@ function deleteLayout(id: string | number) {
               </div>
               <div
                   v-if="layout.type !== 'dividingLine'"
-                  class="text-xs text-gray-500 pl-0.5"
+                  class="text-xs text-muted pl-0.5"
               >
                 持续时间:
                 {{

@@ -29,18 +29,18 @@ function handleUpdate(
 <template>
   <div class="p-6 h-full">
     <div v-if="subject && subjectId" class="space-y-6">
-      <div class="text-2xl font-medium text-gray-800">
+      <div class="text-2xl font-medium text-title">
         {{ subject.name }}
         <span
             v-if="subject.shortName"
-            class="text-sm text-gray-500 ml-2"
+            class="text-sm text-muted ml-2"
         >({{ subject.shortName }})</span
         >
       </div>
 
       <div class="space-y-4">
         <div class="space-y-2">
-          <label class="text-sm text-gray-600">科目名称</label>
+          <label class="text-sm text-normal">科目名称</label>
           <TcInput
               :model-value="subject.name"
               placeholder="请输入科目名称"
@@ -49,7 +49,7 @@ function handleUpdate(
         </div>
 
         <div class="space-y-2">
-          <label class="text-sm text-gray-600">简称</label>
+          <label class="text-sm text-normal">简称</label>
           <TcInput
               :model-value="subject.shortName"
               placeholder="请输入科目简称"
@@ -60,7 +60,7 @@ function handleUpdate(
         </div>
 
         <div class="space-y-2">
-          <label class="text-sm text-gray-600">教师姓名</label>
+          <label class="text-sm text-normal">教师姓名</label>
           <TcInput
               :model-value="subject.teacherName"
               placeholder="请输入教师姓名"
@@ -71,7 +71,7 @@ function handleUpdate(
         </div>
 
         <div class="space-y-2">
-          <label class="text-sm text-gray-600">备注</label>
+          <label class="text-sm text-normal">备注</label>
           <TcInput
               :model-value="subject.notes"
               placeholder="请输入备注信息"
@@ -85,7 +85,7 @@ function handleUpdate(
 
     <div
         v-else
-        class="h-full flex items-center justify-center text-gray-400"
+        class="h-full flex items-center justify-center text-subtle"
     >
       请选择一个科目以查看详细信息
     </div>

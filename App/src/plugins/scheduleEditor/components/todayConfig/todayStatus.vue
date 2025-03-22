@@ -116,19 +116,19 @@ async function regenerateTodaySchedule() {
 </script>
 
 <template>
-  <div class="flex gap-6 h-[100%]">
+  <div class="flex gap-6 h-full">
     <!-- 左侧：状态和基本信息 -->
     <div class="flex-1 max-w-96 flex flex-col">
       <!-- 状态卡片 -->
       <div
-          class="bg-white rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
+          class="bg-50 rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
       >
-        <h2 class="text-lg font-medium px-2 text-center text-gray-800">
+        <h2 class="text-lg font-medium px-2 text-center text-title">
           今日课表状态
         </h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
+          class="flex-1 bg-50 rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
       >
         <!-- 状态显示 -->
         <div
@@ -144,7 +144,7 @@ async function regenerateTodaySchedule() {
             </div>
             <div
                 v-if="scheduleEditorTodayConfig.generateDate"
-                class="text-sm text-gray-500"
+                class="text-sm text-muted"
             >
               生成时间：{{
                 scheduleEditorTodayConfig.generateDate.toFormat(
@@ -158,12 +158,12 @@ async function regenerateTodaySchedule() {
         <!-- 基本信息 -->
         <div class="space-y-4">
           <div
-              class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+              class="flex items-center justify-between p-4 bg-100 rounded-xl hover:bg-300 transition-colors duration-200"
           >
-                        <span class="text-gray-700 font-medium"
+                        <span class="text-normal font-medium"
                         >今日课程数量</span
                         >
-            <span class="font-medium text-gray-900 text-lg">{{
+            <span class="font-medium text-title text-lg">{{
                 scheduleCount
               }}</span>
           </div>
@@ -175,14 +175,14 @@ async function regenerateTodaySchedule() {
     <div class="flex-1 flex flex-col">
       <!-- 操作卡片 -->
       <div
-          class="bg-white rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
+          class="bg-50 rounded-lg p-2 mb-2 shadow-sm border border-gray-100"
       >
-        <h2 class="text-lg font-medium px-2 text-center text-gray-800">
+        <h2 class="text-lg font-medium px-2 text-center text-title">
           操作
         </h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
+          class="flex-1 bg-50 rounded-lg shadow-sm border border-gray-100 overflow-hidden p-6"
       >
         <!-- 重新生成按钮 -->
         <div class="mb-8">
@@ -197,24 +197,24 @@ async function regenerateTodaySchedule() {
 
         <!-- 生成状态信息 -->
         <div class="space-y-4">
-          <div class="text-sm font-medium text-gray-700">
+          <div class="text-sm font-medium text-normal">
             即将生成：
           </div>
           <div
-              class="p-5 rounded-xl bg-gray-50 flex flex-col gap-3 hover:bg-gray-100 transition-colors duration-200"
+              class="p-5 rounded-xl bg-100 flex flex-col gap-3 hover:bg-300 transition-colors duration-200"
           >
             <div class="flex items-center justify-between">
-              <span class="text-gray-700">生成日期</span>
-              <span class="font-medium text-gray-900">{{
+              <span class="text-normal">生成日期</span>
+              <span class="font-medium text-title">{{
                   currentDate.toFormat("yyyy-MM-dd")
                 }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-gray-700">使用配置</span>
+              <span class="text-normal">使用配置</span>
               <span
                   :class="
                                     currentConfig.isTemp
-                                        ? 'bg-blue-100 text-blue-800'
+                                        ? 'bg-primary-100 text-primary-700'
                                         : 'bg-green-100 text-green-700'
                                 "
                   class="text-xs px-3 py-1 rounded-full font-medium"
@@ -227,17 +227,17 @@ async function regenerateTodaySchedule() {
                             </span>
             </div>
             <div class="flex items-center justify-between">
-                            <span class="text-gray-700"
+                            <span class="text-normal"
                             >使用{{ currentConfig.type }}</span
                             >
-              <span class="font-medium text-gray-900">{{
+              <span class="font-medium text-title">{{
                   currentConfig.name
                 }}</span>
             </div>
             <template v-if="currentConfig.isTemp">
               <div class="flex items-center justify-between">
-                <span class="text-gray-700">临时配置时间</span>
-                <span class="text-sm font-medium text-gray-900">
+                <span class="text-normal">临时配置时间</span>
+                <span class="text-sm font-medium text-title">
                                     {{
                     currentConfig.startTime?.toFormat(
                         "MM-dd"

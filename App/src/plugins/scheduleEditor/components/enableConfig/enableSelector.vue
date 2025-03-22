@@ -145,14 +145,14 @@ const getItemInfo = (item: SelectableItem) => {
 </script>
 
 <template>
-  <div class="flex gap-4 h-[100%]">
+  <div class="flex gap-4 h-full">
     <!-- 左侧选择列表 -->
     <div class="w-2/5 flex flex-col">
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm">
         <h2 class="text-lg font-medium px-2 text-center">当前启用</h2>
       </div>
       <div
-          class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50 rounded-lg"
+          class="flex-1 overflow-y-auto scrollbar-stable bg-100 rounded-lg"
       >
         <div class="flex flex-col gap-2 p-2 rounded-lg h-full">
           <TransitionGroup
@@ -166,8 +166,8 @@ const getItemInfo = (item: SelectableItem) => {
                 :class="[
                                 selectedItem.type === item.type &&
                                 selectedItem.id === item.id
-                                    ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
-                                    : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                    ? 'bg-primary/10 text-primary shadow-sm'
+                                    : 'text-normal hover:bg-500 hover:translate-x-1',
                                 item.type === 'timegroup' &&
                                 !isTimeGroupSelectable(item.id)
                                     ? 'opacity-50 cursor-not-allowed hover:translate-x-0 hover:bg-transparent'
@@ -193,7 +193,7 @@ const getItemInfo = (item: SelectableItem) => {
                       :class="[
                                             'text-xs px-1.5 py-0.5 rounded',
                                             item.type === 'curriculum'
-                                                ? 'bg-blue-100 text-blue-700'
+                                                ? 'bg-primary-100 text-primary'
                                                 : 'bg-green-100 text-green-700',
                                         ]"
                   >
@@ -204,7 +204,7 @@ const getItemInfo = (item: SelectableItem) => {
                     }}
                                     </span>
                 </div>
-                <div class="text-xs text-gray-500 pl-0.5">
+                <div class="text-xs text-muted pl-0.5">
                   {{ getItemInfo(item) }}
                 </div>
               </div>
@@ -216,20 +216,20 @@ const getItemInfo = (item: SelectableItem) => {
 
     <!-- 右侧信息展示 -->
     <div class="w-3/5 flex flex-col">
-      <div class="bg-white rounded-lg p-2 mb-2 shadow-sm relative">
+      <div class="bg-50 rounded-lg p-2 mb-2 shadow-sm relative">
         <h2 class="text-lg font-medium px-2 text-center">详细信息</h2>
       </div>
       <div
-          class="flex-1 bg-white rounded-lg shadow-sm overflow-hidden p-4"
+          class="flex-1 bg-50 rounded-lg shadow-sm overflow-hidden p-4"
       >
         <div v-if="selectedItem.id" class="space-y-4">
           <!-- 基本信息 -->
           <div class="space-y-4">
-            <h3 class="font-medium text-gray-700 border-b pb-2">
+            <h3 class="font-medium text-normal border-b pb-2">
               基本信息
             </h3>
             <div class="grid grid-cols-2 gap-4">
-              <div class="text-gray-600">名称</div>
+              <div class="text-normal">名称</div>
               <div>
                 {{
                   getItemName(
@@ -238,7 +238,7 @@ const getItemInfo = (item: SelectableItem) => {
                   )
                 }}
               </div>
-              <div class="text-gray-600">类型</div>
+              <div class="text-normal">类型</div>
               <div>
                 {{
                   selectedItem.type === "curriculum"
@@ -252,7 +252,7 @@ const getItemInfo = (item: SelectableItem) => {
                                     shouldShowStartTime
                                 "
               >
-                <div class="text-gray-600">开始时间</div>
+                <div class="text-normal">开始时间</div>
                 <div>
                   {{ getStartTimeText(selectedItem.id) }}
                 </div>
@@ -260,7 +260,7 @@ const getItemInfo = (item: SelectableItem) => {
             </div>
           </div>
         </div>
-        <div v-else class="text-center text-gray-500 mt-4">
+        <div v-else class="text-center text-muted mt-4">
           请选择一个课程表或时间组
         </div>
       </div>

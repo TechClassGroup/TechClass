@@ -28,7 +28,7 @@ onUnmounted(() => {
 
 <template>
   <div
-      class="select-none text-6xl font-light text-gray-800 tracking-wider p-4 bg-white shadow-lg rounded-lg transition-all duration-300 hover:opacity-90 flex items-center justify-center h-full cursor-pointer gap-1"
+      class="select-none text-6xl font-light text-title tracking-wider p-4 bg-50 shadow-lg rounded-lg transition-all duration-300 hover:opacity-90 flex items-center justify-center h-full cursor-pointer gap-1"
   >
     <div class="min-w-[160px] flex items-center justify-center gap-2">
       <TransitionGroup name="time">
@@ -40,7 +40,7 @@ onUnmounted(() => {
                             props.store.storage.displaySecond
                         "
               :key="'colon1'"
-              class="inline-block text-gray-400"
+              class="inline-block text-subtle"
           >:</span
           >
         </template>
@@ -51,7 +51,7 @@ onUnmounted(() => {
           <span
               v-if="props.store.storage.displaySecond"
               :key="'colon2'"
-              class="inline-block text-gray-400"
+              class="inline-block text-subtle"
           >:</span
           >
         </template>

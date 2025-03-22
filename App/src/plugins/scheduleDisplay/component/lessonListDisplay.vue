@@ -44,7 +44,7 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
             :key="item.id"
         >
           <div
-              class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
+              class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-50 border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
           >
             <div
                 class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
@@ -94,7 +94,7 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
 
         <div
             v-else
-            class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-white border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
+            class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-50 border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
         >
           <div
               class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
@@ -131,7 +131,7 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
     <Transition name="fade">
       <div
           v-if="normalLessonList.length === 0"
-          class="empty-state p-2 text-center text-gray-500"
+          class="empty-state p-2 text-center text-muted"
       >
         暂无课程安排
       </div>

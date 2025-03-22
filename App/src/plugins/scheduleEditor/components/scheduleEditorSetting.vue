@@ -109,7 +109,7 @@ if (!store) {
     <!-- 一级导航：配置类型切换 -->
     <div class="flex items-end justify-between gap-4">
       <div
-          class="flex gap-1 bg-white p-2 rounded-lg border border-gray-200 shadow-sm"
+          class="flex gap-1 bg-50 p-2 rounded-lg border border-gray-200 shadow-sm"
       >
         <tc-button
             v-for="(type, index) in ['todayConfig', 'enable', 'course']"
@@ -131,7 +131,7 @@ if (!store) {
       <!-- 二级导航：通用tabs -->
       <div
           v-if="store.configType"
-          class="flex gap-1 bg-gray-50 px-1 py-1 rounded-t-lg border-x border-t border-gray-200"
+          class="flex gap-1 bg-100 px-1 py-1 rounded-t-lg border-x border-t border-gray-200"
       >
         <tc-button
             v-for="(tab, key) in tabsConfig[store.configType as ConfigType]"

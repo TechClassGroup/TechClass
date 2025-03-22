@@ -62,10 +62,10 @@ const formatDuration = computed(() => {
 
 <template>
   <div
-      class="select-none text-4xl font-light text-gray-800 tracking-wider p-4 bg-white shadow-lg rounded-lg hover:opacity-90 flex flex-col items-center justify-center h-full cursor-pointer gap-1"
+      class="select-none text-4xl font-light text-title tracking-wider p-4 bg-50 shadow-lg rounded-lg hover:opacity-90 flex flex-col items-center justify-center h-full cursor-pointer gap-1"
   >
     <template v-if="nextLessonInfo.remainingTime">
-      <div class="text-2xl text-gray-600">
+      <div class="text-2xl text-normal">
         {{ nextLessonInfo.text }}
         <template
             v-for="(lesson, index) in nextLessonInfo.lessons"
@@ -77,11 +77,11 @@ const formatDuration = computed(() => {
           >
         </template>
       </div>
-      <div class="text-4xl font-medium text-[rgb(43,173,242)]">
+      <div class="text-4xl font-medium text-primary">
         {{ formatDuration }}
       </div>
     </template>
-    <div v-else class="text-2xl text-gray-600">
+    <div v-else class="text-2xl text-normal">
       {{ nextLessonInfo.text }}
     </div>
   </div>

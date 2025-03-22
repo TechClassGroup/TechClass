@@ -94,14 +94,14 @@ function getClassSubjectId(timeId: string): string {
 <template>
     <div class="flex flex-col h-full">
         <!-- 未选择课程表时的提示 -->
-        <div v-if="!currentCurriculum" class="text-center text-gray-500 p-4">
+      <div v-if="!currentCurriculum" class="text-center text-muted p-4">
             请选择一个课程表
         </div>
 
         <!-- 未选择时间表时的提示 -->
         <div
             v-else-if="!currentTimetable"
-            class="text-center text-gray-500 p-4"
+            class="text-center text-muted p-4"
         >
             请先选择关联的时间表
         </div>
@@ -113,7 +113,7 @@ function getClassSubjectId(timeId: string): string {
                 <h2 class="text-lg font-medium">
                     {{ currentCurriculum.name }}
                 </h2>
-                <p class="text-sm text-gray-500 mt-1">
+              <p class="text-sm text-muted mt-1">
                     使用时间表: {{ currentTimetable.name }}
                 </p>
             </div>
@@ -124,11 +124,11 @@ function getClassSubjectId(timeId: string): string {
                     <div
                         v-for="(layout, id) in sortedLayouts"
                         :key="id"
-                        class="p-4 hover:bg-gray-50"
+                        class="p-4 hover:bg-100"
                     >
                         <div class="flex items-center gap-4">
                             <!-- 时间显示 -->
-                            <div class="text-sm font-medium text-gray-500 w-24">
+                          <div class="text-sm font-medium text-muted w-24">
                               {{ formatTime(layout.startTime) }}
                               <template v-if="layout.type !== 'dividingLine'">
                                 -
@@ -144,7 +144,7 @@ function getClassSubjectId(timeId: string): string {
                                         v-if="layout.subjectId"
                                         class="flex flex-col gap-1"
                                     >
-                                        <div class="text-sm text-gray-500">
+                                      <div class="text-sm text-muted">
                                             默认课程：{{
                                                 getSubjectName(layout.subjectId)
                                             }}
@@ -154,7 +154,7 @@ function getClassSubjectId(timeId: string): string {
                                                 getClassSubjectId(String(id))
                                             "
                                             @change="(e) => updateSubject(String(id), (e.target as HTMLSelectElement).value)"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                                         >
                                             <option value="">
                                                 继承默认课程
@@ -177,7 +177,7 @@ function getClassSubjectId(timeId: string): string {
                                                 getClassSubjectId(String(id))
                                             "
                                             @change="(e) => updateSubject(String(id), (e.target as HTMLSelectElement).value)"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4]"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                                         >
                                             <option value="">请选择课程</option>
                                             <option
@@ -197,7 +197,7 @@ function getClassSubjectId(timeId: string): string {
                             <!-- 课间时段 -->
                           <template v-else-if="layout.type === 'break'">
                                 <div class="flex-1">
-                                    <div class="text-sm text-gray-500">
+                                  <div class="text-sm text-muted">
                                         {{ layout.breakName }}
                                     </div>
                                 </div>

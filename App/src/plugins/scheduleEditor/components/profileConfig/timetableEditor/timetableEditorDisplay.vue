@@ -78,7 +78,7 @@ function deleteTimetable(id: string | number) {
         </div>
 
         <!-- 时间表列表 -->
-        <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+      <div class="flex-1 overflow-y-auto scrollbar-stable bg-100">
             <div class="flex flex-col gap-2 p-2  rounded-lg h-full">
                 <TransitionGroup
                     class="flex flex-col gap-2"
@@ -90,8 +90,8 @@ function deleteTimetable(id: string | number) {
                         :key="id"
                         :class="[
                             selectedTimetableId === id
-                                ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                ? 'bg-primary/10 text-primary shadow-sm'
+                                : 'text-normal hover:bg-500 hover:translate-x-1',
                         ]"
                         class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                         @click="selectedTimetableId = id"
@@ -105,7 +105,7 @@ function deleteTimetable(id: string | number) {
                                     >
                                 </div>
                             </div>
-                            <div class="text-xs text-gray-500 pl-0.5">
+                          <div class="text-xs text-muted pl-0.5">
                                 {{ Object.keys(timetable.layouts).length }}
                               个时间段
                             </div>

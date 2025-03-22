@@ -76,7 +76,7 @@ function deleteCurriculum(id: string) {
         </div>
 
         <!-- 课程表列表 -->
-        <div class="flex-1 overflow-y-auto scrollbar-stable bg-gray-50">
+      <div class="flex-1 overflow-y-auto scrollbar-stable bg-100">
             <div class="flex flex-col gap-2 p-2  rounded-lg h-full">
                 <TransitionGroup
                     class="flex flex-col gap-2"
@@ -88,8 +88,8 @@ function deleteCurriculum(id: string) {
                         :key="id"
                         :class="[
                             selectedCurriculumId === id
-                                ? 'bg-[#0078D4]/10 text-[#0078D4] shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-200 hover:translate-x-1',
+                                ? 'bg-primary/10 text-primary shadow-sm'
+                                : 'text-normal hover:bg-500 hover:translate-x-1',
                         ]"
                         class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                         @click="selectedCurriculumId = String(id)"
@@ -104,7 +104,7 @@ function deleteCurriculum(id: string) {
                                     </span>
                                 </div>
                             </div>
-                            <div class="text-xs text-gray-500 pl-0.5">
+                          <div class="text-xs text-muted pl-0.5">
                                 {{ curriculum.classes.length }} 个课程
                             </div>
                         </div>

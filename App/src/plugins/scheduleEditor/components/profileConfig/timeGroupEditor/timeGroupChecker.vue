@@ -162,7 +162,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
         <div v-if="currentTimeGroup" class="space-y-6">
             <!-- 时间组名称 -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1"
+              <label class="block text-sm font-medium text-normal mb-1"
                     >时间组名称</label
                 >
                 <TcInput
@@ -174,7 +174,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
 
             <!-- 粒度设置 -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1"
+              <label class="block text-sm font-medium text-normal mb-1"
                     >时间粒度</label
                 >
                 <select
@@ -194,7 +194,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
 
           <!-- 天的预设周期 -->
           <div v-if="currentTimeGroup.granularity === 'day'">
-            <label class="block text-sm font-medium text-gray-700 mb-1"
+            <label class="block text-sm font-medium text-normal mb-1"
             >天的预设周期</label
             >
             <select
@@ -214,7 +214,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
 
           <!-- 周期设置 -->
           <div v-if="computedProps.showCycleInput.value">
-                <label class="block text-sm font-medium text-gray-700 mb-1"
+            <label class="block text-sm font-medium text-normal mb-1"
                     >周期</label
                 >
                 <TcInput
@@ -230,7 +230,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
                         updateTimeGroup.cycle(limitedNum);
                     }"
                 />
-                <p class="mt-1 text-sm text-gray-500">
+            <p class="mt-1 text-sm text-muted">
                     设置时间组包含的{{
                     GRANULARITY_MAP[currentTimeGroup.granularity]
                   }}数（最大1000）
@@ -243,11 +243,11 @@ const computedProps = useComputedProperties(currentTimeGroup);
               class="space-y-3"
           >
                 <div class="flex items-center justify-between">
-                    <label class="text-sm font-medium text-gray-700"
+                  <label class="text-sm font-medium text-normal"
                         >开始时间</label
                     >
                     <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-600">继承父组件</span>
+                      <span class="text-sm text-normal">继承父组件</span>
                         <TcSwitch
                             :model-value="
                                 computedProps.isInheritStartTime.value
@@ -265,7 +265,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
                     @update:model-value="updateTimeGroup.startTime"
                     class="w-full"
                 />
-                <p v-else class="text-sm text-gray-500 italic">
+            <p v-else class="text-sm text-muted italic">
                     将继承父时间组的开始时间
                 </p>
             </div>
@@ -273,7 +273,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
 
         <div
             v-else
-            class="h-full flex items-center justify-center text-gray-500"
+            class="h-full flex items-center justify-center text-muted"
         >
             请选择一个时间组进行编辑
         </div>
@@ -283,7 +283,7 @@ const computedProps = useComputedProperties(currentTimeGroup);
 <style scoped>
 .form-select {
   @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm;
-  @apply focus:ring-2 focus:ring-[#0078D4] focus:border-[#0078D4];
+  @apply focus:ring-2 focus:ring-primary focus:border-primary;
     padding-right: 2.5rem;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
