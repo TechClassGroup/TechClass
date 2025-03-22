@@ -163,29 +163,29 @@ const handleInput = (e: Event) => {
         v-if="type === 'textarea'"
         ref="textareaRef"
         :class="inputClasses"
+        :value="model"
         :disabled="disabled"
         :placeholder="placeholder"
         :rows="rows"
-        :value="model"
         class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full resize-none"
         @input="handleInput"
     />
     <input
         v-else
         :class="inputClasses"
-        :disabled="disabled"
-        :placeholder="placeholder"
         :type="type"
         :value="displayValue"
-        class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full"
+        :disabled="disabled"
+        :placeholder="placeholder"
         v-bind="timeInputProps"
+        class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full"
         @input="handleInput"
     />
 
     <p
         v-if="helperText"
-        :class="error ? 'text-red-500' : 'text-muted'"
         class="text-xs"
+        :class="error ? 'text-red-500' : 'text-muted'"
     >
       {{ helperText }}
     </p>
