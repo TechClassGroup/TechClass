@@ -64,13 +64,13 @@ const sizeClasses = {
 // 颜色映射
 const colorClasses = computed(() => ({
     primary: {
-      filled: "bg-primary text-white hover:bg-[#006CBE] active:bg-[#005BA1]",
-      tonal: "bg-[#EFF6FC] text-primary hover:bg-[#DEECF9] active:bg-[#C7E0F4]",
+      filled: "bg-primary text-white hover:bg-primary-700 active:bg-primary-900",
+      tonal: "bg-primary-100 text-primary hover:bg-primary-100 active:bg-primary-300",
         outlined:
-            "border-2 border-primary text-primary hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
-      text: "text-primary hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
+            "border-2 border-primary text-primary hover:bg-primary-100 active:bg-primary-300",
+      text: "text-primary hover:bg-primary-100 active:bg-primary-300",
         elevated:
-            "bg-50 text-primary shadow-md hover:shadow-lg hover:bg-[#EFF6FC] active:bg-[#DEECF9]",
+            "bg-50 text-primary shadow-md hover:shadow-lg hover:bg-primary-100 active:bg-primary-300",
     },
     error: {
         filled: "bg-[#D92D20] text-white hover:bg-[#C41E3A] active:bg-[#B31B1B]",
