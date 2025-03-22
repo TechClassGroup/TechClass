@@ -181,7 +181,7 @@ function deleteLayout(id: string | number) {
                     :class="[
                                         'text-xs px-1.5 py-0.5 rounded',
                                         layout.type === 'lesson'
-                                            ? 'bg-blue-100 text-blue-700'
+                                            ? 'bg-primary-100 text-primary'
                                             : layout.type === 'break'
                                             ? 'bg-green-100 text-green-700'
                                             : 'bg-purple-100 text-purple-700',

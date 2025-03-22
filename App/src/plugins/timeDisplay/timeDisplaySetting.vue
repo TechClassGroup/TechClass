@@ -30,10 +30,7 @@ watch(isSecondDisabled, (newValue) => {
         <tc-switch
             v-model="store.storage.displayHour"
             class="ml-2"
-            :class="{
-                        'bg-blue-500': store.storage.displayHour,
-                        'bg-700': !store.storage.displayHour,
-                    }"
+
         ></tc-switch>
       </div>
       <div
@@ -43,10 +40,7 @@ watch(isSecondDisabled, (newValue) => {
         <tc-switch
             v-model="store.storage.displayMinute"
             class="ml-2"
-            :class="{
-                        'bg-blue-500': store.storage.displayMinute,
-                        'bg-700': !store.storage.displayMinute,
-                    }"
+
         ></tc-switch>
       </div>
       <div
@@ -57,10 +51,7 @@ watch(isSecondDisabled, (newValue) => {
             v-model="store.storage.displaySecond"
             :disabled="isSecondDisabled"
             class="ml-2"
-            :class="{
-                        'bg-blue-500': store.storage.displaySecond,
-                        'bg-700': !store.storage.displaySecond,
-                    }"
+
         ></tc-switch>
       </div>
     </div>

@@ -121,7 +121,7 @@ const availableTimeGroups = computed(() => {
                                 class="text-xs px-2 py-0.5 rounded-full"
                                 :class="[
                                     layout.type === 'curriculum'
-                                        ? 'bg-blue-100 text-blue-800'
+                                        ? 'bg-primary-100 text-primary-700'
                                         : 'bg-green-100 text-green-800',
                                 ]"
                             >

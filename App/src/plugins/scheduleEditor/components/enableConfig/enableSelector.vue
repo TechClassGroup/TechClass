@@ -193,7 +193,7 @@ const getItemInfo = (item: SelectableItem) => {
                       :class="[
                                             'text-xs px-1.5 py-0.5 rounded',
                                             item.type === 'curriculum'
-                                                ? 'bg-blue-100 text-blue-700'
+                                                ? 'bg-primary-100 text-primary'
                                                 : 'bg-green-100 text-green-700',
                                         ]"
                   >

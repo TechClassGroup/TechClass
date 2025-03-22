@@ -6,10 +6,10 @@
             <!-- Material Design 风格的开发中提示 -->
             <div class="flex flex-col items-center space-y-4 mb-8">
                 <div
-                    class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center"
+                    class="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center"
                 >
                     <div
-                        class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                        class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"
                     ></div>
                 </div>
 
