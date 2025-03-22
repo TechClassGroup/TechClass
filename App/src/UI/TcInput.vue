@@ -102,7 +102,7 @@ const sizeClasses = computed(() => ({
 const inputClasses = computed(() => ({
     ...sizeClasses.value,
     "border-red-500": props.error,
-    "border-gray-300": !props.error,
+  "border-background-700": !props.error,
   "hover:border-primary hover:shadow-sm": !props.disabled && !props.error,
   "focus:border-primary focus:ring-1 focus:ring-primary/20 focus:shadow":
         !props.disabled && !props.error,
@@ -154,7 +154,7 @@ const handleInput = (e: Event) => {
 
 <template>
     <div class="flex flex-col gap-1">
-        <label v-if="label" class="text-sm font-medium text-gray-700">
+      <label v-if="label" class="text-sm font-medium text-background-900">
             {{ label }}
             <span v-if="required" class="text-red-500">*</span>
         </label>
@@ -185,7 +185,7 @@ const handleInput = (e: Event) => {
         <p
             v-if="helperText"
             class="text-xs"
-            :class="error ? 'text-red-500' : 'text-gray-500'"
+            :class="error ? 'text-red-500' : 'text-background-700'"
         >
             {{ helperText }}
         </p>
