@@ -114,7 +114,7 @@ const availableTimeGroups = computed(() => {
                         <div
                             class="px-4 py-3 bg-100 border-b border-gray-200 flex items-center justify-between"
                         >
-                            <div class="font-medium text-gray-700">
+                          <div class="font-medium text-normal">
                                 {{ getCycleName(index) }}
                             </div>
                             <span
@@ -134,7 +134,7 @@ const availableTimeGroups = computed(() => {
                             <!-- 类型选择 -->
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                    class="block text-sm font-medium text-normal mb-1"
                                     >类型</label
                                 >
                                 <select
@@ -150,7 +150,7 @@ const availableTimeGroups = computed(() => {
                             <!-- ID选择 -->
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                    class="block text-sm font-medium text-normal mb-1"
                                 >
                                     {{
                                         layout.type === "curriculum"

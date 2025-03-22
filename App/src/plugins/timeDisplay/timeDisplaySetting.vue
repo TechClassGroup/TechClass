@@ -26,7 +26,7 @@ watch(isSecondDisabled, (newValue) => {
       <div
           class="flex items-center justify-between p-3 bg-100 rounded-lg"
       >
-        <span class="text-gray-700">显示小时</span>
+        <span class="text-normal">显示小时</span>
         <tc-switch
             v-model="store.storage.displayHour"
             class="ml-2"
@@ -39,7 +39,7 @@ watch(isSecondDisabled, (newValue) => {
       <div
           class="flex items-center justify-between p-3 bg-100 rounded-lg"
       >
-        <span class="text-gray-700">显示分钟</span>
+        <span class="text-normal">显示分钟</span>
         <tc-switch
             v-model="store.storage.displayMinute"
             class="ml-2"
@@ -52,7 +52,7 @@ watch(isSecondDisabled, (newValue) => {
       <div
           class="flex items-center justify-between p-3 bg-100 rounded-lg"
       >
-        <span class="text-gray-700">显示秒</span>
+        <span class="text-normal">显示秒</span>
         <tc-switch
             v-model="store.storage.displaySecond"
             :disabled="isSecondDisabled"

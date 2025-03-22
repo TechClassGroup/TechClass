@@ -154,7 +154,7 @@ const handleInput = (e: Event) => {
 
 <template>
   <div class="flex flex-col gap-1">
-    <label v-if="label" class="text-sm font-medium text-gray-700">
+    <label v-if="label" class="text-sm font-medium text-normal">
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </label>
@@ -184,7 +184,7 @@ const handleInput = (e: Event) => {
 
     <p
         v-if="helperText"
-        :class="error ? 'text-red-500' : 'text-gray-500'"
+        :class="error ? 'text-red-500' : 'text-muted'"
         class="text-xs"
     >
       {{ helperText }}

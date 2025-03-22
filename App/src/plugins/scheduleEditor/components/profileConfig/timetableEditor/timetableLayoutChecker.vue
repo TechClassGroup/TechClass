@@ -153,9 +153,9 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
   >
     <!-- 时间表基本信息 -->
     <div v-if="currentTimetable" class="space-y-4">
-      <h3 class="text-lg font-medium text-gray-900">时间表设置</h3>
+      <h3 class="text-lg font-medium text-title">时间表设置</h3>
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1"
+        <label class="block text-sm font-medium text-normal mb-1"
         >时间表名称</label
         >
         <TcInput
@@ -175,9 +175,9 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
     <template v-if="currentLayout">
       <!-- 类型选择 -->
       <div class="space-y-4">
-        <h3 class="text-lg font-medium text-gray-900">类型设置</h3>
+        <h3 class="text-lg font-medium text-title">类型设置</h3>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-normal mb-1"
           >选择类型</label
           >
           <select
@@ -193,11 +193,11 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
       </div>
       <!-- 时间设置 -->
       <div class="space-y-4">
-        <h3 class="text-lg font-medium text-gray-900">时间设置</h3>
+        <h3 class="text-lg font-medium text-title">时间设置</h3>
         <div class="grid grid-cols-1 gap-4">
           <div>
             <label
-                class="block text-sm font-medium text-gray-700 mb-1"
+                class="block text-sm font-medium text-normal mb-1"
             >开始时间</label
             >
             <TcInput
@@ -215,7 +215,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
           </div>
           <div v-if="currentLayout.type !== 'dividingLine'">
             <label
-                class="block text-sm font-medium text-gray-700 mb-1"
+                class="block text-sm font-medium text-normal mb-1"
             >结束时间</label
             >
             <TcInput
@@ -236,9 +236,9 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
 
       <!-- 课程设置 -->
       <div v-if="currentLayout.type === 'lesson'" class="space-y-4">
-        <h3 class="text-lg font-medium text-gray-900">课程设置</h3>
+        <h3 class="text-lg font-medium text-title">课程设置</h3>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-normal mb-1"
           >选择默认课程</label
           >
           <select
@@ -257,7 +257,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
           </select>
         </div>
         <div class="flex items-center gap-2">
-          <label class="text-sm font-medium text-gray-700"
+          <label class="text-sm font-medium text-normal"
           >合并显示</label
           >
           <TcSwitch
@@ -268,9 +268,9 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
       </div>
 
       <div v-if="currentLayout.type === 'break'" class="space-y-4">
-        <h3 class="text-lg font-medium text-gray-900">课间名称</h3>
+        <h3 class="text-lg font-medium text-title">课间名称</h3>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-normal mb-1"
           >课间名称</label
           >
           <TcInput
@@ -280,7 +280,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1"
+          <label class="block text-sm font-medium text-normal mb-1"
           >课间简称</label
           >
           <TcInput
@@ -290,7 +290,7 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
           />
         </div>
         <div class="flex items-center gap-2">
-          <label class="text-sm font-medium text-gray-700"
+          <label class="text-sm font-medium text-normal"
           >合并显示</label
           >
           <TcSwitch
@@ -303,11 +303,11 @@ function updateNoDisplayedSeparately(noDisplayedSeparately: boolean) {
 
     <div
         v-else-if="!selectedTimetableId"
-        class="p-4 text-center text-gray-500"
+        class="p-4 text-center text-muted"
     >
       请选择一个时间表
     </div>
-    <div v-else class="p-4 text-center text-gray-500">
+    <div v-else class="p-4 text-center text-muted">
       请选择一个课程进行编辑
     </div>
   </div>

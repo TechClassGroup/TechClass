@@ -13,11 +13,11 @@
                     ></div>
                 </div>
 
-                <h2 class="text-2xl font-medium text-gray-900">开发进行中</h2>
-                <p class="text-gray-600">你来的真早！但是还没写完</p>
+              <h2 class="text-2xl font-medium text-title">开发进行中</h2>
+              <p class="text-normal">你来的真早！但是还没写完</p>
             </div>
 
-            <div class="max-w-lg mx-auto mt-8 space-y-4 text-gray-600">
+          <div class="max-w-lg mx-auto mt-8 space-y-4 text-normal">
                 <p>
                     这是一个基于 Tauri + Vue3 + TypeScript 开发的现代化桌面应用
                 </p>

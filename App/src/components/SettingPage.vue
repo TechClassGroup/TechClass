@@ -104,7 +104,7 @@ watch(
                             :class="[
                                 store.setting.current_page === key
                                     ? 'text-primary bg-primary/10 shadow-sm'
-                                    : 'text-gray-600 hover:bg-700/50 hover:translate-x-1',
+                                    : 'text-normal hover:bg-700/50 hover:translate-x-1',
                             ]"
                         >
                             <div
@@ -122,7 +122,7 @@ watch(
                         class="flex items-center gap-2 mt-8 mb-1 px-2"
                     >
                       <div class="h-[1px] bg-700 flex-grow"></div>
-                        <span class="text-sm text-gray-500 font-medium"
+                      <span class="text-sm text-muted font-medium"
                             >官方插件</span
                         >
                       <div class="h-[1px] bg-700 flex-grow"></div>
@@ -145,7 +145,7 @@ watch(
                             :class="[
                                 store.setting.current_page === key
                                     ? 'text-primary bg-primary/10 shadow-sm'
-                                    : 'text-gray-600 hover:bg-700/50 hover:translate-x-1',
+                                    : 'text-normal hover:bg-700/50 hover:translate-x-1',
                             ]"
                         >
                             <div

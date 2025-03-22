@@ -20,7 +20,7 @@ defineEmits<{
                 :class="[
                     selectedSubjectId === id
                         ? 'bg-primary/10 text-primary shadow-sm'
-                        : 'text-gray-600 hover:bg-500 hover:translate-x-1',
+                        : 'text-normal hover:bg-500 hover:translate-x-1',
                 ]"
                 class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                 @click="$emit('select', String(id))"
@@ -39,7 +39,7 @@ defineEmits<{
                     </div>
                     <div
                         v-if="subject.notes"
-                        class="text-xs text-gray-500 pl-0.5"
+                        class="text-xs text-muted pl-0.5"
                     >
                         {{ subject.notes }}
                     </div>

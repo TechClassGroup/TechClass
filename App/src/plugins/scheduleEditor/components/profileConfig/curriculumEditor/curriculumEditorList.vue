@@ -89,7 +89,7 @@ function deleteCurriculum(id: string) {
                         :class="[
                             selectedCurriculumId === id
                                 ? 'bg-primary/10 text-primary shadow-sm'
-                                : 'text-gray-600 hover:bg-500 hover:translate-x-1',
+                                : 'text-normal hover:bg-500 hover:translate-x-1',
                         ]"
                         class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                         @click="selectedCurriculumId = String(id)"
@@ -104,7 +104,7 @@ function deleteCurriculum(id: string) {
                                     </span>
                                 </div>
                             </div>
-                            <div class="text-xs text-gray-500 pl-0.5">
+                          <div class="text-xs text-muted pl-0.5">
                                 {{ curriculum.classes.length }} 个课程
                             </div>
                         </div>

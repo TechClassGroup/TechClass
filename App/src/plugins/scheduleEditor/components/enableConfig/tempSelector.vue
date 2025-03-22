@@ -235,7 +235,7 @@ onMounted(() => {
                                 selectedItem.type === item.type &&
                                 selectedItem.id === item.id
                                     ? 'bg-primary/10 text-primary shadow-sm'
-                                    : 'text-gray-600 hover:bg-500 hover:translate-x-1',
+                                    : 'text-normal hover:bg-500 hover:translate-x-1',
                                 item.type === 'timegroup' &&
                                 !isTimeGroupSelectable(item.id)
                                     ? 'opacity-50 cursor-not-allowed hover:translate-x-0 hover:bg-transparent'
@@ -272,7 +272,7 @@ onMounted(() => {
                     }}
                                     </span>
                 </div>
-                <div class="text-xs text-gray-500 pl-0.5">
+                <div class="text-xs text-muted pl-0.5">
                   {{ getItemInfo(item) }}
                 </div>
               </div>
@@ -302,7 +302,7 @@ onMounted(() => {
         <div
             class="mb-6 flex items-center justify-between px-4 py-2 bg-100 rounded-lg"
         >
-          <span class="text-gray-700 font-medium">临时启用</span>
+          <span class="text-normal font-medium">临时启用</span>
           <tc-switch v-model="tempEnabled" />
         </div>
 
@@ -311,11 +311,11 @@ onMounted(() => {
 
           <!-- 时间设置 -->
           <div class="space-y-4">
-            <h3 class="font-medium text-gray-700 border-b pb-2">
+            <h3 class="font-medium text-normal border-b pb-2">
               时间设置
             </h3>
             <div class="grid grid-cols-2 gap-4">
-              <div class="text-gray-600">启用覆盖时间</div>
+              <div class="text-normal">启用覆盖时间</div>
               <input
                   :value="startTime.toFormat('yyyy-MM-dd')"
                   class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
@@ -330,7 +330,7 @@ onMounted(() => {
                                     )
                                 "
               />
-              <div class="text-gray-600">结束覆盖时间</div>
+              <div class="text-normal">结束覆盖时间</div>
               <input
                   :value="endTime.toFormat('yyyy-MM-dd')"
                   class="px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
@@ -348,11 +348,11 @@ onMounted(() => {
             </div>
           </div>
           <div class="space-y-4">
-            <h3 class="font-medium text-gray-700 border-b pb-2">
+            <h3 class="font-medium text-normal border-b pb-2">
               基本信息
             </h3>
             <div class="grid grid-cols-2 gap-4">
-              <div class="text-gray-600">名称</div>
+              <div class="text-normal">名称</div>
               <div>
                 {{
                   getItemName(
@@ -361,7 +361,7 @@ onMounted(() => {
                   )
                 }}
               </div>
-              <div class="text-gray-600">类型</div>
+              <div class="text-normal">类型</div>
               <div>
                 {{
                   selectedItem.type === "curriculum"
@@ -372,7 +372,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div v-else class="text-center text-gray-500 mt-4">
+        <div v-else class="text-center text-muted mt-4">
           请选择一个课程表或时间组
         </div>
       </div>

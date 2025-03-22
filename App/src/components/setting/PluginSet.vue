@@ -59,7 +59,7 @@ const reload_plugins = () => {
             <div class="text-base font-medium">
               {{ item.name }}
             </div>
-            <div class="mt-1 text-sm text-gray-600">
+            <div class="mt-1 text-sm text-normal">
               {{ item.description }}
             </div>
           </div>

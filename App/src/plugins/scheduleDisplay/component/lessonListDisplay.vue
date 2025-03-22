@@ -131,7 +131,7 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
     <Transition name="fade">
       <div
           v-if="normalLessonList.length === 0"
-          class="empty-state p-2 text-center text-gray-500"
+          class="empty-state p-2 text-center text-muted"
       >
         暂无课程安排
       </div>

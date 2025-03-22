@@ -150,7 +150,7 @@ function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
                         :class="[
                             selectedTimeGroupId === id
                                 ? 'bg-primary/10 text-primary shadow-sm'
-                                : 'text-gray-600 hover:bg-500 hover:translate-x-1',
+                                : 'text-normal hover:bg-500 hover:translate-x-1',
                         ]"
                         class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                         @click="selectedTimeGroupId = id as string"
@@ -164,7 +164,7 @@ function getTimeGroupInfo(timeGroup: (typeof timeGroups.value)[string]) {
                                     >
                                 </div>
                             </div>
-                            <div class="text-xs text-gray-500 pl-0.5">
+                          <div class="text-xs text-muted pl-0.5">
                                 {{ getTimeGroupInfo(timeGroup) }}
                             </div>
                         </div>

@@ -26,6 +26,13 @@ export default {
                 900: "rgb(var(--color-background-900))",
                 DEFAULT: "rgb(var(--color-background-500))",
             },
+            textColor: {
+                title: "rgb(var(--color-text-title))",
+                normal: "rgb(var(--color-text-normal))",
+                muted: "rgb(var(--color-text-muted))",
+                subtle: "rgb(var(--color-text-subtle))",
+                DEFAULT: "rgb(var(--color-text-normal))",
+            },
         },
     },
     variants: {

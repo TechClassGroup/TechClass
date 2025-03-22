@@ -91,7 +91,7 @@ function deleteTimetable(id: string | number) {
                         :class="[
                             selectedTimetableId === id
                                 ? 'bg-primary/10 text-primary shadow-sm'
-                                : 'text-gray-600 hover:bg-500 hover:translate-x-1',
+                                : 'text-normal hover:bg-500 hover:translate-x-1',
                         ]"
                         class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
                         @click="selectedTimetableId = id"
@@ -105,7 +105,7 @@ function deleteTimetable(id: string | number) {
                                     >
                                 </div>
                             </div>
-                            <div class="text-xs text-gray-500 pl-0.5">
+                          <div class="text-xs text-muted pl-0.5">
                                 {{ Object.keys(timetable.layouts).length }}
                               个时间段
                             </div>

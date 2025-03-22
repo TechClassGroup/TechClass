@@ -162,7 +162,7 @@ function deleteLayout(id: string | number) {
               :class="[
                             selectedLayoutId === id
                                 ? 'bg-primary/10 text-primary shadow-sm'
-                                : 'text-gray-600 hover:bg-500 hover:translate-x-1',
+                                : 'text-normal hover:bg-500 hover:translate-x-1',
                         ]"
               class="px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 select-none"
               @click="selectedLayoutId = id"
@@ -198,7 +198,7 @@ function deleteLayout(id: string | number) {
               </div>
               <div
                   v-if="layout.type !== 'dividingLine'"
-                  class="text-xs text-gray-500 pl-0.5"
+                  class="text-xs text-muted pl-0.5"
               >
                 持续时间:
                 {{
