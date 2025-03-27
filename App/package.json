@@ -9,7 +9,8 @@
     "preview": "rsbuild preview",
     "tauri": "tauri",
     "tauri-dev": "tauri dev",
-    "tauri-build": "tauri build"
+    "tauri-build": "tauri build",
+    "tauri-build:safari": "cross-env WEBVIEW_TARGET=safari tauri build"
   },
   "dependencies": {
     "@rsbuild/core": "^1.2.3",
@@ -17,6 +18,7 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "^2",
     "@types/lodash": "^4.17.13",
+    "cross-env": "^7.0.3",
     "lodash": "^4.17.21",
     "lucide-vue-next": "^0.477.0",
     "luxon": "^3.5.0",

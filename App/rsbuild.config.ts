@@ -8,6 +8,11 @@ import {pluginImageCompress} from "@rsbuild/plugin-image-compress";
 
 const isProduction = process.env.NODE_ENV === "production";
 
+type webviewTargetType = "webview2" | "safari"
+const webviewTarget: webviewTargetType =
+    (process.env.WEBVIEW_TARGET as webviewTargetType) || "webview2";
+
+
 function getLogLevel() {
     const cargoPath = path.resolve(__dirname, "src-tauri/Cargo.toml");
     const cargoContent = fs.readFileSync(cargoPath, "utf-8");
@@ -17,9 +22,9 @@ function getLogLevel() {
                 loglevel: {
                     releaseFrontend: string;
                     debugFrontend: string;
-                }
-            }
-        }
+                };
+            };
+        };
     };
     return isProduction
         ? cargoData.package.metadata.loglevel.releaseFrontend
@@ -49,7 +54,8 @@ export default defineConfig({
     plugins: [
         pluginVue(),
         pluginHtmlMinifierTerser(),
-        pluginImageCompress(["pngLossless", "jpeg", "svg", "ico", 'avif'])],
+        pluginImageCompress(["pngLossless", "jpeg", "svg", "ico", "avif"]),
+    ],
     html: {
         template: "index.html",
     },
@@ -68,7 +74,11 @@ export default defineConfig({
     tools: {
         rspack: {
             watchOptions: {
-                ignored: ["**/node_modules", "**/src-tauri/target/**", "**/.git/**"],
+                ignored: [
+                    "**/node_modules",
+                    "**/src-tauri/target/**",
+                    "**/.git/**",
+                ],
             },
             resolve: {
                 extensions: [".js", ".ts", ".json"],
@@ -102,9 +112,7 @@ export default defineConfig({
                     },
                 ],
             },
-            plugins: [
-                new rspack.DefinePlugin(getLogLevelFlags()),
-            ]
+            plugins: [new rspack.DefinePlugin(getLogLevelFlags())],
         },
     },
 });
