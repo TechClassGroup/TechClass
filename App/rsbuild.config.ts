@@ -9,7 +9,7 @@ import {pluginImageCompress} from "@rsbuild/plugin-image-compress";
 const isProduction = process.env.NODE_ENV === "production";
 console.log(`[构建环境] 当前环境: ${isProduction ? "Release" : "Production"}`);
 
-type webviewTargetType = "webview2" | "safari";
+type webviewTargetType = "webview2" | "WKWebView" | "WebKitGTK";
 const webviewTarget: webviewTargetType =
     (process.env.WEBVIEW_TARGET as webviewTargetType) || "webview2";
 console.log(`[Webview目标] 使用的webview类型: ${webviewTarget}`);
@@ -61,6 +61,13 @@ function getLogLevelFlags() {
     return result;
 }
 
+const browserList: Record<webviewTargetType, any> = {
+    webview2: {},
+    WKWebView: {},
+    WebKitGTK: {},
+}
+const browserListTarget = browserList[webviewTarget];
+console.log(`[浏览器列表] 当前使用的浏览器列表: ${browserListTarget}`);
 export default defineConfig({
     plugins: [
         pluginVue(),
@@ -77,12 +84,6 @@ export default defineConfig({
     },
     server: {
         port: 1422,
-        onBeforeStartDevServer() {
-            console.log("[开发服务器] 正在启动开发服务器...");
-        },
-        onAfterStartDevServer() {
-            console.log("[开发服务器] 开发服务器已启动，端口: 1422");
-        },
     },
     dev: {
         hmr: false,
@@ -131,5 +132,10 @@ export default defineConfig({
             },
             plugins: [new rspack.DefinePlugin(getLogLevelFlags())],
         },
+
     },
+    output: {
+        overrideBrowserslist: browserListTarget
+    }
+
 } as RsbuildConfig);
