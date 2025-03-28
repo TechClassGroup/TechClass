@@ -4,6 +4,7 @@
 
 import Logger from "./logger";
 import {DateTime} from "luxon";
+import {ref} from "vue";
 
 /**
  * 创建一个具有重试机制的保存函数
@@ -127,3 +128,12 @@ export function sleepUntil(
 
     return {promise, cancel};
 }
+
+// 用户是否偏好深色模式
+export const userPreferDarkMode = ref(false);
+const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+userPreferDarkMode.value = darkModeMediaQuery.matches;
+darkModeMediaQuery.addEventListener("change", (e) => {
+    userPreferDarkMode.value = e.matches;
+});
+

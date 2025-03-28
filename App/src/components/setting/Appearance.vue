@@ -4,8 +4,6 @@ import SettingItem from "../utils/SettingItem.vue";
 import TcSelect from "../../UI/TcSelect.vue";
 
 const store = useApplicationStore();
-
-
 </script>
 
 <template>
@@ -23,8 +21,8 @@ const store = useApplicationStore();
             v-model="store.storage.appearance.theme"
             :options="[
                         { label: '默认', value: Theme.auto },
-                        { label: '深色', value: Theme.dark },
                         { label: '浅色', value: Theme.light },
+                        { label: '深色', value: Theme.dark },
                     ]"
             required
         >
