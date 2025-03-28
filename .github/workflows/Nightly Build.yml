@@ -37,7 +37,7 @@ jobs:
         run: node .github/scripts/processLoglevelToTrace.js
       # Build
       - name: Build
-        run: pnpm --filter @techclass/app tauri build
+        run: pnpm --filter @techclass/app tauri build:webview2
       - name: Rename artifact
         shell: pwsh
         run: |
