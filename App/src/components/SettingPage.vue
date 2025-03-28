@@ -3,7 +3,7 @@ import logger from "../modules/logger";
 import {useApplicationStore} from "../stores/useApplicationStore";
 import About from "./setting/About.vue";
 import {computed, defineComponent, markRaw, watch} from "vue";
-import PluginSet from "./setting/PluginSet.vue";
+import PluginSetting from "./setting/PluginSetting.vue";
 import {computedPluginsComponent} from "../modules/pluginUtils";
 import {PluginStore} from "../types/plugins.types";
 import {CircleX} from "lucide-vue-next";
@@ -39,7 +39,7 @@ const baseRoutes: Route = {
     },
     plugin: {
         name: "插件配置",
-        component: markRaw(PluginSet),
+      component: markRaw(PluginSetting),
     },
 };
 
