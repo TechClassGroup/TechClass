@@ -10,7 +10,9 @@
     "tauri": "tauri",
     "tauri-dev": "tauri dev",
     "tauri-build": "tauri build",
-    "tauri-build:safari": "cross-env WEBVIEW_TARGET=safari tauri build"
+    "tauri-build:webview2": "cross-env WEBVIEW_TARGET=webview2 tauri build",
+    "tauri-build:WKWebView": "cross-env WEBVIEW_TARGET=WKWebView tauri build",
+    "tauri-build:WebKitGTK": "cross-env WEBVIEW_TARGET=WebKitGTK tauri build"
   },
   "dependencies": {
     "@rsbuild/core": "^1.2.3",
