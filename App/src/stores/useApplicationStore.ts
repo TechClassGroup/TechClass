@@ -9,9 +9,9 @@ import {watch} from "vue";
 type AppStore = ReturnType<typeof useApplicationStore>;
 
 export const enum Theme {
-    dark = 'dark',
-    light = 'light',
-    auto = 'auto'
+    dark = "dark",
+    light = "light",
+    auto = "auto",
 }
 
 export interface ApplicationStoreTypes {
@@ -19,18 +19,19 @@ export interface ApplicationStoreTypes {
         open: boolean;
         current_page: string;
         needReloadPlugins: boolean;
-    },
+    };
     storage: {
         pluginsList: {
             official: string[];
             custom: string[];
         };
         appearance: {
-            theme: Theme
+            theme: Theme;
         };
     };
 }
 
+// @ts-ignore
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: (): ApplicationStoreTypes => {
         return {
@@ -45,8 +46,8 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
                     custom: [] as string[],
                 },
                 appearance: {
-                    theme: Theme.auto
-                }
+                    theme: Theme.auto,
+                },
             },
         };
     },

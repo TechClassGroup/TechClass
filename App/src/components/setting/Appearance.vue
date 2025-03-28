@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import {useApplicationStore} from "../../stores/useApplicationStore";
+import {Theme, useApplicationStore} from "../../stores/useApplicationStore";
 import SettingItem from "../utils/SettingItem.vue";
+import TcSelect from "../../UI/TcSelect.vue";
 
 const store = useApplicationStore();
 
@@ -16,15 +17,21 @@ const store = useApplicationStore();
     <div class="space-y-4">
       <setting-item>
         <template #title>基础颜色</template>
-        <template #description>
-          设置应用的基础颜色
-        </template>
+        <template #description> 设置应用的基础颜色</template>
 
+        <TcSelect
+            v-model="store.storage.appearance.theme"
+            :options="[
+                        { label: '默认', value: Theme.auto },
+                        { label: '深色', value: Theme.dark },
+                        { label: '浅色', value: Theme.light },
+                    ]"
+            required
+        >
+        </TcSelect>
       </setting-item>
     </div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
