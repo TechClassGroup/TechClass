@@ -62,12 +62,25 @@ function getLogLevelFlags() {
 }
 
 const browserList: Record<webviewTargetType, any> = {
-    webview2: {},
-    WKWebView: {},
-    WebKitGTK: {},
+    webview2: [
+        "last 2 Chrome major versions",
+        "Chrome >= 90"
+    ],
+    WKWebView: [
+        "last 2 iOS major versions",
+        "last 2 Safari major versions",
+        "ios_saf >= 14.4"
+    ],
+    WebKitGTK: [
+        "safari >= 13",
+        "last 2 iOS major versions",
+        "last 2 Safari major versions",
+        "ios_saf >= 14.4",
+        "Chrome >= 90"
+    ],
 }
 const browserListTarget = browserList[webviewTarget];
-console.log(`[浏览器列表] 当前使用的浏览器列表: ${browserListTarget}`);
+console.log(`[浏览器列表] 当前使用的浏览器列表: ${browserListTarget.map((item: string) => item).join(", ")}`);
 export default defineConfig({
     plugins: [
         pluginVue(),
