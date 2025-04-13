@@ -7,9 +7,33 @@ import {init_plugins} from "../modules/pluginsManager";
 import {watch} from "vue";
 
 type AppStore = ReturnType<typeof useApplicationStore>;
+
+export const enum Theme {
+    dark = "dark",
+    light = "light",
+    auto = "auto",
+}
+
+export interface ApplicationStoreTypes {
+    setting: {
+        open: boolean;
+        current_page: string;
+        needReloadPlugins: boolean;
+    };
+    storage: {
+        pluginsList: {
+            official: string[];
+            custom: string[];
+        };
+        appearance: {
+            theme: Theme;
+        };
+    };
+}
+
 // @ts-ignore
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
-    state: () => {
+    state: (): ApplicationStoreTypes => {
         return {
             setting: {
                 open: false,
@@ -20,6 +44,9 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
                 pluginsList: {
                     official: [] as string[],
                     custom: [] as string[],
+                },
+                appearance: {
+                    theme: Theme.auto,
                 },
             },
         };
