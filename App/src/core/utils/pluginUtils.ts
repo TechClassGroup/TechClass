@@ -3,7 +3,7 @@
  */
 import {computed, ComputedRef} from "vue";
 import {IPlugin, PluginComponentStore} from "../../types/plugins.types";
-import {loadedPlugins, onPluginRegister} from "../plugins-systems/pluginsManager";
+import {loadedPlugins, onPluginRegister} from "../plugins-systems/pluginsManager_old";
 import {FsItemInfo, PluginType} from "../../types/rsShared.types";
 import {rustFs} from "../rustApi";
 
