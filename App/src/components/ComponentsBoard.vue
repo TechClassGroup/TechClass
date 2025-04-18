@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {DraggableComponentStatus} from "../types/plugins.types.js";
-import {computedPluginsComponent} from "../modules/pluginUtils";
+import {computedPluginsComponent} from "../core/utils/pluginUtils";
 import {computed} from "vue";
 
 const updateComponentStatus = (

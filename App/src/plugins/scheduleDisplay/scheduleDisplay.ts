@@ -4,8 +4,8 @@
 import {IPlugin} from "../../types/plugins.types";
 import {ref} from "vue";
 import {scheduleEditorApi} from "../scheduleEditor/scheduleEditor.types";
-import {InterPluginApi} from "../../modules/pluginUtils";
-import logger from "../../modules/logger";
+import {InterPluginApi} from "../../core/utils/pluginUtils";
+import logger from "../../core/utils/logger";
 import nextLesson from "./component/nextLesson.vue"
 import LessonListDisplay from "./component/lessonListDisplay.vue"
 

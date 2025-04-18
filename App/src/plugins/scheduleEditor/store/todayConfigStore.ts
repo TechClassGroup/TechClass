@@ -6,10 +6,10 @@ import {todayConfig} from "../scheduleEditor.types";
 import {generateTodayConfigByDate} from "../modules/todayConfig";
 import {DateTime} from "luxon";
 import {scheduleEditorProfile, waitForInit} from "./scheduleEditorProfile";
-import Logger from "../../../modules/logger";
-import logger from "../../../modules/logger";
-import {PluginFs} from "../../../modules/pluginUtils";
-import {createRetrySaveFunction, sleepUntil} from "../../../modules/utils";
+import Logger from "../../../core/utils/logger";
+import logger from "../../../core/utils/logger";
+import {PluginFs} from "../../../core/utils/pluginUtils";
+import {createRetrySaveFunction, sleepUntil} from "../../../core/utils/utils";
 
 export const scheduleEditorTodayConfig: Ref<todayConfig> = ref<todayConfig>(
     {} as todayConfig

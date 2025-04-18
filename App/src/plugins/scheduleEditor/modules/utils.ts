@@ -1,4 +1,4 @@
-import {createLogger} from "../../../modules/utils";
+import {createLogger} from "../../../core/utils/utils";
 
 /**
  * @fileOverview scheduleEditor的一些工具函数

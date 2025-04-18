@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import logger from "../modules/logger";
+import logger from "../core/utils/logger";
 import {useApplicationStore} from "../stores/useApplicationStore";
 import About from "./setting/About.vue";
 import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSetting from "./setting/PluginSetting.vue";
-import {computedPluginsComponent} from "../modules/pluginUtils";
+import {computedPluginsComponent} from "../core/utils/pluginUtils";
 import {PluginStore} from "../types/plugins.types";
 import {CircleX} from "lucide-vue-next";
 import Appearance from "./setting/Appearance.vue";

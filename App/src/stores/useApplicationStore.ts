@@ -2,8 +2,8 @@
  * @fileOverview 应用程序的一些状态
  */
 import {defineStore, StoreDefinition} from "pinia";
-import logger from "../modules/logger";
-import {init_plugins} from "../modules/pluginsManager";
+import logger from "../core/utils/logger";
+import {init_plugins} from "../core/plugins-systems/pluginsManager";
 import {watch} from "vue";
 
 type AppStore = ReturnType<typeof useApplicationStore>;

@@ -3,7 +3,7 @@
  */
 import {defineComponent} from "vue";
 import type {StateTree, Store} from "pinia";
-import {PluginFs} from "../modules/pluginUtils";
+import {PluginFs} from "../core/utils/pluginUtils";
 
 /**
  * 可拖拽组件的配置参数。
