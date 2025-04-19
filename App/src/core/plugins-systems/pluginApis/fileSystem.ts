@@ -6,6 +6,8 @@ import {FsItemInfo, PluginType} from "../../../types/rsShared.types";
 
 /**
  * 局部文件系统的API 以你的插件文件夹作为原点
+ *
+ * 如果你只想单次调用，请参考rustApi内的
  */
 export class localFileSystem {
     /**
