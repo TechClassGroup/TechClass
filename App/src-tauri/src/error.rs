@@ -40,6 +40,7 @@ impl serde::Serialize for IpcError {
             Self::NotFile => IpcErrorKind::NotFile(error_message),
             Self::NotDir => IpcErrorKind::NotDir(error_message),
             Self::IsDir => IpcErrorKind::IsDir(error_message),
+            Self::InvalidPluginType(_) => IpcErrorKind::InvalidPluginType(error_message),
         };
         error_kind.serialize(serializer)
     }

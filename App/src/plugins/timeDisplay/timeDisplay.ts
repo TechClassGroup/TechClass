@@ -9,6 +9,7 @@ import timeDisplayMain from "./timeDisplayMain.vue";
 class timeDisplay extends Plugin {
     onload(): Promise<void> | void {
         this.componentStatus.addMainPageComponent("main", timeDisplayMain)
+        // this.componentStatus.addSettingPageComponent("main", timeDisplayMain)
     }
 
     onunload(): void {

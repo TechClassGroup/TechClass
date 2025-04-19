@@ -1,10 +1,6 @@
 //! 前端的文件系统
 
-use std::{
-    io,
-    path::{Path, PathBuf},
-    sync::Arc,
-};
+use std::path::PathBuf;
 
 use crate::{
     contestants::PATH_BASIC,
