@@ -1,17 +1,11 @@
 /**
  * @fileOverview 插件管理器
  */
-import {ref, Ref} from "vue";
 import {OfficialPlugin, Plugin, PluginManifest} from "./plugin.type";
 import {createLogger} from "../utils/utils";
 import {useApplicationStore} from "../../stores/useApplicationStore";
 import officialPlugins from "./officialPlugins";
 import {appInstance} from "./appInstance";
-
-/**
- * 已加载插件的集合
- */
-const loadedPlugins: Ref<Record<string, Plugin>> = ref({});
 
 /**
  * 插件管理器日志记录器
@@ -28,13 +22,13 @@ function registerPlugin(pluginClass: Plugin, manifest: PluginManifest) {
 
     logger.trace(`加载插件 ${manifest.name} id: ${manifest.id}`);
     // 处理已加载插件的情况
-    if (loadedPlugins.value[manifest.id]) {
+    if (app.plugins.value[manifest.id]) {
         logger.warn(`插件 ${manifest.name} id: ${manifest.id} 已加载`);
         return;
     }
     // @ts-ignore
     const plugin = new pluginClass(app, manifest);
-    loadedPlugins.value[manifest.id] = plugin;
+    app.plugins.value[manifest.id] = plugin;
     logger.debug(
         `已创建插件实例 ${manifest.name} id: ${manifest.id} 实例: ${plugin}`
     );
@@ -60,14 +54,15 @@ function registerOfficialPlugin(plugin: OfficialPlugin) {
  * @param pluginId 插件ID
  */
 function unRegisterPlugin(pluginId: string) {
-    const plugin: Plugin | undefined = loadedPlugins.value[pluginId];
+    const app = appInstance;
+    const plugin: Plugin | undefined = app.plugins.value[pluginId];
     if (!plugin) {
         logger.warn(`插件 ${pluginId} 未加载 无法卸载`);
         return;
     }
     logger.trace(`开始卸载插件 ${pluginId}`);
     plugin.onunload();
-    delete loadedPlugins.value[pluginId];
+    delete app.plugins.value[pluginId];
     logger.info(`插件 ${pluginId} 卸载完成`);
 }
 
@@ -77,10 +72,11 @@ function unRegisterPlugin(pluginId: string) {
  */
 function updatePluginList() {
     logger.debug("开始更新插件列表");
+    const app = appInstance;
     const appStore = useApplicationStore();
     const enabledOfficialPlugins: string[] =
         appStore.storage.pluginsList.official;
-    const currentPluginsId = Object.keys(loadedPlugins.value);
+    const currentPluginsId = Object.keys(app.plugins.value);
 
     // 遍历当前已加载的插件，卸载不在启用列表中的插件
     logger.trace("检查需要卸载的插件...");
@@ -95,7 +91,7 @@ function updatePluginList() {
     logger.trace("检查需要加载的新插件");
     enabledOfficialPlugins.forEach((pluginId) => {
         // 如果插件已加载，则跳过
-        if (loadedPlugins.value[pluginId]) {
+        if (app.plugins.value[pluginId]) {
             logger.trace(`插件 ${pluginId} 已加载，跳过加载`);
             return;
         }
