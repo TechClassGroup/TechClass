@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {onMounted, onUnmounted, ref} from "vue";
+import {config} from "./timeDisplay"
 
 const hours = ref("");
 const minutes = ref("");
@@ -22,11 +23,7 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(timer);
 });
-const config = {
-  displayHour: true,
-  displayMinute: true,
-  displaySecond: true,
-}
+
 </script>
 
 <template>

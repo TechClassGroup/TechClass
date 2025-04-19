@@ -4,12 +4,19 @@
 
 import {OfficialPlugin, Plugin, PluginManifest} from "../../core/plugins-systems/types/plugin.type";
 import timeDisplayMain from "./timeDisplayMain.vue";
+import {ref} from "vue";
+import timeDisplaySetting from "./timeDisplaySetting.vue";
 
+export const config = ref({
+    displayHour: true,
+    displayMinute: true,
+    displaySecond: true,
+})
 
 class timeDisplay extends Plugin {
     onload(): Promise<void> | void {
         this.componentStatus.addMainPageComponent("main", timeDisplayMain)
-        // this.componentStatus.addSettingPageComponent("main", timeDisplayMain)
+        this.componentStatus.setSettingPageComponent(timeDisplaySetting)
     }
 
     onunload(): void {

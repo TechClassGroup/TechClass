@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import {PluginProps} from "../../types/plugins.types";
 import TcSwitch from "../../UI/TcSwitch.vue";
 import {computed, watch} from "vue";
-
-const props = defineProps<PluginProps>();
-const store = props.store;
+import {config} from "./timeDisplay"
 
 const isSecondDisabled = computed(() => {
   return (
-      (store.storage.displayHour && !store.storage.displayMinute) ||
-      !store.storage.displayMinute
+      (config.value.displayHour && !config.value.displayMinute) ||
+      !config.value.displayMinute
   );
 });
 
 watch(isSecondDisabled, (newValue) => {
   if (newValue) {
-    store.storage.displaySecond = false;
+    config.value.displaySecond = false;
   }
 });
 </script>
@@ -28,7 +25,7 @@ watch(isSecondDisabled, (newValue) => {
       >
         <span class="text-normal">显示小时</span>
         <tc-switch
-            v-model="store.storage.displayHour"
+            v-model="config.displayHour"
             class="ml-2"
 
         ></tc-switch>
@@ -38,7 +35,7 @@ watch(isSecondDisabled, (newValue) => {
       >
         <span class="text-normal">显示分钟</span>
         <tc-switch
-            v-model="store.storage.displayMinute"
+            v-model="config.displayMinute"
             class="ml-2"
 
         ></tc-switch>
@@ -48,7 +45,7 @@ watch(isSecondDisabled, (newValue) => {
       >
         <span class="text-normal">显示秒</span>
         <tc-switch
-            v-model="store.storage.displaySecond"
+            v-model="config.displaySecond"
             :disabled="isSecondDisabled"
             class="ml-2"
 

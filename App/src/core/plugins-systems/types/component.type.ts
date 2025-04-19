@@ -76,11 +76,11 @@ class settingPageComponent extends componentItem {
 
 export class pluginComponent {
     mainPage: Record<string, mainBoardComponent>;
-    settingPage: Record<string, settingPageComponent>;
+    settingPage: settingPageComponent | null;
 
     constructor() {
         this.mainPage = {};
-        this.settingPage = {};
+        this.settingPage = null;
     }
 
     addMainPageComponent(
@@ -91,18 +91,17 @@ export class pluginComponent {
         this.mainPage[name] = new mainBoardComponent(component, status);
     }
 
-    addSettingPageComponent(
-        name: string,
+    setSettingPageComponent(
         component: ReturnType<typeof defineComponent>
     ) {
-        this.settingPage[name] = new settingPageComponent(component);
+        this.settingPage = new settingPageComponent(component);
     }
 
     removeMainPageComponent(name: string) {
         delete this.mainPage[name];
     }
 
-    removeSettingPageComponent(name: string) {
-        delete this.settingPage[name];
+    removeSettingPageComponent() {
+        this.settingPage = null
     }
 }
