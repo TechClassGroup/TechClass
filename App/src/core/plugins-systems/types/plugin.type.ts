@@ -35,6 +35,6 @@ export abstract class Plugin {
 }
 
 export interface OfficialPlugin {
-    plugin: Plugin;
+    plugin: typeof Plugin;
     manifest: PluginManifest;
 }

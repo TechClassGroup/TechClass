@@ -18,7 +18,7 @@ const logger = new createLogger("PluginManager");
  * @param pluginClass 插件类
  * @param manifest 插件清单
  */
-function registerPlugin(pluginClass: Plugin, manifest: PluginManifest) {
+function registerPlugin(pluginClass: typeof Plugin, manifest: PluginManifest) {
     const app = appInstance;
 
     logger.trace(`加载插件 ${manifest.name} id: ${manifest.id}`);
@@ -30,7 +30,7 @@ function registerPlugin(pluginClass: Plugin, manifest: PluginManifest) {
     // 处理一些plugin需要的参数
     const componentStatus = new pluginComponent()
     // @ts-ignore
-    const plugin = new pluginClass(app, manifest, pluginComponent);
+    const plugin = new pluginClass(app, manifest, componentStatus);
     app.plugins.value[manifest.id] = plugin;
     logger.debug(
         `已创建插件实例 ${manifest.name} id: ${manifest.id} 实例: ${plugin}`
