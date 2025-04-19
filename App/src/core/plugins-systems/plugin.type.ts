@@ -34,3 +34,8 @@ export interface OfficialPlugin {
     plugin: Plugin;
     manifest: PluginManifest;
 }
+
+interface ComponentStatus{
+    component: any,
+    
+}
