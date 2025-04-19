@@ -3,7 +3,7 @@
  */
 import {IPlugin} from "../../types/plugins.types";
 import {FsItemInfo, PluginType} from "../../types/rsShared.types";
-import {rustFs} from "../rustApi";
+import {rustLocalFs} from "../rustApi";
 
 
 /**
@@ -23,27 +23,27 @@ export class PluginFs {
     }
 
     async exists(path: string): Promise<FsItemInfo> {
-        return rustFs.exists(this.id, this.pluginType, path);
+        return rustLocalFs.exists(this.id, this.pluginType, path);
     }
 
     async readFile(path: string): Promise<string> {
-        return rustFs.readFile(this.id, this.pluginType, path);
+        return rustLocalFs.readFile(this.id, this.pluginType, path);
     }
 
     async writeFile(path: string, content: string): Promise<void> {
-        return rustFs.writeFile(this.id, this.pluginType, path, content);
+        return rustLocalFs.writeFile(this.id, this.pluginType, path, content);
     }
 
     async removeFile(path: string): Promise<void> {
-        return rustFs.removeFile(this.id, this.pluginType, path);
+        return rustLocalFs.removeFile(this.id, this.pluginType, path);
     }
 
     async createDir(path: string): Promise<void> {
-        return rustFs.createDir(this.id, this.pluginType, path);
+        return rustLocalFs.createDir(this.id, this.pluginType, path);
     }
 
     async removeDir(path: string): Promise<void> {
-        return rustFs.removeDir(this.id, this.pluginType, path);
+        return rustLocalFs.removeDir(this.id, this.pluginType, path);
     }
 }
 
