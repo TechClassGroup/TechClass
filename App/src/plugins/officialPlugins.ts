@@ -14,4 +14,4 @@ const plugins: IPlugin<any>[] = [
     InfoDisplay
 ];
 
-export const officialPlugins = plugins.sort((a, b) => a.name.localeCompare(b.name));
+// export const officialPlugins = plugins.sort((a, b) => a.name.localeCompare(b.name));

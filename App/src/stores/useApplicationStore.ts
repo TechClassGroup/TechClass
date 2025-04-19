@@ -3,8 +3,9 @@
  */
 import {defineStore, StoreDefinition} from "pinia";
 import logger from "../core/utils/logger";
-import {init_plugins} from "../core/plugins-systems/pluginsManager_old";
+
 import {watch} from "vue";
+import {updatePluginList} from "../core/plugins-systems/pluginManager";
 
 type AppStore = ReturnType<typeof useApplicationStore>;
 
@@ -63,7 +64,7 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
             this.setting.open = !this.setting.open;
         },
         reloadPlugins() {
-            init_plugins();
+            updatePluginList()
             this.setting.needReloadPlugins = false;
         },
     },
@@ -74,7 +75,7 @@ export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
         throttle_ms: 1000,
     },
     on_storage_load_complete(store: AppStore) {
-        init_plugins();
+        updatePluginList()
         watch(
             () => store.storage.pluginsList,
             () => {

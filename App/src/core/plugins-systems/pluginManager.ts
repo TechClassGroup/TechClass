@@ -45,7 +45,7 @@ function registerPlugin(pluginClass: Plugin, manifest: PluginManifest) {
  * 注册官方插件
  * @param plugin 官方插件对象
  */
-function registerOfficialPlugin(plugin: OfficialPlugin) {
+export function registerOfficialPlugin(plugin: OfficialPlugin) {
     const manifest = plugin.manifest;
     const pluginClass = plugin.plugin;
     logger.debug(`注册官方插件 ${manifest.name} id: ${manifest.id}`);
@@ -56,7 +56,7 @@ function registerOfficialPlugin(plugin: OfficialPlugin) {
  * 从系统中卸载指定插件
  * @param pluginId 插件ID
  */
-function unRegisterPlugin(pluginId: string) {
+export function unRegisterPlugin(pluginId: string) {
     const app = appInstance;
     const plugin: Plugin | undefined = app.plugins.value[pluginId];
     if (!plugin) {
@@ -73,7 +73,7 @@ function unRegisterPlugin(pluginId: string) {
  * 更新插件列表
  * 检查需要加载或卸载的插件，并执行相应操作
  */
-function updatePluginList() {
+export function updatePluginList() {
     logger.debug("开始更新插件列表");
     const app = appInstance;
     const appStore = useApplicationStore();

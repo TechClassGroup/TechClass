@@ -4,10 +4,12 @@ import {useApplicationStore} from "../stores/useApplicationStore";
 import About from "./setting/About.vue";
 import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSetting from "./setting/PluginSetting.vue";
-import {computedPluginsComponent} from "../core/utils/pluginUtils";
+import officialPluginsList from "../core/plugins-systems/officialPlugins"
 import {PluginStore} from "../types/plugins.types";
 import {CircleX} from "lucide-vue-next";
 import Appearance from "./setting/Appearance.vue";
+import {appInstance} from "../core/plugins-systems/appInstance";
+import {Plugin} from "../core/plugins-systems/types/plugin.type";
 
 const store = useApplicationStore();
 
@@ -20,17 +22,23 @@ interface Route {
 }
 
 const officialPlugins = computed<Route>(() => {
-  return computedPluginsComponent.value
-      .filter((plugin) => plugin.isOfficial && plugin.component.settingPage)
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .reduce((acc, plugin) => {
-        acc[`official-plugin-${plugin.id}`] = {
-          name: plugin.name,
-          component: plugin.component.settingPage,
-          store: plugin.store,
-        };
-        return acc;
-      }, {});
+  const officialKeys = officialPluginsList.map((plugin) => plugin.manifest.id);
+  const pluginList = Object.keys(appInstance.plugins.value)
+      .filter((key) => {
+        const plugin: Plugin = appInstance.plugins.value[key];
+        return Object.keys(plugin.componentStatus.settingPage).length > 0
+            &&
+            officialKeys.includes(plugin.manifest.id);
+      })
+  const result: Route = {};
+  pluginList.forEach((key) => {
+    const plugin: Plugin = appInstance.plugins.value[key];
+    result[`official-plugin-${plugin.manifest.id}`] = {
+      name: plugin.manifest.name,
+      component: plugin.componentStatus.settingPage,
+    }
+  })
+  return result
 });
 
 const baseRoutes: Route = {
@@ -166,14 +174,6 @@ watch(
       <div class="bg-300 w-3/4 p-8 rounded-lg ml-1 flex-grow">
         <component
             :is="routes[store.setting.current_page].component"
-            v-bind="
-                        routes[store.setting.current_page].store
-                            ? {
-                                  store: routes[store.setting.current_page]
-                                      .store,
-                              }
-                            : {}
-                    "
         />
       </div>
     </div>

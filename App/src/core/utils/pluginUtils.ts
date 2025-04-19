@@ -1,27 +1,9 @@
 /**
  * @fileOverview 插件的一些工具函数
  */
-import {computed, ComputedRef} from "vue";
-import {IPlugin, PluginComponentStore} from "../../types/plugins.types";
-import {loadedPlugins, onPluginRegister} from "../plugins-systems/pluginsManager_old";
+import {IPlugin} from "../../types/plugins.types";
 import {FsItemInfo, PluginType} from "../../types/rsShared.types";
 import {rustFs} from "../rustApi";
-
-export const computedPluginsComponent: ComputedRef<
-    Array<PluginComponentStore>
-> = computed(() => {
-    const components: Array<PluginComponentStore> = [];
-    for (const plugin of Object.values(loadedPlugins.value)) {
-        components.push({
-            component: plugin.pluginObject.component,
-            store: plugin.store,
-            id: plugin.pluginObject.id,
-            isOfficial: plugin.pluginObject.isOfficial,
-            name: plugin.pluginObject.name,
-        });
-    }
-    return components;
-});
 
 
 /**
@@ -76,10 +58,10 @@ export class InterPluginApi {
      * @returns {Record<string, any> | null} - 返回插件的 API 对象，如果插件不存在或没有 API，则返回 `null`。
      */
     static getPluginApi(id: string): Record<string, any> | null {
-        const plugin = loadedPlugins.value[id];
-        if (plugin?.pluginObject?.api) {
-            return plugin.pluginObject.api;
-        }
+        // const plugin = loadedPlugins.value[id];
+        // if (plugin?.pluginObject?.api) {
+        //     return plugin.pluginObject.api;
+        // }
         return null;
     }
 
@@ -91,23 +73,23 @@ export class InterPluginApi {
      */
     static getPluginApiPromise(id: string): Promise<Record<string, any> | null> {
         return new Promise((resolve) => {
-            const plugin = loadedPlugins.value[id];
-            if (plugin) {
-                if (plugin?.pluginObject?.api) {
-                    resolve(plugin.pluginObject.api)
-                } else {
-                    resolve(null)
-                }
-            } else {
-                onPluginRegister(id, () => {
-                    const plugin = loadedPlugins.value[id];
-                    if (plugin?.pluginObject?.api) {
-                        resolve(plugin.pluginObject.api)
-                    } else {
-                        resolve(null)
-                    }
-                })
-            }
+            // const plugin = loadedPlugins.value[id];
+            // if (plugin) {
+            //     if (plugin?.pluginObject?.api) {
+            //         resolve(plugin.pluginObject.api)
+            //     } else {
+            //         resolve(null)
+            //     }
+            // } else {
+            //     onPluginRegister(id, () => {
+            //         const plugin = loadedPlugins.value[id];
+            //         if (plugin?.pluginObject?.api) {
+            //             resolve(plugin.pluginObject.api)
+            //         } else {
+            //             resolve(null)
+            //         }
+            //     })
+            // }
 
 
         });

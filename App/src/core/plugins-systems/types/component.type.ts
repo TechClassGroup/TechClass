@@ -1,7 +1,7 @@
 /**
  * @fileOverview 组件的类型定义
  */
-import {defineComponent} from "vue";
+import {defineComponent, ref, Ref, shallowRef, ShallowRef} from "vue";
 
 export interface draggableComponentStatus {
     /** 组件最大宽度 */
@@ -47,29 +47,30 @@ export const defaultDraggableComponentStatus: draggableComponentStatus = {
     width: "auto",
     x: 0,
     y: 0,
-    zIndex: 0
-
-}
+    zIndex: 0,
+};
 
 export class componentItem {
-    component: ReturnType<typeof defineComponent>
-
+    component: ShallowRef<ReturnType<typeof defineComponent>>;
 }
 
 class mainBoardComponent extends componentItem {
-    status: draggableComponentStatus;
+    status: Ref<draggableComponentStatus>;
 
-    constructor(component: ReturnType<typeof defineComponent>, status: draggableComponentStatus) {
+    constructor(
+        component: ReturnType<typeof defineComponent>,
+        status: draggableComponentStatus
+    ) {
         super();
-        this.component = component;
-        this.status = status;
+        this.component = shallowRef(component);
+        this.status = ref(status);
     }
 }
 
 class settingPageComponent extends componentItem {
     constructor(component: ReturnType<typeof defineComponent>) {
         super();
-        this.component = component;
+        this.component = shallowRef(component);
     }
 }
 
@@ -82,12 +83,18 @@ export class pluginComponent {
         this.settingPage = {};
     }
 
-    addMainPageComponent(name: string, component: ReturnType<typeof defineComponent>,
-                         status: draggableComponentStatus = defaultDraggableComponentStatus) {
+    addMainPageComponent(
+        name: string,
+        component: ReturnType<typeof defineComponent>,
+        status: draggableComponentStatus = defaultDraggableComponentStatus
+    ) {
         this.mainPage[name] = new mainBoardComponent(component, status);
     }
 
-    addSettingPageComponent(name: string, component: ReturnType<typeof defineComponent>) {
+    addSettingPageComponent(
+        name: string,
+        component: ReturnType<typeof defineComponent>
+    ) {
         this.settingPage[name] = new settingPageComponent(component);
     }
 

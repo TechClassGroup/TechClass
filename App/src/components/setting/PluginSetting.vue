@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import {useApplicationStore} from "../../stores/useApplicationStore";
-import {officialPlugins} from "../../plugins/officialPlugins";
+import officialPlugins from "../../core/plugins-systems/officialPlugins";
 import TcSwitch from "../../UI/TcSwitch.vue";
 import TcButton from "../../UI/TcButton.vue";
-import {init_plugins} from "../../core/plugins-systems/pluginsManager_old";
+import {updatePluginList} from "../../core/plugins-systems/pluginManager";
+
 // 数据流动: 按钮更新 --> store变化 --> 按钮状态变化
 const store = useApplicationStore();
 
@@ -21,7 +22,7 @@ const togglePlugin = (pluginId: string, value: boolean) => {
   }
 };
 const reload_plugins = () => {
-  init_plugins();
+  updatePluginList()
   store.reloadPlugins();
 };
 </script>
@@ -51,24 +52,24 @@ const reload_plugins = () => {
     <div class="space-y-3">
       <div
           v-for="item in officialPlugins"
-          :key="item.id"
+          :key="item.manifest.id"
           class="bg-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out"
       >
         <div class="flex items-center justify-between p-4">
           <div class="flex-1 mr-4">
             <div class="text-base font-medium">
-              {{ item.name }}
+              {{ item.manifest.name }}
             </div>
             <div class="mt-1 text-sm text-muted">
-              {{ item.description }}
+              {{ item.manifest.description }}
             </div>
           </div>
           <TcSwitch
               :model-value="
-                            store.storage.pluginsList.official.includes(item.id)
+                            store.storage.pluginsList.official.includes(item.manifest.id)
                         "
               @update:model-value="
-                            (value) => togglePlugin(item.id, value)
+                            (value) => togglePlugin(item.manifest.id, value)
                         "
           />
         </div>

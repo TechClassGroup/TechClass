@@ -10,13 +10,13 @@ import {useApplicationStore} from "../../stores/useApplicationStore";
 import {officialPlugins} from "../../plugins/officialPlugins";
 import {PluginFs} from "../utils/pluginUtils";
 
-export const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
+const loadedPlugins: Ref<{ [key: string]: InstancePlugin }> = ref({});
 
 /**
  * 加载插件
  * @param plugin
  */
-export function registerPlugin(plugin: IPlugin<any>) {
+function registerPlugin(plugin: IPlugin<any>) {
     type ComponentKeys = keyof NonNullable<typeof plugin.component.mainPage>;
 
     logger.trace(`加载插件 ${plugin.name} id: ${plugin.id}`);
@@ -153,7 +153,7 @@ function unregisterPlugin(id: string) {
 /**
  * 初始化插件
  */
-export function init_plugins() {
+function init_plugins() {
     const store = useApplicationStore();
     const enable_official_plugins = store.storage.pluginsList.official;
 

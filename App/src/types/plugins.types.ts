@@ -8,7 +8,7 @@ import {PluginFs} from "../core/utils/pluginUtils";
 /**
  * 可拖拽组件的配置参数。
  */
-export interface DraggableComponentStatus {
+interface DraggableComponentStatus {
     /** 组件最大宽度 */
     maxWidth: number;
     /** 组件最大高度 */
