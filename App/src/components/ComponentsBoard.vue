@@ -63,6 +63,7 @@ const computedComponents = computed<componentItem[]>(() => {
     })
 
   })
+  console.log(components);
   return components
 })
 </script>
@@ -73,22 +74,19 @@ const computedComponents = computed<componentItem[]>(() => {
   <!--  @dragging="(...$event: any) => onResizeDrag($event, item.store.componentStatus[key])"-->
   <div class="bg-300 relative min-h-full p-4">
     <template v-for="item in computedComponents" :key="item.id">
-      <template
-          v-for="(component, key) in item.component.mainPage"
-          :key="`${item.id}-${key}`"
-      >
-        <vue-draggable-resizable
-            :parent="true"
-            class="shadow-md rounded-lg bg-50"
 
-        >
-          <component
-              :is="component"
-              class="p-2"
-          ></component>
-        </vue-draggable-resizable>
-      </template>
+      <vue-draggable-resizable
+          :parent="true"
+          class="shadow-md rounded-lg bg-50"
+
+      >
+        <component
+            :is="item.component"
+            class="p-2"
+        ></component>
+      </vue-draggable-resizable>
     </template>
+
   </div>
 </template>
 
