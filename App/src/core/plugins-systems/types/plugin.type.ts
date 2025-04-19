@@ -18,15 +18,18 @@ export abstract class Plugin {
     app: App;
     manifest: PluginManifest;
     componentStatus: pluginComponent;
+    readonly isOfficial: boolean;
 
     protected constructor(
         app: App,
         manifest: PluginManifest,
-        componentStatus: pluginComponent
+        componentStatus: pluginComponent,
+        isOfficial: boolean
     ) {
         this.app = app;
         this.manifest = manifest;
         this.componentStatus = componentStatus;
+        this.isOfficial = isOfficial;
     }
 
     abstract onload(): Promise<void> | void;

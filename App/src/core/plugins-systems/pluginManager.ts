@@ -17,8 +17,9 @@ const logger = new createLogger("PluginManager");
  * 注册插件到系统中
  * @param pluginClass 插件类
  * @param manifest 插件清单
+ * @param isOfficial 是否是官方插件
  */
-function registerPlugin(pluginClass: typeof Plugin, manifest: PluginManifest) {
+function registerPlugin(pluginClass: typeof Plugin, manifest: PluginManifest, isOfficial: boolean) {
     const app = appInstance;
 
     logger.trace(`加载插件 ${manifest.name} id: ${manifest.id}`);
@@ -30,7 +31,7 @@ function registerPlugin(pluginClass: typeof Plugin, manifest: PluginManifest) {
     // 处理一些plugin需要的参数
     const componentStatus = new pluginComponent()
     // @ts-ignore
-    const plugin = new pluginClass(app, manifest, componentStatus);
+    const plugin = new pluginClass(app, manifest, componentStatus, isOfficial);
     app.plugins.value[manifest.id] = plugin;
     logger.debug(
         `已创建插件实例 ${manifest.name} id: ${manifest.id} 实例: ${plugin}`
@@ -49,7 +50,7 @@ export function registerOfficialPlugin(plugin: OfficialPlugin) {
     const manifest = plugin.manifest;
     const pluginClass = plugin.plugin;
     logger.debug(`注册官方插件 ${manifest.name} id: ${manifest.id}`);
-    registerPlugin(pluginClass, manifest);
+    registerPlugin(pluginClass, manifest, true);
 }
 
 /**
