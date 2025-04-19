@@ -65,6 +65,7 @@ export function unRegisterPlugin(pluginId: string) {
     }
     logger.trace(`开始卸载插件 ${pluginId}`);
     plugin.onunload();
+    plugin.cleanup();
     delete app.plugins.value[pluginId];
     logger.info(`插件 ${pluginId} 卸载完成`);
 }

@@ -32,6 +32,15 @@ export abstract class Plugin {
     abstract onload(): Promise<void> | void;
 
     abstract onunload(): void;
+
+    cleanup(): void {
+        // 释放资源，防止循环引用
+
+        // @ts-ignore
+        this.componentStatus = null;
+        // @ts-ignore
+        this.manifest = null;
+    }
 }
 
 export interface OfficialPlugin {
