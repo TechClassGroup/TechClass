@@ -88,9 +88,6 @@ const computedComponents = computed<componentItem[]>(() => {
             :is="item.component"
             class="p-2"
         ></component>
-        <div>
-          {{ item.status }}
-        </div>
       </vue-draggable-resizable>
     </template>
 
