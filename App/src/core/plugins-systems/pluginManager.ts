@@ -2,20 +2,29 @@
  * @fileOverview 插件管理器
  */
 import {ref, Ref} from "vue";
-import {App, OfficialPlugin, Plugin, PluginManifest} from "./plugin.type";
+import {OfficialPlugin, Plugin, PluginManifest} from "./plugin.type";
 import {createLogger} from "../utils/utils";
 import {useApplicationStore} from "../../stores/useApplicationStore";
 import officialPlugins from "./officialPlugins";
+import {appInstance} from "./appInstance";
 
-
+/**
+ * 已加载插件的集合
+ */
 const loadedPlugins: Ref<Record<string, Plugin>> = ref({});
+
+/**
+ * 插件管理器日志记录器
+ */
 const logger = new createLogger("PluginManager");
 
-function registerPlugin(
-    pluginClass: Plugin,
-    manifest: PluginManifest
-) {
-    const app: App = undefined; // TODO: Provide a valid App instance here instead of null
+/**
+ * 注册插件到系统中
+ * @param pluginClass 插件类
+ * @param manifest 插件清单
+ */
+function registerPlugin(pluginClass: Plugin, manifest: PluginManifest) {
+    const app = appInstance;
 
     logger.trace(`加载插件 ${manifest.name} id: ${manifest.id}`);
     // 处理已加载插件的情况
@@ -35,13 +44,21 @@ function registerPlugin(
     logger.info(`插件 ${manifest.name} id: ${manifest.id} 加载完成`);
 }
 
+/**
+ * 注册官方插件
+ * @param plugin 官方插件对象
+ */
 function registerOfficialPlugin(plugin: OfficialPlugin) {
-    const manifest = plugin.manifest
+    const manifest = plugin.manifest;
     const pluginClass = plugin.plugin;
     logger.debug(`注册官方插件 ${manifest.name} id: ${manifest.id}`);
-    registerPlugin(pluginClass, manifest)
+    registerPlugin(pluginClass, manifest);
 }
 
+/**
+ * 从系统中卸载指定插件
+ * @param pluginId 插件ID
+ */
 function unRegisterPlugin(pluginId: string) {
     const plugin: Plugin | undefined = loadedPlugins.value[pluginId];
     if (!plugin) {
@@ -54,6 +71,10 @@ function unRegisterPlugin(pluginId: string) {
     logger.info(`插件 ${pluginId} 卸载完成`);
 }
 
+/**
+ * 更新插件列表
+ * 检查需要加载或卸载的插件，并执行相应操作
+ */
 function updatePluginList() {
     logger.debug("开始更新插件列表");
     const appStore = useApplicationStore();

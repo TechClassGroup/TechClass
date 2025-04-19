@@ -1,9 +1,9 @@
 /**
- * 插件的定义文件
+ * @fileOverview 插件的类型定义文件
  */
-export class App {
 
-}
+import {App} from "./appInstance";
+
 
 export interface PluginManifest {
     id: string;
