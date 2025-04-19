@@ -1,7 +1,7 @@
 /**
  * 提供App类
  */
-import {Plugin} from "./plugin.type";
+import {Plugin} from "./types/plugin.type";
 import {ref, Ref} from "vue";
 
 /**

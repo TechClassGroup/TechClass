@@ -1,11 +1,12 @@
 /**
  * @fileOverview 插件管理器
  */
-import {OfficialPlugin, Plugin, PluginManifest} from "./plugin.type";
+import {OfficialPlugin, Plugin, PluginManifest} from "./types/plugin.type";
 import {createLogger} from "../utils/utils";
 import {useApplicationStore} from "../../stores/useApplicationStore";
 import officialPlugins from "./officialPlugins";
 import {appInstance} from "./appInstance";
+import {pluginComponent} from "./types/component.type";
 
 /**
  * 插件管理器日志记录器
@@ -26,8 +27,10 @@ function registerPlugin(pluginClass: Plugin, manifest: PluginManifest) {
         logger.warn(`插件 ${manifest.name} id: ${manifest.id} 已加载`);
         return;
     }
+    // 处理一些plugin需要的参数
+    const componentStatus = new pluginComponent()
     // @ts-ignore
-    const plugin = new pluginClass(app, manifest);
+    const plugin = new pluginClass(app, manifest, pluginComponent);
     app.plugins.value[manifest.id] = plugin;
     logger.debug(
         `已创建插件实例 ${manifest.name} id: ${manifest.id} 实例: ${plugin}`
