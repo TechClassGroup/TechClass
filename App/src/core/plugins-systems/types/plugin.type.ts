@@ -55,10 +55,14 @@ export abstract class Plugin {
         this.app = null;
     }
 
-    initStorage(defaultValue: storageDefaultValue, config: IStorageConfig, completeCallback: () => void): void {
+    initStorage(defaultValue: storageDefaultValue,
+                config: IStorageConfig,
+                completeCallback: () => void = () => {
+                }): void {
         if (this.storage) {
             logger.warn(`${this.manifest.id} 插件存储已经初始化，无法重复初始化`);
         }
+
         this.storage = new PluginStorage(this, config, defaultValue, completeCallback);
     }
 }
