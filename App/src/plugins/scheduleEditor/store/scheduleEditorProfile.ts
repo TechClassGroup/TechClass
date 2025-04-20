@@ -2,12 +2,12 @@
  * @fileOverview 档案的store
  */
 import {ScheduleEditorProfileStore} from "../scheduleEditor.types";
-import logger from "../../../modules/logger";
-import {PluginFs} from "../../../modules/pluginUtils";
+import logger from "../../../core/utils/logger";
+import {PluginFs} from "../../../core/utils/pluginUtils";
 import {DateTime} from "luxon";
 import {ref, watch} from "vue";
 import {throttle} from "lodash";
-import {createRetrySaveFunction} from "../../../modules/utils";
+import {createRetrySaveFunction} from "../../../core/utils/utils";
 
 export const scheduleEditorProfile = ref<ScheduleEditorProfileStore>(
     {} as ScheduleEditorProfileStore

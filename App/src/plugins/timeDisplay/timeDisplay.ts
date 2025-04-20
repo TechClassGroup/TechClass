@@ -2,37 +2,62 @@
  * @fileOverview 时间显示插件
  */
 
+import {OfficialPlugin, Plugin, PluginManifest,} from "../../core/plugins-systems/types/plugin.type";
 import timeDisplayMain from "./timeDisplayMain.vue";
-import {IPlugin} from "../../types/plugins.types";
 import timeDisplaySetting from "./timeDisplaySetting.vue";
 
-type MainComponentKey = "main";
-const timeDisplay: IPlugin<MainComponentKey> = {
-    name: "时钟",
-    id: "timeDisplay",
-    description: "显示当前时间",
-    isOfficial: true,
-    component: {
-        mainPage: {
-            main: timeDisplayMain,
-        },
-        settingPage: timeDisplaySetting,
-    },
-    storeConfig: {
-        state: () => {
-            return {
-                storage: {
+/**
+ * 时钟插件的配置类型
+ */
+interface TimeDisplayConfig {
+    /** 是否显示小时 */
+    displayHour: boolean;
+    /** 是否显示分钟 */
+    displayMinute: boolean;
+    /** 是否显示秒数 */
+    displaySecond: boolean;
+}
+
+/**
+ * 时钟插件实现类
+ * 使用TimeDisplayConfig作为存储数据类型
+ */
+class timeDisplay extends Plugin<TimeDisplayConfig> {
+    onload(): Promise<void> | void {
+        this.componentStatus.addMainPageComponent("main", timeDisplayMain);
+        this.componentStatus.setSettingPageComponent(timeDisplaySetting);
+
+        this.initStorage(
+            (): TimeDisplayConfig => {
+                return {
                     displayHour: true,
                     displayMinute: true,
                     displaySecond: true,
-                },
-            };
-        },
-        storageConfig: {
-            enabled: true,
-            throttle_ms: 1000,
-            keys: ["componentStatus", "storage"],
-        },
-    },
+                };
+            },
+            {
+                storage: true,
+            }
+        );
+    }
+
+    onunload(): void {
+        // 插件卸载时的清理代码
+    }
+}
+
+const manifest: PluginManifest = {
+    name: "时钟",
+    description: "显示当前时间",
+    id: "timeDisplay",
+    minAppVersion: "0.0.0",
+    author: "TechClass官方",
+    version: "0.0.0",
 };
-export default timeDisplay;
+
+
+const PluginTimeDisplay: OfficialPlugin = {
+    manifest,
+    plugin: timeDisplay,
+};
+export default PluginTimeDisplay;

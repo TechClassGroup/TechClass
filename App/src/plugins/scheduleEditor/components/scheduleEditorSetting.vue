@@ -8,7 +8,7 @@ import enableSelector from "./enableConfig/enableSelector.vue";
 import {scheduleEditorStore} from "../store/scheduleStore";
 import {watch} from "vue";
 import tempSelector from "./enableConfig/tempSelector.vue";
-import logger from "../../../modules/logger";
+import logger from "../../../core/utils/logger";
 import todayStatus from "./todayConfig/todayStatus.vue";
 import todayEditor from "./todayConfig/todayEditor.vue";
 

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import {DraggableComponentStatus} from "../types/plugins.types.js";
-import {computedPluginsComponent} from "../modules/pluginUtils";
 import {computed} from "vue";
+import {appInstance} from "../core/plugins-systems/appInstance";
+import {draggableComponentStatus} from "../core/plugins-systems/types/component.type";
 
 const updateComponentStatus = (
-    status: DraggableComponentStatus,
+    status: draggableComponentStatus,
     left: number | "auto",
     top: number | "auto",
     width: number,
@@ -17,44 +17,53 @@ const updateComponentStatus = (
     status.height = height as any;
   }
 };
-const onResizeDrag = ($event: any, status: DraggableComponentStatus) => {
+const onResizeDrag = ($event: any, status: draggableComponentStatus) => {
   updateComponentStatus(status, $event[0], $event[1], $event[2], $event[3]);
 };
 
-const getComponentProps = (status: DraggableComponentStatus) => {
-  return computed(() => ({
-    maxWidth: status.maxWidth,
-    maxHeight: status.maxHeight,
-    minWidth: status.minWidth,
-    minHeight: status.minHeight,
-    w: status.width,
-    h: status.height,
-    x: status.x,
-    y: status.y,
-    draggable: status.draggable,
-    resizable: status.resizable,
-    z: status.zIndex,
-  })).value;
+const getComponentProps = (componentStatus: draggableComponentStatus) => {
+  return computed(() => {
+    const status = componentStatus;
+    return {
+      maxWidth: status.maxWidth,
+      maxHeight: status.maxHeight,
+      minWidth: status.minWidth,
+      minHeight: status.minHeight,
+      w: status.width,
+      h: status.height,
+      x: status.x,
+      y: status.y,
+      draggable: status.draggable,
+      resizable: status.resizable,
+      z: status.zIndex,
+    };
+  }).value;
 };
+
+
 </script>
 
 <template>
   <div class="bg-300 relative min-h-full p-4">
-    <template v-for="item in computedPluginsComponent" :key="item.id">
+    <template
+        v-for="(plugin, pluginKey) in appInstance.plugins.value"
+        :key="pluginKey"
+    >
       <template
-          v-for="(component, key) in item.component.mainPage"
-          :key="`${item.id}-${key}`"
+          v-for="(componentInfo, componentKey) in plugin.componentStatus
+                    .mainPage"
+          :key="`${pluginKey}-${componentKey}`"
       >
         <vue-draggable-resizable
             :parent="true"
             class="shadow-md rounded-lg bg-50"
-            v-bind="getComponentProps(item.store.componentStatus[key])"
-            @resizing="(...$event: any) => onResizeDrag($event, item.store.componentStatus[key])"
-            @dragging="(...$event: any) => onResizeDrag($event, item.store.componentStatus[key])"
+            v-bind="getComponentProps(componentInfo.status as unknown as draggableComponentStatus)"
+            @dragging="(...$event: any) => onResizeDrag($event, componentInfo.status as unknown as draggableComponentStatus)"
+            @resizing="(...$event: any) => onResizeDrag($event, componentInfo.status as unknown as draggableComponentStatus)"
         >
           <component
-              :is="component"
-              :store="item.store"
+              :is="componentInfo.component"
+              :plugin="plugin"
               class="p-2"
           ></component>
         </vue-draggable-resizable>
