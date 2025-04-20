@@ -2,37 +2,48 @@
  * @fileOverview 时间显示插件
  */
 
-import {OfficialPlugin, Plugin, PluginManifest} from "../../core/plugins-systems/types/plugin.type";
+import {OfficialPlugin, Plugin, PluginManifest,} from "../../core/plugins-systems/types/plugin.type";
 import timeDisplayMain from "./timeDisplayMain.vue";
 import timeDisplaySetting from "./timeDisplaySetting.vue";
 
+/**
+ * 时钟插件的配置类型
+ */
 interface TimeDisplayConfig {
+    /** 是否显示小时 */
     displayHour: boolean;
+    /** 是否显示分钟 */
     displayMinute: boolean;
+    /** 是否显示秒数 */
     displaySecond: boolean;
 }
 
-
-class timeDisplay extends Plugin {
+/**
+ * 时钟插件实现类
+ * 使用TimeDisplayConfig作为存储数据类型
+ */
+class timeDisplay extends Plugin<TimeDisplayConfig> {
     onload(): Promise<void> | void {
-        this.componentStatus.addMainPageComponent("main", timeDisplayMain)
-        this.componentStatus.setSettingPageComponent(timeDisplaySetting)
+        this.componentStatus.addMainPageComponent("main", timeDisplayMain);
+        this.componentStatus.setSettingPageComponent(timeDisplaySetting);
 
-        this.initStorage((): TimeDisplayConfig => {
-            return {
-                displayHour: true,
-                displayMinute: true,
-                displaySecond: true
+        this.initStorage(
+            (): TimeDisplayConfig => {
+                return {
+                    displayHour: true,
+                    displayMinute: true,
+                    displaySecond: true,
+                };
+            },
+            {
+                storage: true,
             }
-
-        }, {
-            storage: true
-        })
+        );
     }
 
     onunload(): void {
+        // 插件卸载时的清理代码
     }
-
 }
 
 const manifest: PluginManifest = {
@@ -41,10 +52,12 @@ const manifest: PluginManifest = {
     id: "timeDisplay",
     minAppVersion: "0.0.0",
     author: "TechClass官方",
-    version: "0.0.0"
-}
+    version: "0.0.0",
+};
+
+
 const PluginTimeDisplay: OfficialPlugin = {
     manifest,
     plugin: timeDisplay,
-}
-export default PluginTimeDisplay
+};
+export default PluginTimeDisplay;
