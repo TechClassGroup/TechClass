@@ -23,10 +23,10 @@ class storageConfig {
     }
 }
 
-export type storageDefaultValue = () => Record<string, any>;
+export type storageDefaultValue = () => any;
 
 export class PluginStorage {
-    storage: Ref<Record<string, any>>;
+    storage: Ref<any>;
 
 
     private _plugin: Plugin;
@@ -78,10 +78,8 @@ export class PluginStorage {
                                 this._logger.error('存储失败，超过最大重试次数', this._fileName, error);
                             }
                         })
-
-
-                    attemptStorage();
                 }
+            attemptStorage();
             }
         )
         // 监听存储
