@@ -2,6 +2,7 @@
  * @fileOverview 组件的类型定义
  */
 import {defineComponent, ref, Ref, shallowRef, ShallowRef} from "vue";
+import {Plugin} from "./plugin.type"
 
 export interface draggableComponentStatus {
     /** 组件最大宽度 */
@@ -104,4 +105,8 @@ export class pluginComponent {
     removeSettingPageComponent() {
         this.settingPage = null
     }
+}
+
+export interface componentProps {
+    plugin: Plugin;
 }

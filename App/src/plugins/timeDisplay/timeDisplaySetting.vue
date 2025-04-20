@@ -2,7 +2,12 @@
 import TcSwitch from "../../UI/TcSwitch.vue";
 import {computed, watch} from "vue";
 import {config} from "./timeDisplay"
+import {componentProps} from "../../core/plugins-systems/types/component.type";
 
+const props = defineProps<componentProps>()
+setTimeout(() => {
+  console.log(props.plugin)
+}, 1000)
 const isSecondDisabled = computed(() => {
   return (
       (config.value.displayHour && !config.value.displayMinute) ||

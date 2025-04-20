@@ -5,7 +5,6 @@ import About from "./setting/About.vue";
 import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSetting from "./setting/PluginSetting.vue";
 import officialPluginsList from "../core/plugins-systems/officialPlugins"
-import {PluginStore} from "../types/plugins.types";
 import {CircleX} from "lucide-vue-next";
 import Appearance from "./setting/Appearance.vue";
 import {appInstance} from "../core/plugins-systems/appInstance";
@@ -17,7 +16,7 @@ interface Route {
   [key: string]: {
     name: string;
     component: ReturnType<typeof defineComponent>;
-    store?: PluginStore;
+    plugin?: Plugin;
   };
 }
 
@@ -34,9 +33,9 @@ const officialPlugins = computed<Route>(() => {
     result[`official-plugin-${plugin.manifest.id}`] = {
       name: plugin.manifest.name,
       component: plugin.componentStatus.settingPage.component,
+      plugin: plugin,
     }
   })
-  console.log(result);
   return result
 });
 
@@ -173,6 +172,7 @@ watch(
       <div class="bg-300 w-3/4 p-8 rounded-lg ml-1 flex-grow">
         <component
             :is="routes[store.setting.current_page].component"
+            :plugin="routes[store.setting.current_page].plugin"
         />
       </div>
     </div>
