@@ -8,12 +8,22 @@ import {pluginComponent} from "./component.type";
 import {IStorageConfig, PluginStorage, storageDefaultValue,} from "./pluginStorage";
 import logger from "../../utils/logger";
 
+/**
+ * 插件清单接口
+ * 定义了插件的基本信息和元数据
+ */
 export interface PluginManifest {
+    /** 插件的唯一标识符 */
     id: string;
+    /** 插件的显示名称 */
     name: string;
+    /** 插件的作者信息 */
     author: string;
+    /** 插件的功能描述 */
     description: string;
+    /** 插件的版本号 */
     version: string;
+    /** 插件所需的最低应用版本 */
     minAppVersion: string;
 }
 
@@ -24,8 +34,18 @@ export interface PluginManifest {
  *              - 如果不提供，则默认为any类型
  */
 export abstract class Plugin<T extends object = any> {
+    /**
+     * 应用的实例
+     * - 请尽量在插件中通过该方式访问应用实例
+     */
     app: App;
+    /**
+     * 插件的配置文件
+     */
     manifest: PluginManifest;
+    /**
+     * 选然后的组件状态
+     */
     componentStatus: pluginComponent;
     readonly isOfficial: boolean;
     /**
