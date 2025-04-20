@@ -5,7 +5,7 @@
 import {App} from "../appInstance";
 import {pluginComponent} from "./component.type";
 
-import {IStorageConfig, PluginStorage, storageDefaultValue} from "./pluginStorage.type";
+import {IStorageConfig, PluginStorage, storageDefaultValue} from "./pluginStorage";
 import logger from "../../utils/logger";
 
 export interface PluginManifest {

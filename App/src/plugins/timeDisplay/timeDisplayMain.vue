@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref} from "vue";
-import {config} from "./timeDisplay"
+import {onMounted, onUnmounted, ref, toRaw} from "vue";
+import {componentProps} from "../../core/plugins-systems/types/component.type";
 
 const hours = ref("");
 const minutes = ref("");
 const seconds = ref("");
 
+const props = defineProps<componentProps>()
+const config = toRaw(props.plugin.storage)!.content
 
 const updateTime = () => {
   const now = new Date();

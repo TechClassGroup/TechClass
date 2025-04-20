@@ -1,7 +1,7 @@
 /**
  * @fileOverview 插件存储
  */
-import {ref, Ref, watch, WatchStopHandle} from "vue";
+import {ref, Ref, toRaw, watch, WatchStopHandle} from "vue";
 import {Plugin} from "./plugin.type";
 import {localFileSystem} from "../pluginApis/fileSystem";
 import {createLogger} from "../../utils/utils";
@@ -58,15 +58,14 @@ export class PluginStorage {
         this._storeWatcher = null;
         // 主要逻辑
         this.content = ref(this._defaultValue());
-
         // 自动存储函数
         this.storageFunc = throttle(() => {
                 let retryCount = 0;
-
+            this._logger.trace("存储数据")
                 const attemptStorage = () => {
                     this._fileSystem.writeFile(this._fileName, JSON.stringify(this.content.value))
                         .then(() => {
-                            this._logger.info('存储成功', this._fileName);
+                            this._logger.trace('存储成功', this._fileName);
                             retryCount = 0;
                         })
                         .catch((error: IpcErrorKind) => {
@@ -86,9 +85,7 @@ export class PluginStorage {
         if (config.storage) {
             this.load().then(() => {
                 onLoadComplete?.();
-                this._storeWatcher = watch(() => {
-                    this.content.value
-                }, () => {
+                this._storeWatcher = watch(toRaw(this.content).value, () => {
                     this.storageFunc();
                 })
             });
