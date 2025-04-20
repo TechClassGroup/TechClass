@@ -7,7 +7,7 @@ import {v4 as uuidv4} from "uuid";
 
 import {CurriculumResult, processTimeGroupWithResult, TimeGroupInfo,} from "./timeGroupProcessor";
 import {scheduleEditorLogger} from "./utils";
-import logger from "../../../modules/logger";
+import logger from "../../../core/utils/logger";
 
 function findTodayCurriculum(
     targetDate: DateTime,

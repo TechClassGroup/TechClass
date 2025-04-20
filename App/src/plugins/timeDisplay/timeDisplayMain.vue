@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref} from "vue";
-import {PluginProps} from "../../types/plugins.types";
+import {onMounted, onUnmounted, ref, toRaw} from "vue";
+import {componentProps} from "../../core/plugins-systems/types/component.type";
 
 const hours = ref("");
 const minutes = ref("");
 const seconds = ref("");
 
-const props = defineProps<PluginProps>();
+const props = defineProps<componentProps>()
+const config = toRaw(props.plugin.storage)!.content
 
 const updateTime = () => {
   const now = new Date();
@@ -24,6 +25,7 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(timer);
 });
+
 </script>
 
 <template>
@@ -32,31 +34,30 @@ onUnmounted(() => {
   >
     <div class="min-w-[160px] flex items-center justify-center gap-2">
       <TransitionGroup name="time">
-        <template v-if="props.store.storage.displayHour">
+        <template v-if="config.displayHour">
           <span :key="'hours'" class="inline-block">{{ hours }}</span>
           <span
               v-if="
-                            props.store.storage.displayMinute ||
-                            props.store.storage.displaySecond
+                          config.displayMinute || config.displaySecond
                         "
               :key="'colon1'"
               class="inline-block text-subtle"
           >:</span
           >
         </template>
-        <template v-if="props.store.storage.displayMinute">
+        <template v-if="config.displayMinute">
                     <span :key="'minutes'" class="inline-block">{{
                         minutes
                       }}</span>
           <span
-              v-if="props.store.storage.displaySecond"
+              v-if="config.displaySecond"
               :key="'colon2'"
               class="inline-block text-subtle"
           >:</span
           >
         </template>
         <span
-            v-if="props.store.storage.displaySecond"
+            v-if="config.displaySecond"
             :key="'seconds'"
             class="inline-block"
         >{{ seconds }}</span

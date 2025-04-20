@@ -6,7 +6,6 @@ export const enum IpcErrorKind {
     Io = "Io",
     Json = "Json",
     InvalidPluginType = "InvalidPluginType",
-    PathTraversal = "PathTraversal",
     NotFile = "NotFile",
     NotDir = "NotDir",
     IsDir = "IsDir",

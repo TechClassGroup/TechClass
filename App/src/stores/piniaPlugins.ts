@@ -7,7 +7,7 @@ import {watch} from "vue";
 import {throttle} from "lodash";
 
 import {invoke} from "@tauri-apps/api/core";
-import logger from "../modules/logger";
+import logger from "../core/utils/logger";
 import {IpcErrorKind, PluginType} from "../types/rsShared.types";
 
 export interface ConfigStorageOptions {

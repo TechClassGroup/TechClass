@@ -4,7 +4,7 @@
 import {FsItemInfo, PluginType} from "../types/rsShared.types";
 import {invoke} from "@tauri-apps/api/core";
 
-export class rustFs {
+export class rustLocalFs {
     static async exists(
         id: string,
         type: PluginType,

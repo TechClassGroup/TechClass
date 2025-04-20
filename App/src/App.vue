@@ -2,7 +2,7 @@
 import MainWindow from "./components/MainWindow.vue";
 import {computed} from "vue";
 import {Theme, useApplicationStore} from "./stores/useApplicationStore";
-import {userPreferDarkMode} from "./modules/utils";
+import {userPreferDarkMode} from "./core/utils/utils";
 
 const applicationStore = useApplicationStore();
 const isDarkMode = computed<boolean>(() => {

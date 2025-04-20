@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import logger from "../modules/logger";
+import logger from "../core/utils/logger";
 import {useApplicationStore} from "../stores/useApplicationStore";
 import About from "./setting/About.vue";
 import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSetting from "./setting/PluginSetting.vue";
-import {computedPluginsComponent} from "../modules/pluginUtils";
-import {PluginStore} from "../types/plugins.types";
+import officialPluginsList from "../core/plugins-systems/officialPlugins"
 import {CircleX} from "lucide-vue-next";
 import Appearance from "./setting/Appearance.vue";
+import {appInstance} from "../core/plugins-systems/appInstance";
+import {Plugin} from "../core/plugins-systems/types/plugin.type";
 
 const store = useApplicationStore();
 
@@ -15,22 +16,27 @@ interface Route {
   [key: string]: {
     name: string;
     component: ReturnType<typeof defineComponent>;
-    store?: PluginStore;
+    plugin?: Plugin;
   };
 }
 
 const officialPlugins = computed<Route>(() => {
-  return computedPluginsComponent.value
-      .filter((plugin) => plugin.isOfficial && plugin.component.settingPage)
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .reduce((acc, plugin) => {
-        acc[`official-plugin-${plugin.id}`] = {
-          name: plugin.name,
-          component: plugin.component.settingPage,
-          store: plugin.store,
-        };
-        return acc;
-      }, {});
+  const officialKeys = officialPluginsList.map((plugin) => plugin.manifest.id);
+  const pluginList = Object.keys(appInstance.plugins.value)
+      .filter((key) => {
+        const plugin: Plugin = appInstance.plugins.value[key];
+        return plugin.componentStatus.settingPage !== null;
+      })
+  const result: Route = {};
+  pluginList.forEach((key) => {
+    const plugin: Plugin = appInstance.plugins.value[key];
+    result[`official-plugin-${plugin.manifest.id}`] = {
+      name: plugin.manifest.name,
+      component: plugin.componentStatus.settingPage.component,
+      plugin: plugin,
+    }
+  })
+  return result
 });
 
 const baseRoutes: Route = {
@@ -166,14 +172,7 @@ watch(
       <div class="bg-300 w-3/4 p-8 rounded-lg ml-1 flex-grow">
         <component
             :is="routes[store.setting.current_page].component"
-            v-bind="
-                        routes[store.setting.current_page].store
-                            ? {
-                                  store: routes[store.setting.current_page]
-                                      .store,
-                              }
-                            : {}
-                    "
+            :plugin="routes[store.setting.current_page].plugin"
         />
       </div>
     </div>
