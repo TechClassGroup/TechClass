@@ -91,7 +91,7 @@ export class PluginStorage<T extends object = any> {
         this._storeWatcher = null;
         // 主要逻辑
         this.content = ref(this._defaultValue()) as Ref<T>;
-        // 自动存储函数
+        // 自动存储函数 带节流
         this.storageFunc = throttle(() => {
             let retryCount = 0;
             this._logger.trace("存储数据");
@@ -126,9 +126,11 @@ export class PluginStorage<T extends object = any> {
             };
             attemptStorage();
         }, this.config.throttleWait);
+
         // 监听存储
         if (config.storage) {
             this.load().then(() => {
+                this._logger.debug("存储加载完成", this._fileName);
                 onLoadComplete?.();
                 this._storeWatcher = watch(
                     () => toRaw(this.content).value,
