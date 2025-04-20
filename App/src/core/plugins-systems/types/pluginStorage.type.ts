@@ -26,7 +26,7 @@ class storageConfig {
 export type storageDefaultValue = () => any;
 
 export class PluginStorage {
-    storage: Ref<any>;
+    content: Ref<any>;
 
 
     private _plugin: Plugin;
@@ -57,14 +57,14 @@ export class PluginStorage {
         this._logger = new createLogger(`[${plugin.manifest.id}][插件存储]`)
         this._storeWatcher = null;
         // 主要逻辑
-        this.storage = ref(this._defaultValue());
+        this.content = ref(this._defaultValue());
 
         // 自动存储函数
         this.storageFunc = throttle(() => {
                 let retryCount = 0;
 
                 const attemptStorage = () => {
-                    this._fileSystem.writeFile(this._fileName, JSON.stringify(this.storage.value))
+                    this._fileSystem.writeFile(this._fileName, JSON.stringify(this.content.value))
                         .then(() => {
                             this._logger.info('存储成功', this._fileName);
                             retryCount = 0;
@@ -87,7 +87,7 @@ export class PluginStorage {
             this.load().then(() => {
                 onLoadComplete?.();
                 this._storeWatcher = watch(() => {
-                    this.storage.value
+                    this.content.value
                 }, () => {
                     this.storageFunc();
                 })
@@ -101,20 +101,20 @@ export class PluginStorage {
         const exists = await this._fileSystem.exists(this._fileName);
         if (!exists.exists) {
             this._logger.info('文件不存在，使用默认值', this._fileName);
-            this.storage.value = this._defaultValue();
+            this.content.value = this._defaultValue();
             await this.save();
             return;
         }
         this._logger.trace('文件存在，加载数据', this._fileName);
         const data = await this._fileSystem.readFile(this._fileName);
-        this.storage.value = JSON.parse(data);
+        this.content.value = JSON.parse(data);
         this._logger.info('加载成功', this._fileName);
 
     }
 
     async save() {
-        this._logger.trace('保存数据', this.storage.value);
-        const data = JSON.stringify(this.storage.value, null, 2);
+        this._logger.trace('保存数据', this.content.value);
+        const data = JSON.stringify(this.content.value, null, 2);
         await this._fileSystem.writeFile(this._fileName, data);
         this._logger.info('保存成功', this._fileName);
     }
