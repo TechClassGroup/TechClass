@@ -43,7 +43,8 @@ class storageConfig {
 export type storageDefaultValue<T = any> = () => T;
 
 /**
- * 插件存储类，用于管理插件数据的持久化
+ * 插件存储类，用于管理插件的共用数据，以及持久化
+ * - 请不要直接实例化该类，而是使用initStorage方法
  * @template T - 存储数据的类型，必须是对象类型，默认为any
  */
 export class PluginStorage<T extends object = any> {
