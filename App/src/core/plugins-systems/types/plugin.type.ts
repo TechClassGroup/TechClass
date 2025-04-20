@@ -5,6 +5,9 @@
 import {App} from "../appInstance";
 import {pluginComponent} from "./component.type";
 
+import {IStorageConfig, PluginStorage, storageDefaultValue} from "./pluginStorage.type";
+import logger from "../../utils/logger";
+
 export interface PluginManifest {
     id: string;
     name: string;
@@ -19,6 +22,7 @@ export abstract class Plugin {
     manifest: PluginManifest;
     componentStatus: pluginComponent;
     readonly isOfficial: boolean;
+    storage: PluginStorage | null;
 
     protected constructor(
         app: App,
@@ -30,6 +34,7 @@ export abstract class Plugin {
         this.manifest = manifest;
         this.componentStatus = componentStatus;
         this.isOfficial = isOfficial;
+        this.storage = null;
     }
 
     abstract onload(): Promise<void> | void;
@@ -39,10 +44,22 @@ export abstract class Plugin {
     cleanup(): void {
         // 释放资源，防止循环引用
 
+        if (this.storage) {
+            this.storage.cleanup()
+        }
         // @ts-ignore
         this.componentStatus = null;
         // @ts-ignore
         this.manifest = null;
+        // @ts-ignore
+        this.app = null;
+    }
+
+    initStorage(defaultValue: storageDefaultValue, config: IStorageConfig, completeCallback: () => void): void {
+        if (this.storage) {
+            logger.warn(`${this.manifest.id} 插件存储已经初始化，无法重复初始化`);
+        }
+        this.storage = new PluginStorage(this, config, defaultValue, completeCallback);
     }
 }
 
