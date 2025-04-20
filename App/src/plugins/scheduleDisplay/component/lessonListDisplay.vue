@@ -36,15 +36,18 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
 
 <template>
   <div class="h-full w-full flex flex-col gap-1 p-1 overflow-hidden">
-    <!-- 非显示的课程 -->
-    <template v-if="noDisplaySepLesson.length > 0">
-      <TransitionGroup class="flex flex-col gap-1" name="list" tag="div">
-        <template
-            v-for="(item, index) in noDisplaySepLesson"
-            :key="item.id"
-        >
+    <!-- 合并后的 TransitionGroup，添加 flex-1 和 overflow-y-auto -->
+    <TransitionGroup
+        class="flex-1 flex flex-col gap-1 overflow-y-auto"
+        name="list"
+        tag="div"
+    >
+      <!-- 非单独显示的课程 -->
+      <template v-if="noDisplaySepLesson.length > 0">
+        <!-- 非单独显示课程的循环 -->
+        <template v-for="item in noDisplaySepLesson" :key="item.id">
           <div
-              class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-50 border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
+              class="flex-grow flex-shrink min-h-0 p-1 rounded-md bg-50 border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
           >
             <div
                 class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
@@ -75,26 +78,25 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
             </Transition>
           </div>
         </template>
-      </TransitionGroup>
+        <!-- 分隔区域 -->
+        <div
+            key="divider-sep"
+            class="dividing-line border-t-2 border-gray-400 my-1 flex-shrink-0"
+        ></div>
+      </template>
 
-      <!-- 分隔区域 -->
-      <div
-          class="dividing-line border-t-2 border-gray-400 my-1 flex-shrink-0"
-      ></div>
-    </template>
-
-    <!-- 常规课程列表 -->
-    <TransitionGroup class="flex flex-col gap-1" name="list" tag="div">
-      <template v-for="(item, index) in normalLessonList" :key="item.id">
+      <!-- 常规课程列表 -->
+      <template v-for="item in normalLessonList" :key="item.id">
         <!-- 分割线 -->
         <div
             v-if="item.lesson.type === 'dividingLine'"
-            class="my-2 border-b border-gray-300"
+            class="my-2 border-b border-gray-300 flex-shrink-0"
         ></div>
 
+        <!-- 常规课程项 -->
         <div
             v-else
-            class="flex-grow flex-shrink min-h-0 max-h-20 p-1 rounded-md bg-50 border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
+            class="flex-grow flex-shrink min-h-0 p-1 rounded-md bg-50 border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center relative"
         >
           <div
               class="font-medium text-center text-[clamp(0.75rem,3vw,1.5rem)] leading-tight overflow-hidden whitespace-nowrap text-ellipsis"
@@ -125,17 +127,32 @@ const noDisplaySepLesson = computed<LessonListWithoutDividingLine>(() => {
           </Transition>
         </div>
       </template>
+
+      <!-- 无课程时显示 (整合到TransitionGroup内部) -->
+      <template
+          v-if="
+                    noDisplaySepLesson.length === 0 &&
+                    normalLessonList.length === 0
+                "
+      >
+        <div
+            key="empty-state"
+            class="empty-state p-2 text-center text-muted flex-grow flex items-center justify-center"
+        >
+          暂无课程安排
+        </div>
+      </template>
     </TransitionGroup>
 
-    <!-- 无课程时显示 -->
-    <Transition name="fade">
-      <div
-          v-if="normalLessonList.length === 0"
-          class="empty-state p-2 text-center text-muted"
-      >
-        暂无课程安排
-      </div>
-    </Transition>
+    <!-- 原本的无课程显示逻辑被注释或移除，因为它已被整合到上面的 TransitionGroup 中 -->
+    <!-- <Transition name="fade">
+  <div
+      v-if="normalLessonList.length === 0 && noDisplaySepLesson.length === 0"
+      class="empty-state p-2 text-center text-muted flex-grow flex items-center justify-center"
+  >
+    暂无课程安排
+  </div>
+</Transition> -->
   </div>
 </template>
 
