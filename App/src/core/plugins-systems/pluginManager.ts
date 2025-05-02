@@ -29,7 +29,7 @@ function registerPlugin(pluginClass: typeof Plugin, manifest: PluginManifest, is
         return;
     }
     // 处理一些plugin需要的参数
-    const componentStatus = new pluginComponent()
+    const componentStatus = new pluginComponent(manifest.id, isOfficial)
     // @ts-ignore
     const plugin = new pluginClass(app, manifest, componentStatus, isOfficial);
     app.plugins.value[manifest.id] = plugin;
