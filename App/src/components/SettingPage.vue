@@ -32,7 +32,7 @@ const officialPlugins = computed<Route>(() => {
     const plugin: Plugin = appInstance.plugins.value[key];
     result[`official-plugin-${plugin.manifest.id}`] = {
       name: plugin.manifest.name,
-      component: plugin.componentStatus.settingPage.component,
+      component: plugin.componentStatus.settingPage!.component,
       plugin: plugin,
     }
   })

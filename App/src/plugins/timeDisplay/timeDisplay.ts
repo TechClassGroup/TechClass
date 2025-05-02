@@ -2,6 +2,7 @@
  * @fileOverview 时间显示插件
  */
 
+import {componentProps} from "../../core/plugins-systems/types/component.type";
 import {OfficialPlugin, Plugin, PluginManifest,} from "../../core/plugins-systems/types/plugin.type";
 import timeDisplayMain from "./timeDisplayMain.vue";
 import timeDisplaySetting from "./timeDisplaySetting.vue";
@@ -60,4 +61,7 @@ const PluginTimeDisplay: OfficialPlugin = {
     manifest,
     plugin: timeDisplay,
 };
+
+export type timeDisplayComponentProps = componentProps<timeDisplay>;
+
 export default PluginTimeDisplay;

@@ -39,8 +39,6 @@ const getComponentProps = (componentStatus: draggableComponentStatus) => {
     };
   }).value;
 };
-
-
 </script>
 
 <template>
