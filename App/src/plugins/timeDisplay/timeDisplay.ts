@@ -2,10 +2,10 @@
  * @fileOverview 时间显示插件
  */
 
-import {componentProps} from "../../core/plugins-systems/types/component.type";
 import {OfficialPlugin, Plugin, PluginManifest,} from "../../core/plugins-systems/types/plugin.type";
 import timeDisplayMain from "./timeDisplayMain.vue";
 import timeDisplaySetting from "./timeDisplaySetting.vue";
+import {componentProps} from "../../core/plugins-systems/types/components/utils";
 
 /**
  * 时钟插件的配置类型

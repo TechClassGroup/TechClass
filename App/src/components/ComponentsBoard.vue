@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import {computed} from "vue";
 import {appInstance} from "../core/plugins-systems/appInstance";
-import {draggableComponentStatus} from "../core/plugins-systems/types/component.type";
+
+import {draggableComponentStatus} from "../core/plugins-systems/types/components/base";
 
 const updateComponentStatus = (
     status: draggableComponentStatus,

@@ -3,7 +3,7 @@
  */
 
 import {App} from "../appInstance";
-import {pluginComponent} from "./component.type";
+import {pluginComponent} from "./components/component";
 
 import {IStorageConfig, PluginStorage, storageDefaultValue,} from "./pluginStorage";
 import logger from "../../utils/logger";

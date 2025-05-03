@@ -6,7 +6,7 @@ import {createLogger} from "../utils/utils";
 import {useApplicationStore} from "../../stores/useApplicationStore";
 import officialPlugins from "./officialPlugins";
 import {appInstance} from "./appInstance";
-import {pluginComponent} from "./types/component.type";
+import {pluginComponent} from "./types/components/component";
 
 /**
  * 插件管理器日志记录器
