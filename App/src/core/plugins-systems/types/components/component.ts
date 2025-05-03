@@ -60,7 +60,17 @@ export class pluginComponent {
                 const data = JSON.parse(content);
                 // 使用 data 的 keys 而不是 this.saveStatus
                 Object.keys(data).forEach((key) => {
-                    this.savedStatus[key] = data[key];
+                    if (
+                        this.savedStatus[key] &&
+                        typeof this.savedStatus[key] === "object"
+                    ) {
+                        Object.assign(
+                            this.savedStatus[key] as object,
+                            data[key]
+                        );
+                    } else {
+                        this.savedStatus[key] = data[key];
+                    }
                 });
             }
             // 只传递 mainBoard 对象，而不是整个 savedStatus
