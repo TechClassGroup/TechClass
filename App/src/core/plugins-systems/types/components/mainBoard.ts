@@ -97,8 +97,8 @@ export class MainBoardComponentManager {
             watch(
                 componentInstance.status,
                 () => {
+
                     this.updateSavedComponentStatus();
-                    this.saveCallback();
                 },
                 {deep: true}
             );
@@ -128,6 +128,8 @@ export class MainBoardComponentManager {
                 this.savedStatus[name] = component.status.value;
             }
         }
+
+        this.saveCallback();
     }
 
     applySavedComponentStatus() {

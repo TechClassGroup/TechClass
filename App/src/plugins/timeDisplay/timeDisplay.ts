@@ -25,7 +25,7 @@ interface TimeDisplayConfig {
  */
 class timeDisplay extends Plugin<TimeDisplayConfig> {
     onload(): Promise<void> | void {
-        this.componentStatus.addMainPageComponent("main", timeDisplayMain);
+        this.componentStatus.addMainPageComponent("main", timeDisplayMain, true);
         this.componentStatus.setSettingPageComponent(timeDisplaySetting);
 
         this.initStorage(

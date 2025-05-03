@@ -2,14 +2,15 @@
  * @fileOverview 组件的类型定义
  */
 import {defineComponent} from "vue";
-import {defaultDraggableComponentStatus, draggableComponentStatus} from "./base";
+import {defaultDraggableComponentStatus, draggableComponentStatus,} from "./base";
 import {MainBoardComponentManager, mainBoardStatus} from "./mainBoard";
 import {SettingPageComponentManager} from "./settingPage";
 import {localFileSystem} from "../../pluginApis/fileSystem";
+import {throttle} from "lodash";
 
 export type savedStatus = {
-    mainBoard: mainBoardStatus
-}
+    mainBoard: mainBoardStatus;
+};
 
 /**
  * 插件组件管理类
@@ -20,9 +21,10 @@ export class pluginComponent {
     readonly mainBoardManager: MainBoardComponentManager;
     /** 设置页面组件管理器 */
     readonly settingPageManager: SettingPageComponentManager;
-    savedStatus: savedStatus
+    savedStatus: savedStatus;
     private readonly FileName: string;
-    private readonly FileSystem: localFileSystem
+    private readonly FileSystem: localFileSystem;
+    private throttledSaveStatusToFile: ReturnType<typeof throttle>;
 
     /**
      * 创建插件组件管理实例
@@ -30,15 +32,22 @@ export class pluginComponent {
      */
     constructor(pluginId: string, isOfficial: boolean) {
         this.savedStatus = {
-            mainBoard: {}
-        }
-        this.mainBoardManager = new MainBoardComponentManager(this.savedStatus.mainBoard, this.saveStatus);
+            mainBoard: {},
+        };
+        this.throttledSaveStatusToFile = throttle(
+            this.savedStatusToFile.bind(this),
+            500
+        );
+        this.mainBoardManager = new MainBoardComponentManager(
+            this.savedStatus.mainBoard,
+            this.saveStatus
+        );
         this.settingPageManager = new SettingPageComponentManager();
         this.FileName = `${pluginId}.status.json`;
         this.FileSystem = new localFileSystem(pluginId, isOfficial);
 
         this.saveStatus = this.saveStatus.bind(this);
-
+        this.loadSavedStatus().then();
     }
 
     async loadSavedStatus() {
@@ -48,23 +57,26 @@ export class pluginComponent {
                 const content = await this.FileSystem.readFile(this.FileName);
                 this.savedStatus = JSON.parse(content);
             }
-            this.mainBoardManager.initSavedComponentStatus()
+            this.mainBoardManager.initSavedComponentStatus();
         } catch (e) {
             // 错误处理
         }
     }
 
     saveStatus() {
-        console.log(this.savedStatus)
-        // this.savedStatusToFile()
+        console.log("save! savest");
+        // 通过节流函数调用保存到文件的方法
+        // this.throttledSaveStatusToFile();
     }
 
     async savedStatusToFile() {
+        console.log("save! savetf")
         try {
             const content = JSON.stringify(this.savedStatus);
             await this.FileSystem.writeFile(this.FileName, content);
+
         } catch (e) {
-            // 错误处理
+
         }
     }
 
@@ -78,10 +90,15 @@ export class pluginComponent {
     addMainPageComponent(
         name: string,
         component: ReturnType<typeof defineComponent>,
-        status: draggableComponentStatus = defaultDraggableComponentStatus,
-        memorizeStatus: boolean = false
+        memorizeStatus: boolean = false,
+        status: draggableComponentStatus = defaultDraggableComponentStatus
     ) {
-        this.mainBoardManager.addComponent(name, component, status, memorizeStatus);
+        this.mainBoardManager.addComponent(
+            name,
+            component,
+            status,
+            memorizeStatus
+        );
     }
 
     /**
@@ -107,7 +124,4 @@ export class pluginComponent {
     removeSettingPageComponent() {
         this.settingPageManager.removeComponent();
     }
-
-
 }
-
