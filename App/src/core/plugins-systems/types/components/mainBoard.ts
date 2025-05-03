@@ -1,5 +1,5 @@
 import {componentItem, defaultDraggableComponentStatus, draggableComponentStatus} from "./base";
-import {defineComponent, ref, Ref, shallowRef} from "vue";
+import {defineComponent, ref, Ref, ShallowRef, shallowRef} from "vue";
 
 /**
  * 主面板组件类
@@ -9,19 +9,24 @@ import {defineComponent, ref, Ref, shallowRef} from "vue";
 export class mainBoardComponent extends componentItem {
     /** 组件状态的响应式引用 */
     status: Ref<draggableComponentStatus>;
+    component: ShallowRef<ReturnType<typeof defineComponent>>;
+    memorizeStatus: boolean;
 
     /**
      * 创建主面板组件实例
      * @param component - Vue组件实例
      * @param status - 组件的状态配置
+     * @param memorizeStatus
      */
     constructor(
         component: ReturnType<typeof defineComponent>,
-        status: draggableComponentStatus
+        status: draggableComponentStatus,
+        memorizeStatus: boolean
     ) {
         super();
         this.component = shallowRef(component);
         this.status = ref(status);
+        this.memorizeStatus = memorizeStatus;
     }
 }
 
@@ -46,13 +51,15 @@ export class MainBoardComponentManager {
      * @param name - 组件名称，作为标识符
      * @param component - Vue组件实例
      * @param status - 组件状态配置，默认使用defaultDraggableComponentStatus
+     * @param memorizeStatus
      */
     addComponent(
         name: string,
         component: ReturnType<typeof defineComponent>,
-        status: draggableComponentStatus = defaultDraggableComponentStatus
+        status: draggableComponentStatus = defaultDraggableComponentStatus,
+        memorizeStatus: boolean,
     ) {
-        this.components[name] = new mainBoardComponent(component, status);
+        this.components[name] = new mainBoardComponent(component, status, memorizeStatus);
     }
 
     /**

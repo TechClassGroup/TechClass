@@ -31,13 +31,15 @@ export class pluginComponent {
      * @param name - 组件名称，作为标识符
      * @param component - Vue组件实例
      * @param status - 组件状态配置，默认使用defaultDraggableComponentStatus
+     * @param memorizeStatus
      */
     addMainPageComponent(
         name: string,
         component: ReturnType<typeof defineComponent>,
-        status: draggableComponentStatus = defaultDraggableComponentStatus
+        status: draggableComponentStatus = defaultDraggableComponentStatus,
+        memorizeStatus: boolean = false
     ) {
-        this.mainBoardManager.addComponent(name, component, status);
+        this.mainBoardManager.addComponent(name, component, status, memorizeStatus);
     }
 
     /**
