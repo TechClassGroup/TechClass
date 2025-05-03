@@ -24,7 +24,7 @@ export class pluginComponent {
     savedStatus: savedStatus;
     private readonly FileName: string;
     private readonly FileSystem: localFileSystem;
-    private throttledSaveStatusToFile: ReturnType<typeof throttle>;
+    private readonly throttledSaveStatusToFile: ReturnType<typeof throttle>;
 
     /**
      * 创建插件组件管理实例
@@ -34,10 +34,12 @@ export class pluginComponent {
         this.savedStatus = {
             mainBoard: {},
         };
-        this.throttledSaveStatusToFile = throttle(
-            this.savedStatusToFile.bind(this),
-            500
-        );
+
+        this.saveStatus = this.saveStatus.bind(this);
+        this.savedStatusToFile = this.savedStatusToFile.bind(this);
+
+        this.throttledSaveStatusToFile = throttle(this.savedStatusToFile, 500);
+
         this.mainBoardManager = new MainBoardComponentManager(
             this.savedStatus.mainBoard,
             this.saveStatus
@@ -46,7 +48,6 @@ export class pluginComponent {
         this.FileName = `${pluginId}.status.json`;
         this.FileSystem = new localFileSystem(pluginId, isOfficial);
 
-        this.saveStatus = this.saveStatus.bind(this);
         this.loadSavedStatus().then();
     }
 
@@ -55,7 +56,11 @@ export class pluginComponent {
             const exists = await this.FileSystem.exists(this.FileName);
             if (exists.exists) {
                 const content = await this.FileSystem.readFile(this.FileName);
-                this.savedStatus = JSON.parse(content);
+
+                const data = JSON.parse(content);
+                Object.keys(this.saveStatus).forEach((key) => {
+                    this.savedStatus[key] = data[key];
+                });
             }
             this.mainBoardManager.initSavedComponentStatus();
         } catch (e) {
@@ -64,19 +69,15 @@ export class pluginComponent {
     }
 
     saveStatus() {
-        console.log("save! savest");
         // 通过节流函数调用保存到文件的方法
-        // this.throttledSaveStatusToFile();
+        this.throttledSaveStatusToFile();
     }
 
     async savedStatusToFile() {
-        console.log("save! savetf")
         try {
             const content = JSON.stringify(this.savedStatus);
             await this.FileSystem.writeFile(this.FileName, content);
-
         } catch (e) {
-
         }
     }
 
