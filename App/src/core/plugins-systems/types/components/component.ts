@@ -3,8 +3,13 @@
  */
 import {defineComponent} from "vue";
 import {defaultDraggableComponentStatus, draggableComponentStatus} from "./base";
-import {MainBoardComponentManager} from "./mainBoard";
+import {MainBoardComponentManager, mainBoardStatus} from "./mainBoard";
 import {SettingPageComponentManager} from "./settingPage";
+import {localFileSystem} from "../../pluginApis/fileSystem";
+
+export type savedStatus = {
+    mainBoard: mainBoardStatus
+}
 
 /**
  * 插件组件管理类
@@ -15,16 +20,51 @@ export class pluginComponent {
     readonly mainBoardManager: MainBoardComponentManager;
     /** 设置页面组件管理器 */
     readonly settingPageManager: SettingPageComponentManager;
+    savedStatus: savedStatus
+    private readonly FileName: string;
+    private readonly FileSystem: localFileSystem
 
     /**
      * 创建插件组件管理实例
      * 初始化主面板组件管理器和设置页面组件管理器
      */
-    constructor() {
-        this.mainBoardManager = new MainBoardComponentManager();
+    constructor(pluginId: string, isOfficial: boolean) {
+        this.savedStatus = {
+            mainBoard: {}
+        }
+        this.mainBoardManager = new MainBoardComponentManager(this.savedStatus.mainBoard, this.saveStatus);
         this.settingPageManager = new SettingPageComponentManager();
+        this.FileName = `${pluginId}.status.json`;
+        this.FileSystem = new localFileSystem(pluginId, isOfficial);
+
+        this.saveStatus = this.saveStatus.bind(this);
     }
 
+    async loadSavedStatus() {
+        try {
+            const exists = await this.FileSystem.exists(this.FileName);
+            if (exists.exists) {
+                const content = await this.FileSystem.readFile(this.FileName);
+                this.savedStatus = JSON.parse(content);
+            }
+            this.mainBoardManager.initSavedComponentStatus()
+        } catch (e) {
+            // 错误处理
+        }
+    }
+
+    saveStatus() {
+        this.savedStatusToFile()
+    }
+
+    async savedStatusToFile() {
+        try {
+            const content = JSON.stringify(this.savedStatus);
+            await this.FileSystem.writeFile(this.FileName, content);
+        } catch (e) {
+            // 错误处理
+        }
+    }
 
     /**
      * 添加主面板组件（委托方法）
@@ -45,9 +85,10 @@ export class pluginComponent {
     /**
      * 移除指定名称的主面板组件（委托方法）
      * @param name - 要移除的组件名称
+     * @param keepStatus
      */
-    removeMainPageComponent(name: string) {
-        this.mainBoardManager.removeComponent(name);
+    removeMainPageComponent(name: string, keepStatus: boolean = false) {
+        this.mainBoardManager.removeComponent(name, keepStatus);
     }
 
     /**
