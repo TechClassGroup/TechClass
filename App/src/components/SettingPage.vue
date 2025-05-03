@@ -25,14 +25,15 @@ const officialPlugins = computed<Route>(() => {
   const pluginList = Object.keys(appInstance.plugins.value)
       .filter((key) => {
         const plugin: Plugin = appInstance.plugins.value[key];
-        return plugin.componentStatus.settingPage !== null;
+        return plugin.componentStatus.settingPageManager.component !== null;
       })
+
   const result: Route = {};
   pluginList.forEach((key) => {
     const plugin: Plugin = appInstance.plugins.value[key];
     result[`official-plugin-${plugin.manifest.id}`] = {
       name: plugin.manifest.name,
-      component: plugin.componentStatus.settingPage!.component,
+      component: plugin.componentStatus.settingPageManager.component,
       plugin: plugin,
     }
   })

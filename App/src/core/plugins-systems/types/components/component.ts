@@ -38,6 +38,7 @@ export class pluginComponent {
         this.FileSystem = new localFileSystem(pluginId, isOfficial);
 
         this.saveStatus = this.saveStatus.bind(this);
+
     }
 
     async loadSavedStatus() {
@@ -54,7 +55,8 @@ export class pluginComponent {
     }
 
     saveStatus() {
-        this.savedStatusToFile()
+        console.log(this.savedStatus)
+        // this.savedStatusToFile()
     }
 
     async savedStatusToFile() {

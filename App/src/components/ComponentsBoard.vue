@@ -50,7 +50,7 @@ const getComponentProps = (componentStatus: draggableComponentStatus) => {
     >
       <template
           v-for="(componentInfo, componentKey) in plugin.componentStatus
-                    .mainPage"
+                    .mainBoardManager.components"
           :key="`${pluginKey}-${componentKey}`"
       >
         <vue-draggable-resizable

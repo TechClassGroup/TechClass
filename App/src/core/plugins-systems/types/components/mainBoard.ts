@@ -1,5 +1,5 @@
-import {componentItem, defaultDraggableComponentStatus, draggableComponentStatus} from "./base";
-import {defineComponent, ref, Ref, ShallowRef, shallowRef} from "vue";
+import {componentItem, defaultDraggableComponentStatus, draggableComponentStatus,} from "./base";
+import {defineComponent, ref, Ref, ShallowRef, shallowRef, watch} from "vue";
 
 /**
  * 主面板组件类
@@ -31,7 +31,7 @@ export class mainBoardComponent extends componentItem {
 }
 
 export interface mainBoardStatus {
-    [key: string]: draggableComponentStatus
+    [key: string]: draggableComponentStatus;
 }
 
 /**
@@ -43,8 +43,9 @@ export class MainBoardComponentManager {
      * 主面板组件集合，键为组件名称，值为对应的主面板组件实例
      */
     components: Record<string, mainBoardComponent>;
-    savedStatus: mainBoardStatus
-    firstLoaded: boolean
+    savedStatus: mainBoardStatus;
+    firstLoaded: boolean;
+    private readonly saveCallback: () => void;
 
     /**
      * 创建主面板组件管理器实例
@@ -52,8 +53,9 @@ export class MainBoardComponentManager {
      */
     constructor(savedStatus: mainBoardStatus, saveStatus: () => void) {
         this.components = {};
-        this.savedStatus = savedStatus
+        this.savedStatus = savedStatus;
         this.firstLoaded = false;
+        this.saveCallback = saveStatus;
     }
 
     /**
@@ -67,15 +69,39 @@ export class MainBoardComponentManager {
         name: string,
         component: ReturnType<typeof defineComponent>,
         status: draggableComponentStatus = defaultDraggableComponentStatus,
-        memorizeStatus: boolean,
+        memorizeStatus: boolean
     ) {
-        this.components[name] = new mainBoardComponent(component, status, memorizeStatus);
+        // 创建组件实例
+        const componentInstance = new mainBoardComponent(
+            component,
+            status,
+            memorizeStatus
+        );
+        this.components[name] = componentInstance;
+
+        // 检查是否已经存在保存的状态，如果存在则应用
+        if (this.firstLoaded && this.savedStatus[name] && memorizeStatus) {
+            componentInstance.status.value = this.savedStatus[name];
+        }
+
+        // 管理保存的状态
         if (memorizeStatus) {
-            this.savedStatus[name] = status;
-            
+            this.savedStatus[name] = componentInstance.status.value;
         } else {
             this.savedStatus[name] ? delete this.savedStatus[name] : null;
+        }
 
+        // 监听组件状态变化，自动保存
+        if (memorizeStatus) {
+            // todo 这边以后要加一个cleanup
+            watch(
+                componentInstance.status,
+                () => {
+                    this.updateSavedComponentStatus();
+                    this.saveCallback();
+                },
+                {deep: true}
+            );
         }
     }
 
@@ -116,6 +142,5 @@ export class MainBoardComponentManager {
     initSavedComponentStatus() {
         this.firstLoaded = true;
         this.applySavedComponentStatus();
-
     }
 }
