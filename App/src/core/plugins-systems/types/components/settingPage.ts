@@ -1,5 +1,9 @@
+/**
+ * @fileOverview 设置页面组件类型定义
+ */
 import {componentItem} from "./base";
 import {defineComponent, shallowRef} from "vue";
+import logger from "../../../utils/logger";
 
 /**
  * 设置页面组件类
@@ -14,6 +18,7 @@ export class settingPage extends componentItem {
     constructor(component: ReturnType<typeof defineComponent>) {
         super();
         this.component = shallowRef(component);
+        logger.debug(`创建设置页面组件实例: ${component.name || "未命名组件"}`);
     }
 }
 
@@ -31,6 +36,7 @@ export class SettingPageComponentManager {
      */
     constructor() {
         this.component = null;
+        logger.info("初始化设置页面组件管理器");
     }
 
     /**
@@ -38,11 +44,16 @@ export class SettingPageComponentManager {
      * @param component - Vue组件实例
      */
     setComponent(component: ReturnType<typeof defineComponent>) {
+        logger.info(`设置设置页面组件: ${component.name || "未命名组件"}`);
         this.component = new settingPage(component);
     }
 
+    /**
+     * 移除设置页面组件
+     * 将当前组件设置为null
+     */
     removeComponent() {
+        logger.info("移除设置页面组件");
         this.component = null;
     }
-
 }
