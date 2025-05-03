@@ -58,10 +58,12 @@ export class pluginComponent {
                 const content = await this.FileSystem.readFile(this.FileName);
 
                 const data = JSON.parse(content);
-                Object.keys(this.saveStatus).forEach((key) => {
+                // 使用 data 的 keys 而不是 this.saveStatus
+                Object.keys(data).forEach((key) => {
                     this.savedStatus[key] = data[key];
                 });
             }
+            // 只传递 mainBoard 对象，而不是整个 savedStatus
             this.mainBoardManager.initSavedComponentStatus();
         } catch (e) {
             // 错误处理

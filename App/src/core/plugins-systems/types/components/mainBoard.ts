@@ -85,15 +85,15 @@ export class MainBoardComponentManager {
         }
 
         // 管理保存的状态
+        // 如果你没有手动释放状态，我们不会自动清理，他会一直存在
         if (memorizeStatus) {
             this.savedStatus[name] = componentInstance.status.value;
-        } else {
-            this.savedStatus[name] ? delete this.savedStatus[name] : null;
         }
+        // todo 自动清理
 
         // 监听组件状态变化，自动保存
         if (memorizeStatus) {
-            // todo 这边以后要加一个cleanup
+            // todo 这边以后要加一个cleanup watchers
             watch(
                 componentInstance.status,
                 () => {
