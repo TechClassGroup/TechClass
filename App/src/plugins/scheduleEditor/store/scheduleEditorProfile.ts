@@ -3,17 +3,18 @@
  */
 import {ScheduleEditorProfileStore} from "../scheduleEditor.types";
 import logger from "../../../core/utils/logger";
-import {PluginFs} from "../../../core/utils/pluginUtils";
+
 import {DateTime} from "luxon";
 import {ref, watch} from "vue";
 import {throttle} from "lodash";
 import {createRetrySaveFunction} from "../../../core/utils/utils";
+import {localFileSystem} from "../../../core/plugins-systems/pluginApis/fileSystem";
 
 export const scheduleEditorProfile = ref<ScheduleEditorProfileStore>(
     {} as ScheduleEditorProfileStore
 );
 
-let fileSystem: PluginFs | null = null;
+let fileSystem: localFileSystem | null = null;
 const scheduleEditorStoreProfileName: string =
     "profiles/scheduleEditor.profile.json";
 let profileWatcher: null | ReturnType<typeof watch> = null;
@@ -97,7 +98,7 @@ function deserializeDateTime(profile: any) {
 
 }
 
-export function initProfile(fs: PluginFs) {
+export function initProfile(fs: localFileSystem) {
     fileSystem = fs;
     scheduleEditorProfile.value = createScheduleEditorProfile();
 

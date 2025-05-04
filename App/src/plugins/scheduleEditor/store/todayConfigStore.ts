@@ -8,8 +8,8 @@ import {DateTime} from "luxon";
 import {scheduleEditorProfile, waitForInit} from "./scheduleEditorProfile";
 import Logger from "../../../core/utils/logger";
 import logger from "../../../core/utils/logger";
-import {PluginFs} from "../../../core/utils/pluginUtils";
 import {createRetrySaveFunction, sleepUntil} from "../../../core/utils/utils";
+import {localFileSystem} from "../../../core/plugins-systems/pluginApis/fileSystem";
 
 export const scheduleEditorTodayConfig: Ref<todayConfig> = ref<todayConfig>(
     {} as todayConfig
@@ -86,7 +86,7 @@ const saveTodayConfig = createRetrySaveFunction(
         },
     }
 );
-let fileSystem: PluginFs | null = null;
+let fileSystem: localFileSystem | null = null;
 const scheduleEditorTodayConfigName = "scheduleEditor.todayConfig.json";
 let todayConfigWatcher: null | ReturnType<typeof watch> = null;
 let regenerateTimer: { cancel: () => void } | null = null;
@@ -123,7 +123,7 @@ function setupRegenerateTimer() {
     });
 }
 
-export async function initTodayConfig(fs: PluginFs) {
+export async function initTodayConfig(fs: localFileSystem) {
     fileSystem = fs;
     let needGenerate = false;
     try {
