@@ -4,6 +4,7 @@
 
 import {computed, ref} from "vue";
 import {scheduleEditorTodayConfig} from "../scheduleEditor/store/todayConfigStore";
+// todo 这边可以解耦一下，scheduleEditorTodayConfig改成从API调用
 import {DateTime} from "luxon";
 import {
     LessonList,

@@ -7,8 +7,9 @@ import {clearStore, initializeStore} from "./store/scheduleStore";
 import {scheduleEditorApi} from "./scheduleEditor.types";
 import {scheduleEditorProfile} from "./store/scheduleEditorProfile";
 import {scheduleEditorTodayConfig} from "./store/todayConfigStore";
+import {componentProps} from "../../core/plugins-systems/types/components/utils";
 
-type ConfigType = "course" | "enable" | "todayConfig";
+export type ConfigType = "course" | "enable" | "todayConfig";
 
 interface TabState {
     currentTabs: {
@@ -66,4 +67,5 @@ const PluginScheduleEditor: OfficialPlugin = {
     manifest,
     plugin: scheduleEditor,
 }
+export type scheduleEditorProps = componentProps<scheduleEditor>
 export default PluginScheduleEditor;
