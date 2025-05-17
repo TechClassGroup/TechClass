@@ -32,7 +32,7 @@ export class SettingPageComponentManager {
 
     /**
      * 创建设置页面组件管理器实例
-     * 初始化为空的设置页面组件
+     * 初始化为空设置页面组件
      */
     constructor() {
         this.component = null;

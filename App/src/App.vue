@@ -17,7 +17,7 @@ const isDarkMode = computed<boolean>(() => {
 </script>
 
 <template>
-  <div :class="{ dark: isDarkMode }">
+  <div :class="isDarkMode ? 'dark' :''">
     <main-window></main-window>
   </div>
 </template>
