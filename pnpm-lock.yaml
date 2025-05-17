@@ -27,30 +27,18 @@ importers:
       '@codemirror/state':
         specifier: ^6.5.2
         version: 6.5.2
-      '@rsbuild/core':
-        specifier: ^1.2.3
-        version: 1.2.3
-      '@rsbuild/plugin-vue':
-        specifier: ^1.0.5
-        version: 1.0.5(@rsbuild/core@1.2.3)(vue@3.5.13(typescript@5.7.3))
       '@tauri-apps/api':
         specifier: ^2
         version: 2.2.0
       '@tauri-apps/plugin-shell':
         specifier: ^2
         version: 2.2.0
-      '@types/lodash':
-        specifier: ^4.17.13
-        version: 4.17.14
       '@vueuse/core':
         specifier: ^13.0.0
         version: 13.0.0(vue@3.5.13(typescript@5.7.3))
       codemirror:
         specifier: ^6.0.1
         version: 6.0.1
-      cross-env:
-        specifier: ^7.0.3
-        version: 7.0.3
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -85,12 +73,21 @@ importers:
       '@iarna/toml':
         specifier: ^2.2.5
         version: 2.2.5
+      '@rsbuild/core':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@rsbuild/plugin-image-compress':
         specifier: ^1.1.0
         version: 1.1.0(@rsbuild/core@1.2.3)
+      '@rsbuild/plugin-vue':
+        specifier: ^1.0.5
+        version: 1.0.5(@rsbuild/core@1.2.3)(vue@3.5.13(typescript@5.7.3))
       '@tauri-apps/cli':
         specifier: ^2
         version: 2.2.5
+      '@types/lodash':
+        specifier: ^4.17.13
+        version: 4.17.14
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -100,6 +97,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.1)
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^9.27.0
         version: 9.27.0(jiti@1.21.7)
