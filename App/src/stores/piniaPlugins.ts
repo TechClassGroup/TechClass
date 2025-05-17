@@ -32,9 +32,9 @@ type ConfigErrorKind = {
  * - 具有on_storage_load_complete方法，当存储加载完成时调用
  */
 export function ConfigStoragePiniaPlugin({
-    options,
-    store,
-}: PiniaPluginContext & { options: ConfigStorageOptions }) {
+                                             options,
+                                             store,
+                                         }: PiniaPluginContext & { options: ConfigStorageOptions }) {
     const config = options.config_storage;
     if (
         !config ||
@@ -69,7 +69,7 @@ export function ConfigStoragePiniaPlugin({
         }
 
         // 如果是对象，递归合并
-        const result = { ...target };
+        const result = {...target};
         for (const key in target) {
             if (Object.prototype.hasOwnProperty.call(target, key)) {
                 result[key] = safeDeepMerge(target[key], source, [
@@ -85,7 +85,7 @@ export function ConfigStoragePiniaPlugin({
     logger.info(
         `[Config Storage Pinia Plugin] 加载: ${id} keys: ${keys.join(", ")}`
     );
-    invoke("load_content", { id: id, pluginType: PluginType.Official })
+    invoke("load_content", {id: id, pluginType: PluginType.Official})
         .then((content) => {
             if (content) {
                 // 遍历所有keys
@@ -112,7 +112,7 @@ export function ConfigStoragePiniaPlugin({
                         logger.info(
                             `[Config Storage Pinia Plugin] 加载成功: ${id} key: ${key}`
                         );
-                        ;
+
                     } else {
                         logger.warn(
                             `[Config Storage Pinia Plugin] 加载失败 属性不存在: ${id} key: ${key}`
@@ -184,7 +184,7 @@ export function ConfigStoragePiniaPlugin({
             () => {
                 storage_func();
             },
-            { deep: true }
+            {deep: true}
         )
     );
 

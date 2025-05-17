@@ -37,16 +37,21 @@
     "vue-draggable-resizable": "^3.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.27.0",
     "@iarna/toml": "^2.2.5",
     "@rsbuild/plugin-image-compress": "^1.1.0",
     "@tauri-apps/cli": "^2",
     "@types/luxon": "^3.4.2",
     "@types/markdown-it": "^14.1.2",
     "autoprefixer": "^10.4.20",
+    "eslint": "^9.27.0",
+    "eslint-plugin-vue": "^10.1.0",
+    "globals": "^16.1.0",
     "postcss": "^8.4.49",
     "rsbuild-plugin-html-minifier-terser": "^1.1.1",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.2.2",
+    "typescript-eslint": "^8.32.1",
     "vue-tsc": "^2.0.22"
   }
 }

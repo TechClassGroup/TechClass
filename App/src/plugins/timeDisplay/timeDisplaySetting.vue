@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import TcSwitch from "../../UI/TcSwitch.vue";
 import {computed, watch} from "vue";
 

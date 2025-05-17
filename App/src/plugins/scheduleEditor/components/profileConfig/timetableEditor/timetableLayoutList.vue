@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed} from "vue";
 import {TimetableObject} from "../../../scheduleEditor.types";
 import {v4 as uuidv4} from "uuid";

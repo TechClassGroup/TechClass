@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, onMounted, onUnmounted, ref} from "vue";
 import {timeDisplayComponentProps} from "./timeDisplay";
 
@@ -74,8 +74,8 @@ onUnmounted(() => {
 
 .time-enter-from,
 .time-leave-to {
-  opacity: 0;
   transform: translateY(20px);
+  opacity: 0;
 }
 
 .time-leave-active {

@@ -87,21 +87,6 @@ function serializeForLog(value: any, seen = new WeakSet()): any {
  *
  */
 class Logger {
-    private formatLogMessage(...args: any[]): string {
-        return args
-            .map((arg) => {
-                try {
-                    const serialized = serializeForLog(arg);
-                    return typeof serialized === "string"
-                        ? serialized
-                        : JSON.stringify(serialized, null, 2);
-                } catch (err) {
-                    return String(arg);
-                }
-            })
-            .join(" ");
-    }
-
     trace(...args: any[]) {
         if (__LOG_LEVEL_TRACE__) {
             const message = this.formatLogMessage(...args);
@@ -150,6 +135,21 @@ class Logger {
                 console.error("[ERROR]", ...args);
             }
         }
+    }
+
+    private formatLogMessage(...args: any[]): string {
+        return args
+            .map((arg) => {
+                try {
+                    const serialized = serializeForLog(arg);
+                    return typeof serialized === "string"
+                        ? serialized
+                        : JSON.stringify(serialized, null, 2);
+                } catch (err) {
+                    return String(arg);
+                }
+            })
+            .join(" ");
     }
 }
 
