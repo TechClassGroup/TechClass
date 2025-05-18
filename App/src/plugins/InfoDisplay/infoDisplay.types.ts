@@ -4,10 +4,10 @@
 import {DateTime} from "luxon";
 
 interface infoItem {
-    title: string;
     content: string;
     createDate: DateTime;
     deadDate: DateTime;
+    fatherGroupIds: string[];
     tags: string[];
 }
 

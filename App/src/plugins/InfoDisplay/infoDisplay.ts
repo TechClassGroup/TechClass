@@ -3,20 +3,6 @@
  */
 import {OfficialPlugin, Plugin, PluginManifest,} from "../../core/plugins-systems/types/plugin.type";
 
-// // type mainPageKeys = ""
-// export const InfoDisplay: IPlugin = {
-//     name: "作业展示器",
-//     description: "",
-//     id: "InfoDisplay",
-//     isOfficial: true,
-//     component: {
-//         mainPage: {},
-//         settingPage: null,
-//     },
-//     hooks: {},
-//     storeConfig: {}
-// };
-
 
 class InfoDisplay extends Plugin {
     onload(): Promise<void> | void {
