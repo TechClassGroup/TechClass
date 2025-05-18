@@ -76,8 +76,8 @@ const getComponentProps = (componentStatus: draggableComponentStatus) => {
 }
 
 :deep(.vdr-handle) {
-  background-color: #9ca3af;
   border: 1px solid #6b7280;
+  background-color: #9ca3af;
 }
 
 :deep(.vdr-handle:hover) {

@@ -41,8 +41,8 @@ const reload_plugins = () => {
       >
         <tc-button
             v-if="store.setting.needReloadPlugins"
-            @click="reload_plugins"
             class="ml-auto h-8"
+            @click="reload_plugins"
         >
           立即重新加载
         </tc-button>
