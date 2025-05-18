@@ -5,19 +5,19 @@ import {draggableComponentStatus} from "../core/plugins-systems/types/components
 
 const updateComponentStatus = (
     status: draggableComponentStatus,
-    left: number | "auto",
-    top: number | "auto",
-    width: number,
-    height: number
+    left: number,
+    top: number,
+    width: number | "auto",
+    height: number | "auto"
 ) => {
-  if (left !== undefined) status.x = left as any;
-  if (top !== undefined) status.y = top as any;
-  if (width !== undefined) status.width = width as any;
+  if (left !== undefined) status.x = left
+  if (top !== undefined) status.y = top
+  if (width !== undefined) status.width = width
   if (height !== undefined) {
-    status.height = height as any;
+    status.height = height
   }
 };
-const onResizeDrag = ($event: any, status: draggableComponentStatus) => {
+const onResizeDrag = ($event, status: draggableComponentStatus) => {
   updateComponentStatus(status, $event[0], $event[1], $event[2], $event[3]);
 };
 

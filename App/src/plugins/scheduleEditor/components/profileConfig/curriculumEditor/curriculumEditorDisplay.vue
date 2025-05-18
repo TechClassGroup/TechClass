@@ -51,16 +51,16 @@ function getSubjectName(subjectId: string): string {
   return subjects.value[subjectId]?.name || "未指定";
 }
 
-function getLayoutName(layout: any): string {
-  if (layout.type === "break") {
-    return layout.breakName;
-  } else {
-    const subjectId = currentCurriculum.value?.classes.find(
-        (c) => c.timeId === layout.id
-    )?.subjectId;
-    return subjectId ? getSubjectName(subjectId) : "未安排";
-  }
-}
+// function getLayoutName(layout: any): string {
+//   if (layout.type === "break") {
+//     return layout.breakName;
+//   } else {
+//     const subjectId = currentCurriculum.value?.classes.find(
+//         (c) => c.timeId === layout.id
+//     )?.subjectId;
+//     return subjectId ? getSubjectName(subjectId) : "未安排";
+//   }
+// }
 
 function updateSubject(timeId: string, subjectId: string) {
   if (!currentCurriculum.value) return;
