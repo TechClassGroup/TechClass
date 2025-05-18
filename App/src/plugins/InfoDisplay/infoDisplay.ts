@@ -35,7 +35,7 @@ const manifest: PluginManifest = {
     minAppVersion: "0.0.0",
     author: "TechClass官方",
     version: "0.0.0",
-}
+};
 
 const PluginInfoDisplay: OfficialPlugin = {
     manifest,
