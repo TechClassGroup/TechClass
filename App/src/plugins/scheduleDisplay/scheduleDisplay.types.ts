@@ -1,7 +1,7 @@
 /**
  * @fileOverview scheduleDisplay的类型定义
  */
-import {todaySchedule} from "../scheduleEditor/scheduleEditor.types";
+import type {todaySchedule} from "../scheduleEditor/scheduleEditor.types";
 
 /**
  * 排除分割线类型的课程表类型
@@ -37,15 +37,15 @@ export interface ScheduleWithIdWithoutDividingLine {
  * 课程状态枚举
  * @enum {number}
  */
-export const enum LessonStatusEnum {
+export enum LessonStatusEnum {
     /** 正常状态 */
-    ok,
+    ok = 0,
     /** 在第一节课之前 */
-    beforeFirst,
+    beforeFirst = 1,
     /** 在最后一节课之后 */
-    afterLast,
+    afterLast = 2,
     /** 没有课程 */
-    noLesson,
+    noLesson = 3,
 }
 
 /**
@@ -65,13 +65,13 @@ export interface lessonStatusType {
  * 课程列表类型枚举
  * @enum {number}
  */
-export const enum LessonListEnum {
+export enum LessonListEnum {
     /** 当前课程 */
-    current,
+    current = 0,
     /** 未来课程 */
-    future,
+    future = 1,
     /** 普通课程 */
-    normal,
+    normal = 2,
 }
 
 /**

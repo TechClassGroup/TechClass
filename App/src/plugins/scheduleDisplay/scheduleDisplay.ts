@@ -1,7 +1,7 @@
 /**
  * @fileOverview 课表展示器插件
  */
-import {OfficialPlugin, Plugin, PluginManifest} from "../../core/plugins-systems/types/plugin.type";
+import {type OfficialPlugin, Plugin, type PluginManifest} from "../../core/plugins-systems/types/plugin.type";
 import NextLesson from "./component/nextLesson.vue";
 import LessonListDisplay from "./component/lessonListDisplay.vue";
 
