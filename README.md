@@ -12,18 +12,18 @@
 
 ## 特性
 
--   智能课表管理：支持按天、周、月、年模式编辑及单双周区分
--   作业与通知展示：集中查看作业、教师信息及重要通知
--   可定制界面：自由拖拽布局，自定义主题与深色模式
--   多平台支持：同时提供 Web 与桌面 (Tauri) 版本
+- 智能课表管理：支持按天、周、月、年模式编辑及单双周区分
+- 作业与通知展示：集中查看作业、教师信息及重要通知
+- 可定制界面：自由拖拽布局，自定义主题与深色模式
+- 多平台支持：同时提供 Web 与桌面 (Tauri) 版本
 
 ## 技术栈
 
--   Vue 3 + TypeScript + Vite
--   Tailwind CSS
--   Pinia 状态管理
--   Tauri (Rust) 桌面应用
--   VuePress Theme Hope 文档站点
+- Vue 3 + TypeScript + Vite
+- Tailwind CSS
+- Pinia 状态管理
+- Tauri (Rust) 桌面应用
+- VuePress Theme Hope 文档站点
 
 ## 目录结构
 
@@ -40,9 +40,9 @@
 
 ### 前提条件
 
--   Node.js v16+
--   pnpm 包管理器
--   Rust 工具链（用于 Tauri 构建）
+- Node.js v16+
+- pnpm 包管理器
+- Rust 工具链（用于 Tauri 构建）
 
 ### 本地开发
 
@@ -77,6 +77,6 @@ pnpm docs:build
 
 欢迎提交 Issue 和 Pull Request，一起完善 TechClass！
 
-## License 
+## License
 
 GPL v3
