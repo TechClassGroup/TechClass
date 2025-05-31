@@ -1,5 +1,5 @@
 import {componentItem, defaultDraggableComponentStatus, draggableComponentStatus,} from "./base";
-import {defineComponent, ref, Ref, ShallowRef, shallowRef, watch} from "vue";
+import {defineComponent, ref, Ref, shallowRef, watch} from "vue";
 import logger from "../../../utils/logger";
 
 /**
@@ -10,8 +10,6 @@ import logger from "../../../utils/logger";
 export class mainBoardComponent extends componentItem {
     /** 组件状态的响应式引用 */
     status: Ref<draggableComponentStatus>;
-    /** 组件实例的浅层引用 */
-    component: ShallowRef<ReturnType<typeof defineComponent>>;
     /** 是否记住组件状态 */
     memorizeStatus: boolean;
 

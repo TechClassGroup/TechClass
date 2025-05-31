@@ -2,13 +2,13 @@
  * @fileOverview 课程表编辑器的类型定义
  */
 import {DateTime} from "luxon";
-import {scheduleEditorProfile} from "./store/scheduleEditorProfile";
-import {scheduleEditorTodayConfig} from "./store/todayConfigStore";
+import type {scheduleEditorProfile} from "./store/scheduleEditorProfile";
+import type {scheduleEditorTodayConfig} from "./store/todayConfigStore";
 
 /**
  * 课程信息接口
  */
-interface Subject {
+export interface Subject {
     /** 课程名称 */
     name: string;
     /** 课程简称 */
@@ -29,16 +29,16 @@ interface Subject {
 /**
  * 时间表布局类型
  */
-type timetableLayouts = LessonLayout | BreakLayout | dividingLineLayout;
+export type timetableLayouts = LessonLayout | BreakLayout | dividingLineLayout;
 /**
  * 时间表布局类型的type
  */
-type timetableLayoutTypes = timetableLayouts["type"];
+export type timetableLayoutTypes = timetableLayouts["type"];
 
 /**
  * 时间表接口
  */
-interface Timetable {
+export interface Timetable {
     /** 时间表名称 */
     name: string;
     /** 时间表布局，key为布局ID */
@@ -54,7 +54,7 @@ interface Timetable {
 /**
  * 基础布局接口
  */
-interface BaseLayout {
+export interface BaseLayout {
     /** 开始时间 */
     startTime: DateTime;
 
@@ -67,7 +67,7 @@ interface BaseLayout {
 /**
  * 课程布局接口，继承自基础布局
  */
-interface LessonLayout extends BaseLayout {
+export interface LessonLayout extends BaseLayout {
     /** 布局类型 */
     type: "lesson";
     /** 默认课程的ID */
@@ -84,7 +84,7 @@ interface LessonLayout extends BaseLayout {
 /**
  * 休息时间布局接口，继承自基础布局
  */
-interface BreakLayout extends BaseLayout {
+export interface BreakLayout extends BaseLayout {
     /** 布局类型 */
     type: "break";
     /** 课间休息的名称 */
@@ -103,11 +103,11 @@ interface BreakLayout extends BaseLayout {
  * 分割线布局接口，继承自基础布局
  * 他不关心结束时间，只关心开始时间
  */
-interface dividingLineLayout extends BaseLayout {
+export interface dividingLineLayout extends BaseLayout {
     type: "dividingLine";
 }
 
-type ClassType = {
+export type ClassType = {
     /** 时间ID */
     timeId: string;
     /** 课程ID */

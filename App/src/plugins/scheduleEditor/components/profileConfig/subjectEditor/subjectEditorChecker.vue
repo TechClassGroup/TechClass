@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {SubjectObject} from "../../../scheduleEditor.types";
+import type {SubjectObject} from "../../../scheduleEditor.types";
 import TcInput from "../../../../../UI/TcInput.vue";
 
 const props = defineProps<{
@@ -7,14 +7,11 @@ const props = defineProps<{
   subjectId?: string;
 }>();
 
-const emit = defineEmits<{
-  (
+const emit = defineEmits<(
       e: "update",
       id: string,
       field: keyof SubjectObject[string],
-      value: string | boolean
-  ): void;
-}>();
+      value: string | boolean) => void>();
 
 function handleUpdate(
     field: keyof SubjectObject[string],

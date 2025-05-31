@@ -5,8 +5,8 @@ import CurriculumEditor from "./profileConfig/curriculumEditor/curriculumEditor.
 import TcButton from "../../../UI/TcButton.vue";
 import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue";
 import enableSelector from "./enableConfig/enableSelector.vue";
-import type {ConfigType} from "../scheduleEditor";
-import {scheduleEditorProps} from "../scheduleEditor";
+import type {ConfigType, scheduleEditorProps} from "../scheduleEditor";
+import type {defineComponent} from "vue";
 import {computed, watch} from "vue";
 import tempSelector from "./enableConfig/tempSelector.vue";
 import logger from "../../../core/utils/logger";
@@ -15,7 +15,7 @@ import todayEditor from "./todayConfig/todayEditor.vue";
 
 interface TabConfig {
   label: string;
-  component: any;
+  component: ReturnType<typeof defineComponent>;
 }
 
 interface TabsConfig {
@@ -66,6 +66,7 @@ const tabsConfig: Record<ConfigType, TabsConfig> = {
 };
 const props = defineProps<scheduleEditorProps>()
 
+// biome-ignore lint/style/noNonNullAssertion: <explanation>
 const store = computed(() => props.plugin.storage!.content);
 
 // 默认tab映射

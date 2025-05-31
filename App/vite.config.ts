@@ -5,6 +5,7 @@ import * as fs from 'node:fs'
 import * as toml from '@iarna/toml'
 
 import {createHtmlPlugin} from 'vite-plugin-html'
+import browserslistToEsbuild from "browserslist-to-esbuild";
 
 const isProduction = process.env.NODE_ENV === 'production'
 console.log(`[构建环境] 当前环境: ${isProduction ? 'Release' : 'Development'}`)
@@ -112,7 +113,7 @@ export default defineConfig({
         hmr: false,
     },
     build: {
-        target: browserListTarget,
+        target: browserslistToEsbuild(browserListTarget),
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),

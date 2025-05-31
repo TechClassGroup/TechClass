@@ -1,4 +1,4 @@
-import {defineComponent, ShallowRef} from "vue";
+import type {defineComponent, ShallowRef} from "vue";
 
 /**
  * 可拖拽组件的状态配置接口
@@ -62,4 +62,9 @@ export const defaultDraggableComponentStatus: draggableComponentStatus = {
 export class componentItem {
     /** 组件的浅层引用，用于存储Vue组件实例 */
     component: ShallowRef<ReturnType<typeof defineComponent>>;
+
+    constructor() {
+        // 初始化component属性 只是为了让沟槽的Vite闭嘴
+        this.component = null as unknown as ShallowRef<ReturnType<typeof defineComponent>>;
+    }
 }
