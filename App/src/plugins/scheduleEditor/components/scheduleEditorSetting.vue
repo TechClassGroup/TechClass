@@ -5,8 +5,9 @@ import CurriculumEditor from "./profileConfig/curriculumEditor/curriculumEditor.
 import TcButton from "../../../UI/TcButton.vue";
 import TimeGroupEditor from "./profileConfig/timeGroupEditor/timeGroupEditor.vue";
 import enableSelector from "./enableConfig/enableSelector.vue";
-import {scheduleEditorStore} from "../store/scheduleStore";
-import {watch} from "vue";
+import type {ConfigType, scheduleEditorProps} from "../scheduleEditor";
+import type {defineComponent} from "vue";
+import {computed, watch} from "vue";
 import tempSelector from "./enableConfig/tempSelector.vue";
 import logger from "../../../core/utils/logger";
 import todayStatus from "./todayConfig/todayStatus.vue";
@@ -14,15 +15,13 @@ import todayEditor from "./todayConfig/todayEditor.vue";
 
 interface TabConfig {
   label: string;
-  component: any;
+  component: ReturnType<typeof defineComponent>;
 }
 
 interface TabsConfig {
   [key: string]: TabConfig;
 }
 
-// 统一的配置类型定义
-type ConfigType = "course" | "enable" | "todayConfig";
 
 // 统一的tabs配置
 const tabsConfig: Record<ConfigType, TabsConfig> = {
@@ -65,8 +64,10 @@ const tabsConfig: Record<ConfigType, TabsConfig> = {
     },
   },
 };
+const props = defineProps<scheduleEditorProps>()
 
-const store = scheduleEditorStore!;
+// biome-ignore lint/style/noNonNullAssertion: <explanation>
+const store = computed(() => props.plugin.storage!.content);
 
 // 默认tab映射
 const defaultTabs: Record<ConfigType, string> = {
@@ -77,14 +78,14 @@ const defaultTabs: Record<ConfigType, string> = {
 
 // 监听configType变化，仅在必要时重置currentTab
 watch(
-    () => store?.configType,
+    () => store.value.configType,
     (newType) => {
       if (!store || !newType) return;
       // 只有当前tab不在新类型的tabs中时，才重置为默认值
       const newTypeTabs = tabsConfig[newType as ConfigType];
-      const currentTypeTab = store.currentTabs[newType as ConfigType];
+      const currentTypeTab = store.value.currentTabs[newType as ConfigType];
       if (!currentTypeTab || !(currentTypeTab in newTypeTabs)) {
-        store.currentTabs[newType as ConfigType] =
+        store.value.currentTabs[newType as ConfigType] =
             defaultTabs[newType as ConfigType];
       }
     }
@@ -93,13 +94,13 @@ watch(
 // 初始化currentTab
 if (!store) {
   logger.error("[scheduleEditor] store未初始化");
-} else if (store.configType) {
-  const currentTabs = tabsConfig[store.configType as ConfigType];
-  const currentTypeTab = store.currentTabs[store.configType as ConfigType];
+} else if (store.value.configType) {
+  const currentTabs = tabsConfig[store.value.configType as ConfigType];
+  const currentTypeTab = store.value.currentTabs[store.value.configType as ConfigType];
   // 只有当前tab不存在时，才设置默认值
   if (!currentTypeTab || !(currentTypeTab in currentTabs)) {
-    store.currentTabs[store.configType as ConfigType] =
-        defaultTabs[store.configType as ConfigType];
+    store.value.currentTabs[store.value.configType as ConfigType] =
+        defaultTabs[store.value.configType as ConfigType];
   }
 }
 </script>
@@ -116,7 +117,7 @@ if (!store) {
             :key="index"
             :variant="store.configType === type ? 'filled' : 'text'"
             size="medium"
-            @click="store.configType = type"
+            @click="store.configType = type as ConfigType"
         >
           {{
             type === "todayConfig"
@@ -139,7 +140,7 @@ if (!store) {
             :variant="store.currentTabs[store.configType as ConfigType] === key ? 'filled' : 'text'"
             size="small"
             @click="
-                        store.currentTabs[store.configType as ConfigType] = key
+                        store.currentTabs[store.configType as ConfigType] = key as string;
                     "
         >
           {{ tab.label }}

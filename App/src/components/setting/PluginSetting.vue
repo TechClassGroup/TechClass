@@ -30,7 +30,7 @@ const reload_plugins = () => {
 <template>
   <div class="p-2">
     <div class="flex items-center mb-6">
-      <h1 class="text-2xl font-medium leading-8">插件列表</h1>
+      <h1 class="text-2xl font-medium leading-8 text-title">插件列表</h1>
       <Transition
           enter-active-class="transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
           enter-from-class="transform scale-90 opacity-0"
@@ -41,8 +41,8 @@ const reload_plugins = () => {
       >
         <tc-button
             v-if="store.setting.needReloadPlugins"
-            @click="reload_plugins"
             class="ml-auto h-8"
+            @click="reload_plugins"
         >
           立即重新加载
         </tc-button>

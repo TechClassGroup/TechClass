@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@iarna/toml": "^2.2.5"
   },
   "dependencies": {

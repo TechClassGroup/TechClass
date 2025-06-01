@@ -32,7 +32,6 @@ export interface ApplicationStoreTypes {
     };
 }
 
-// @ts-ignore
 export const useApplicationStore: StoreDefinition = defineStore("AppSettings", {
     state: (): ApplicationStoreTypes => {
         return {

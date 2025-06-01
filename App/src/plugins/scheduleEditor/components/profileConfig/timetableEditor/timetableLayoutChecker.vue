@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed} from "vue";
 import {TimetableObject} from "../../../scheduleEditor.types";
 import {DateTime} from "luxon";

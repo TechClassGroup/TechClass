@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, nextTick, ref} from "vue";
 
 interface Props {
@@ -163,29 +163,29 @@ const handleInput = (e: Event) => {
         v-if="type === 'textarea'"
         ref="textareaRef"
         :class="inputClasses"
-        :value="model"
         :disabled="disabled"
         :placeholder="placeholder"
         :rows="rows"
+        :value="model"
         class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full resize-none"
         @input="handleInput"
     />
     <input
         v-else
         :class="inputClasses"
-        :type="type"
-        :value="displayValue"
         :disabled="disabled"
         :placeholder="placeholder"
-        v-bind="timeInputProps"
+        :type="type"
+        :value="displayValue"
         class="rounded-lg border outline-none transition-all duration-300 ease-in-out w-full"
+        v-bind="timeInputProps"
         @input="handleInput"
     />
 
     <p
         v-if="helperText"
-        class="text-xs"
         :class="error ? 'text-red-500' : 'text-muted'"
+        class="text-xs"
     >
       {{ helperText }}
     </p>

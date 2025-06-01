@@ -5,6 +5,7 @@
 import {OfficialPlugin, Plugin, PluginManifest,} from "../../core/plugins-systems/types/plugin.type";
 import timeDisplayMain from "./timeDisplayMain.vue";
 import timeDisplaySetting from "./timeDisplaySetting.vue";
+import {componentProps} from "../../core/plugins-systems/types/components/utils";
 
 /**
  * 时钟插件的配置类型
@@ -24,7 +25,7 @@ interface TimeDisplayConfig {
  */
 class timeDisplay extends Plugin<TimeDisplayConfig> {
     onload(): Promise<void> | void {
-        this.componentStatus.addMainPageComponent("main", timeDisplayMain);
+        this.componentStatus.addMainPageComponent("main", timeDisplayMain, true);
         this.componentStatus.setSettingPageComponent(timeDisplaySetting);
 
         this.initStorage(
@@ -60,4 +61,7 @@ const PluginTimeDisplay: OfficialPlugin = {
     manifest,
     plugin: timeDisplay,
 };
+
+export type timeDisplayComponentProps = componentProps<timeDisplay>;
+
 export default PluginTimeDisplay;

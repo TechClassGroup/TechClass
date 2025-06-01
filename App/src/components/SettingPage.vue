@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import logger from "../core/utils/logger";
 import {useApplicationStore} from "../stores/useApplicationStore";
-import About from "./setting/About.vue";
+import SettingAbout from "./setting/SettingAbout.vue";
 import {computed, defineComponent, markRaw, watch} from "vue";
 import PluginSetting from "./setting/PluginSetting.vue";
 import officialPluginsList from "../core/plugins-systems/officialPlugins"
 import {CircleX} from "lucide-vue-next";
-import Appearance from "./setting/Appearance.vue";
+import SettingAppearance from "./setting/SettingAppearance.vue";
 import {appInstance} from "../core/plugins-systems/appInstance";
 import {Plugin} from "../core/plugins-systems/types/plugin.type";
 
@@ -25,14 +25,15 @@ const officialPlugins = computed<Route>(() => {
   const pluginList = Object.keys(appInstance.plugins.value)
       .filter((key) => {
         const plugin: Plugin = appInstance.plugins.value[key];
-        return plugin.componentStatus.settingPage !== null;
+        return plugin.componentStatus.settingPageManager.component !== null;
       })
+
   const result: Route = {};
   pluginList.forEach((key) => {
     const plugin: Plugin = appInstance.plugins.value[key];
     result[`official-plugin-${plugin.manifest.id}`] = {
       name: plugin.manifest.name,
-      component: plugin.componentStatus.settingPage.component,
+      component: plugin.componentStatus.settingPageManager.component!.component,
       plugin: plugin,
     }
   })
@@ -42,11 +43,11 @@ const officialPlugins = computed<Route>(() => {
 const baseRoutes: Route = {
   about: {
     name: "关于",
-    component: markRaw(About),
+    component: markRaw(SettingAbout),
   },
   appearance: {
     name: "外观",
-    component: markRaw(Appearance)
+    component: markRaw(SettingAppearance)
   },
   plugin: {
     name: "插件配置",

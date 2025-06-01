@@ -18,14 +18,15 @@ export interface CurriculumResult {
 }
 
 class TimeGroupProcessor {
-    private readonly granularityHandlers = {
-        week: (date: DateTime) => date.weekday - 1,
-        month: (date: DateTime) => date.day - 1,
-    };
     /**
      * 是否是循环引用
      */
     public isLoop = false;
+    private readonly granularityHandlers = {
+        week: (date: DateTime) => date.weekday - 1,
+        month: (date: DateTime) => date.day - 1,
+    };
+
     constructor(
         private readonly profile: ScheduleEditorProfileStore,
         private readonly followTimeGroups: TimeGroupInfo[] = [],

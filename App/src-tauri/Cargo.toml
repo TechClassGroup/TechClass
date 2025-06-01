@@ -2,7 +2,7 @@
 name = "TechClass"
 version = "0.1.0"
 description = "A Tauri App"
-authors = ["erduotong"]
+authors = ["TechClass"]
 edition = "2021"
 
 [package.metadata.loglevel]

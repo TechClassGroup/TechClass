@@ -1,3 +1,11 @@
 packages:
-  - 'App'
-  - 'docs'
+  - App
+  - docs
+onlyBuiltDependencies:
+  - cwebp-bin
+  - esbuild
+  - gifsicle
+  - jpegtran-bin
+  - mozjpeg
+  - optipng-bin
+  - pngquant-bin

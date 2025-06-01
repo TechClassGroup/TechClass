@@ -4,7 +4,6 @@ import "./assets/styles/main.css";
 import logger from "./core/utils/logger";
 import {createPinia} from "pinia";
 import "vue-draggable-resizable/style.css";
-// @ts-ignore
 import VueDraggableResizable from "vue-draggable-resizable";
 import {ConfigStoragePiniaPlugin} from "./stores/piniaPlugins";
 import {appInstance} from "./core/plugins-systems/appInstance";

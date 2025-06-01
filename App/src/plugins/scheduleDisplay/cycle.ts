@@ -4,15 +4,16 @@
 
 import {computed, ref} from "vue";
 import {scheduleEditorTodayConfig} from "../scheduleEditor/store/todayConfigStore";
+// todo 这边可以解耦一下，scheduleEditorTodayConfig改成从API调用
 import {DateTime} from "luxon";
 import {
-    LessonList,
+    type LessonList,
     LessonListEnum,
-    LessonListWithoutDividingLine,
+    type LessonListWithoutDividingLine,
     LessonStatusEnum,
-    lessonStatusType,
-    ScheduleWithId,
-    ScheduleWithIdWithoutDividingLine
+    type lessonStatusType,
+    type ScheduleWithId,
+    type ScheduleWithIdWithoutDividingLine
 } from "./scheduleDisplay.types";
 
 const currentTime = ref<DateTime>(DateTime.now());
@@ -103,12 +104,12 @@ export const lessonStatus = computed<lessonStatusType>(() => {
     // 找出当前正在进行的课程和下一节课
     let firstFutureTime: DateTime | null = null;
 
-    sortedLessonsWithoutDividingLine.value.forEach((val) => {
+    for (const val of sortedLessonsWithoutDividingLine.value) {
         const lesson = val.lesson;
         // current
         if (now >= lesson.startTime && now <= lesson.endTime) {
             currentLessons.push(val);
-            return;
+            continue;
         }
         // future
         if (now < lesson.startTime) {
@@ -119,7 +120,7 @@ export const lessonStatus = computed<lessonStatusType>(() => {
                 futureLessons.push(val);
             }
         }
-    });
+    }
 
     return {
         currentLessons,
@@ -132,23 +133,23 @@ export const lessonList = computed<LessonList>(() => {
     const list: LessonList = [];
     const currentLessons = lessonStatus.value.currentLessons;
     const futureLessons = lessonStatus.value.futureLessons;
-    sortedLessons.value.forEach((val) => {
+    for (const val of sortedLessons.value) {
         const lesson = val.lesson;
         const id = val.id;
         if (lesson.type === "dividingLine") {
             list.push({id, lesson, status: LessonListEnum.normal});
-            return;
+            continue;
         }
         if (currentLessons.find((val) => val.id === id)) {
             list.push({id, lesson, status: LessonListEnum.current});
-            return;
+            continue;
         }
         if (futureLessons.find((val) => val.id === id)) {
             list.push({id, lesson, status: LessonListEnum.future});
-            return;
+            continue;
         }
         list.push({id, lesson, status: LessonListEnum.normal});
-    })
+    }
     return list;
 });
 

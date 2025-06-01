@@ -84,25 +84,24 @@ title: 页面标题
 
 <MyComponent />
 
-<script setup>
-import { defineComponent, h, ref } from 'vue';
+<script setup>import {defineComponent, h, ref} from "vue";
 
 const MyComponent = defineComponent({
   setup() {
-    const input = ref('Hello world!');
+    const input = ref("Hello world!");
     const onInput = (e) => {
       input.value = e.target.value;
     };
 
     return () => [
-      h('p', [
-        h('span','输入: '),
-        h('input', {
+      h("p", [
+        h("span","输入: "),
+        h("input", {
           value: input.value,
           onInput,
         }),
       ]),
-      h('p', [h('span','输出: '), input.value]),
+      h("p", [h("span","输出: "), input.value]),
     ];
   },
 });

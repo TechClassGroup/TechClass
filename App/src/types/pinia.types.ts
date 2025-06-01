@@ -4,6 +4,7 @@
 import "pinia";
 
 declare module "pinia" {
+
     interface DefineStoreOptionsBase<S, Store> {
         config_storage?: {
             enabled: boolean;

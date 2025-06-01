@@ -70,9 +70,9 @@ const thumbClasses = computed(() => [
 
 <template>
   <button
-      type="button"
       :class="switchClasses"
       :disabled="disabled"
+      type="button"
       @click="toggleSwitch"
   >
     <span :class="thumbClasses" />

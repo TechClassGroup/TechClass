@@ -64,7 +64,7 @@ const tempEnabled = computed({
 
 // 处理临时启用状态变更
 const handleTempEnabledChange = (value: boolean) => {
-    store.enableConfig.tempSelected.enable = value;
+  store.enableConfig.tempSelected.enable = value;
   if (value) {
     const now = DateTime.now();
     // 检查时间是否已过期或未设置
@@ -110,13 +110,13 @@ const startTime = computed(() => store.enableConfig.tempSelected.startTime);
 const handleStartTimeChange = (value: DateTime) => {
   // 设置时间为当天的开始
   value = value.startOf("day");
-    store.enableConfig.tempSelected.startTime = value;
-    // 确保结束时间不早于开始时间
+  store.enableConfig.tempSelected.startTime = value;
+  // 确保结束时间不早于开始时间
   if (store.enableConfig.tempSelected.endTime <= value) {
     store.enableConfig.tempSelected.endTime = value
         .plus({days: 1})
         .startOf("day");
-    }
+  }
 };
 
 // 结束时间
@@ -126,11 +126,11 @@ const endTime = computed(() => store.enableConfig.tempSelected.endTime);
 const handleEndTimeChange = (value: DateTime) => {
   // 设置时间为当天的开始
   value = value.startOf("day");
-    // 确保结束时间不早于开始时间
+  // 确保结束时间不早于开始时间
   if (value < store.enableConfig.tempSelected.startTime) {
     value = store.enableConfig.tempSelected.startTime;
-    }
-    store.enableConfig.tempSelected.endTime = value;
+  }
+  store.enableConfig.tempSelected.endTime = value;
 };
 
 // 获取当前选中项目的名称
