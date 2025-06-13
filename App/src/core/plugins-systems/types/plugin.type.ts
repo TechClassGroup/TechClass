@@ -2,10 +2,10 @@
  * @fileOverview 插件的类型定义文件
  */
 
-import {App} from "../appInstance";
-import {pluginComponent} from "./components/component";
+import type {App} from "../appInstance";
+import type {pluginComponent} from "./components/component";
 
-import {IStorageConfig, PluginStorage, storageDefaultValue,} from "./pluginStorage";
+import {type IStorageConfig, PluginStorage, type storageDefaultValue,} from "./pluginStorage";
 import logger from "../../utils/logger";
 
 /**
@@ -33,6 +33,8 @@ export interface PluginManifest {
  *              - 如果提供此泛型，则插件的存储数据必须遵循此类型约束
  *              - 如果不提供，则默认为any类型
  */
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export abstract class Plugin<T extends object = any> {
     /**
      * 应用的实例
@@ -128,6 +130,7 @@ export abstract class Plugin<T extends object = any> {
  */
 export interface OfficialPlugin {
 
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     plugin: typeof Plugin<any>;
     manifest: PluginManifest;
 }
